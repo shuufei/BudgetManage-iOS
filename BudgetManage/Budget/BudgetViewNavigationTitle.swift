@@ -9,13 +9,15 @@ import SwiftUI
 
 struct BudgetViewNavigationTitle: View {
     let title: String
+    private let iconSize: CGFloat = 15
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
+            Spacer().frame(width: self.iconSize)
             Text(title)
             Button(role: .none) {} label: {
                 Image(systemName: "chevron.down")
                     .resizable()
-                    .frame(width: 15, height: 8)
+                    .frame(width: self.iconSize, height: 8)
             }
         }
     }
