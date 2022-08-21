@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var store = BudgetStore()
+
     var body: some View {
         TabView {
-            BudgetView(budget: Budget.sampleData[0])
+            BudgetView(budgets: store.budgets)
                 .tabItem {
                     Label("予算", systemImage: "yensign.circle")
                 }
@@ -18,6 +20,14 @@ struct ContentView: View {
                 .tabItem {
                     Label("出費履歴", systemImage: "list.bullet")
                 }
+        }
+        .task {
+            do {
+                store.budgets = try await BudgetStore.load()
+                print(store.budgets.count)
+            } catch {
+//                        TODO: handling error
+            }
         }
     }
 }

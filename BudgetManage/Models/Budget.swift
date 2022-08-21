@@ -13,6 +13,7 @@ struct Budget: Hashable, Codable, Identifiable {
     var startDate: Date
     var endDate: Date
     var budgetAmount: Int
+    var isActive: Bool?
     
     init(title: String = "", startDate: Date, endDate: Date, budgetAmount: Int) {
         self.id = UUID()
