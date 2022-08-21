@@ -15,11 +15,12 @@ struct Budget: Hashable, Codable, Identifiable {
     var budgetAmount: Int
     var isActive: Bool?
     
-    init(title: String = "", startDate: Date, endDate: Date, budgetAmount: Int) {
+    init(title: String = "", startDate: Date, endDate: Date, budgetAmount: Int, isActibe: Bool = false) {
         self.id = UUID()
         self.startDate = startDate
         self.endDate = endDate
         self.budgetAmount = budgetAmount
+        self.isActive = isActibe
         self.title = title
         if title.isEmpty {
             self.title = computedTitle(startDate: startDate, endDate: endDate)
@@ -43,7 +44,7 @@ struct Budget: Hashable, Codable, Identifiable {
 let daySeconds: Double = 60 * 60 * 24;
 extension Budget {
     static let sampleData = [
-        Budget(title: "夏休み2022", startDate: Date(timeIntervalSince1970: 1660316400), endDate: Date(timeIntervalSince1970: 1660316400 + (daySeconds * 9)), budgetAmount: 30000),
-        Budget(startDate: Date(), endDate: Date(timeIntervalSinceNow: daySeconds * 31), budgetAmount: 150000)
+        Budget(title: "夏休み2022", startDate: Date(timeIntervalSince1970: 1660316400), endDate: Date(timeIntervalSince1970: 1660316400 + (daySeconds * 9)), budgetAmount: 30000, isActibe: false),
+        Budget(startDate: Date(), endDate: Date(timeIntervalSinceNow: daySeconds * 31), budgetAmount: 150000, isActibe: true)
     ]
 }

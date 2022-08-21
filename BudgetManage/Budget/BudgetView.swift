@@ -10,7 +10,11 @@ import SwiftUI
 struct BudgetView: View {
     let budgets: [Budget]
     var activeBudget: Budget? {
-        self.budgets.first { $0.isActive == true }
+        let budget = self.budgets.first { $0.isActive == true }
+        if budget == nil && self.budgets.count > 0 {
+            return self.budgets[0]
+        }
+        return budget
     }
     var navigationTitle: String {
         return self.activeBudget?.title ?? "予算"
@@ -24,6 +28,8 @@ struct BudgetView: View {
                     Text("startDate: \(budget.startDate.ISO8601Format())")
                     Text("endDate: \(budget.endDate.ISO8601Format())")
                     Text("budgetAmount: ¥\(budget.budgetAmount)")
+                } else {
+                    BudgetEmptyView()
                 }
             }
             .navigationTitle(self.navigationTitle)
@@ -42,6 +48,7 @@ struct BudgetView: View {
 
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetView(budgets: Budget.sampleData)
+        BudgetView(budgets: [])
+//        BudgetView(budgets: Budget.sampleData)
     }
 }
