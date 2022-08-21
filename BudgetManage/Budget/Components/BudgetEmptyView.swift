@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct BudgetEmptyView: View {
+    @Binding var openedCreateBudgetModal: Bool
+    
     var body: some View {
         VStack(alignment: .center, spacing: 32) {
             VStack(alignment: .center, spacing: 8) {
@@ -17,7 +19,9 @@ struct BudgetEmptyView: View {
                 Text("予算を登録すると、任意の期間の\n予算を管理することができます。")
                     .foregroundColor(.secondary)
             }
-            Button {} label: {
+            Button {
+                self.openedCreateBudgetModal = true
+            } label: {
                 Label("新しい予算を作成", systemImage: "yensign.circle")
             }
             .buttonStyle(.borderedProminent)
@@ -28,6 +32,6 @@ struct BudgetEmptyView: View {
 
 struct BudgetEmptyView_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetEmptyView()
+        BudgetEmptyView(openedCreateBudgetModal: .constant(false))
     }
 }

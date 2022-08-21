@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct BudgetView: View {
-    let budgets: [Budget]
+    @Binding var budgets: [Budget]
+    @State var openedCreateBudgetModal: Bool = false
     var activeBudget: Budget? {
         let budget = self.budgets.first { $0.isActive == true }
         if budget == nil && self.budgets.count > 0 {
@@ -29,7 +30,7 @@ struct BudgetView: View {
                     Text("endDate: \(budget.endDate.ISO8601Format())")
                     Text("budgetAmount: ¥\(budget.budgetAmount)")
                 } else {
-                    BudgetEmptyView()
+                    BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                 }
             }
             .navigationTitle(self.navigationTitle)
@@ -42,13 +43,22 @@ struct BudgetView: View {
                     BudgetViewMenu()
                 }
             }
+            .sheet(isPresented: $openedCreateBudgetModal) {
+                CreateBudgetModalView(isCreateMode: $openedCreateBudgetModal) { newBudget in
+                    let budget = Budget(data: newBudget)
+                    self.budgets.append(budget)
+                    for (index, element) in self.budgets.enumerated() {
+                        self.budgets[index].isActive = element.id == budget.id ? true : false
+                    }
+                }
+            }
         }
     }
 }
 
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetView(budgets: [])
+        BudgetView(budgets: .constant([]))
 //        BudgetView(budgets: Budget.sampleData)
     }
 }

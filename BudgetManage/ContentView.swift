@@ -12,7 +12,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            BudgetView(budgets: store.budgets)
+            BudgetView(budgets: $store.budgets)
                 .tabItem {
                     Label("予算", systemImage: "yensign.circle")
                 }
