@@ -9,7 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        BudgetView(budget: Budget.sampleData[0])
+        TabView {
+            BudgetView(budget: Budget.sampleData[0])
+                .tabItem {
+                    Label("予算", systemImage: "yensign.circle")
+                }
+            LogView()
+                .tabItem {
+                    Label("出費履歴", systemImage: "list.bullet")
+                }
+        }
     }
 }
 
