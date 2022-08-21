@@ -10,11 +10,23 @@ import SwiftUI
 struct BudgetView: View {
     let budget: Budget
     var body: some View {
-        VStack {
-            Text("title: \(budget.title)")
-            Text("startDate: \(budget.startDate.ISO8601Format())")
-            Text("endDate: \(budget.endDate.ISO8601Format())")
-            Text("budgetAmount: ¥\(budget.budgetAmount)")
+        NavigationView {
+            VStack {
+                Text("title: \(budget.title)")
+                Text("startDate: \(budget.startDate.ISO8601Format())")
+                Text("endDate: \(budget.endDate.ISO8601Format())")
+                Text("budgetAmount: ¥\(budget.budgetAmount)")
+            }
+            .navigationTitle(budget.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    BudgetViewNavigationTitle(title: budget.title)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    BudgetViewMenu()
+                }
+            }
         }
     }
 }

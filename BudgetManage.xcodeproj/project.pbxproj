@@ -16,6 +16,8 @@
 		98B0437D28B1E2F500BC762D /* BudgetManageUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0437C28B1E2F500BC762D /* BudgetManageUITestsLaunchTests.swift */; };
 		98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0438A28B1E30F00BC762D /* BudgetView.swift */; };
 		98B0438E28B1E41300BC762D /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0438D28B1E41300BC762D /* Budget.swift */; };
+		98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0439028B201F300BC762D /* BudgetViewMenu.swift */; };
+		98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		98B0437C28B1E2F500BC762D /* BudgetManageUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetManageUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		98B0438A28B1E30F00BC762D /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 		98B0438D28B1E41300BC762D /* Budget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget.swift; sourceTree = "<group>"; };
+		98B0439028B201F300BC762D /* BudgetViewMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewMenu.swift; sourceTree = "<group>"; };
+		98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewNavigationTitle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +149,8 @@
 			isa = PBXGroup;
 			children = (
 				98B0438A28B1E30F00BC762D /* BudgetView.swift */,
+				98B0439028B201F300BC762D /* BudgetViewMenu.swift */,
+				98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */,
 			);
 			path = Budget;
 			sourceTree = "<group>";
@@ -282,7 +288,9 @@
 				98B0436228B1E2F300BC762D /* ContentView.swift in Sources */,
 				98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */,
 				98B0438E28B1E41300BC762D /* Budget.swift in Sources */,
+				98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,
+				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
