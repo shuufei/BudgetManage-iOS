@@ -37,10 +37,12 @@ struct BudgetView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    BudgetViewNavigationTitle(title: navigationTitle)
+                    BudgetViewNavigationTitle(title: self.navigationTitle)
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    BudgetViewMenu()
+                    BudgetViewMenu() {
+                        self.openedCreateBudgetModal = true
+                    }
                 }
             }
             .sheet(isPresented: $openedCreateBudgetModal) {
@@ -59,6 +61,6 @@ struct BudgetView: View {
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
         BudgetView(budgets: .constant([]))
-//        BudgetView(budgets: Budget.sampleData)
+//        BudgetView(budgets: .constant(Budget.sampleData))
     }
 }
