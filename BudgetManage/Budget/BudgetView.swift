@@ -49,10 +49,12 @@ struct BudgetView: View {
             .sheet(isPresented: $openedCreateBudgetModal) {
                 CreateBudgetModalView(isCreateMode: $openedCreateBudgetModal) { newBudget in
                     let budget = Budget(data: newBudget)
-                    self.budgets.append(budget)
-                    for (index, element) in self.budgets.enumerated() {
-                        self.budgets[index].isActive = element.id == budget.id ? true : false
+                    var tmpBudgets = self.budgets
+                    tmpBudgets.append(budget)
+                    for (index, element) in tmpBudgets.enumerated() {
+                        tmpBudgets[index].isActive = element.id == budget.id ? true : false
                     }
+                    self.budgets = tmpBudgets
                 }
             }
         }
