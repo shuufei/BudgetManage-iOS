@@ -50,7 +50,6 @@ struct CreateBudgetModalView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("作成") {
-                            print("budget amount: \(self.budgetAmount)")
                             let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: Int(self.budgetAmount.value) ?? 0)
                             onCreate(data)
                             self.isCreateMode = false

@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetView: View {
     @Binding var budgets: [Budget]
     @State var openedCreateBudgetModal: Bool = false
+
     var activeBudget: Budget? {
         let budget = self.budgets.first { $0.isActive == true }
         if budget == nil && self.budgets.count > 0 {

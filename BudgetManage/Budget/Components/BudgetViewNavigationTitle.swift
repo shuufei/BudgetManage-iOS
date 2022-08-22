@@ -14,7 +14,6 @@ struct BudgetViewNavigationTitle: View {
         let bounds = UIScreen.main.bounds
         let width = bounds.width
         let maxWidth = width * (2/3)
-        print("width: \(width), \(maxWidth)")
         let calculated =  (CGFloat(title.isEmpty ? 1 : title.count) * 30) + (self.iconSize * 2)
         return calculated > maxWidth ? maxWidth : calculated
     }

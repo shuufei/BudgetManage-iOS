@@ -8,7 +8,18 @@
 import Foundation
 
 class BudgetStore: ObservableObject {
-    @Published var budgets: [Budget] = []
+    @Published var budgets: [Budget] = [] {
+        didSet {
+            print("--- didSet budgets: \(budgets)")
+            Task {
+                do {
+                    try await BudgetStore.save(budgets: self.budgets)
+                } catch {
+//                    TODO: handling error
+                }
+            }
+        }
+    }
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
