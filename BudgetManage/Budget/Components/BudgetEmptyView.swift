@@ -16,7 +16,7 @@ struct BudgetEmptyView: View {
                 Text("予算が登録されていません")
                     .font(.headline)
                     .fontWeight(.bold)
-                Text("予算を登録すると、任意の期間の\n予算を管理することができます。")
+                Text("予算を作成すると、任意の期間の\n予算を管理することができます。")
                     .foregroundColor(.secondary)
             }
             Button {

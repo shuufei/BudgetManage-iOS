@@ -12,24 +12,15 @@ struct CreateBudgetModalView: View {
     @State var title: String = ""
     @State var startDate: Date = Date()
     @State var endDate: Date = Date()
-    @State var budgetAmount: Int = 0
+    @ObservedObject var budgetAmount = NumbersOnly()
     let onCreate: (_ newBudget: Budget.Data) -> Void
-    
-    var formatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.isLenient = true
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "JPY"
-        formatter.maximumFractionDigits = 0
-        formatter.maximumIntegerDigits = 8
-        return formatter
-    }
 
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("タイトル")) {
                     TextField("今月の予算", text: $title)
+                        .modifier(TextFieldClearButton(text: $title))
                 }
                 Section(header: Text("期間")) {
                     DatePicker(selection: $startDate, displayedComponents: .date) {
@@ -42,8 +33,11 @@ struct CreateBudgetModalView: View {
                     }
                 }
                 Section(header: Text("予算額")) {
-                    TextField("¥150,000", value: $budgetAmount, formatter: self.formatter)
-                        .keyboardType(.numberPad)
+                    HStack {
+                        Text("¥")
+                        TextField("50,000", text: $budgetAmount.value)
+                            .keyboardType(.numberPad)
+                    }
                 }
             }
                 .navigationTitle("新規予算")
@@ -56,7 +50,8 @@ struct CreateBudgetModalView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("作成") {
-                            let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: self.budgetAmount)
+                            print("budget amount: \(self.budgetAmount)")
+                            let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: Int(self.budgetAmount.value) ?? 0)
                             onCreate(data)
                             self.isCreateMode = false
                         }
@@ -69,7 +64,6 @@ struct CreateBudgetModalView: View {
                 self.title = data.title
                 self.startDate = data.startDate
                 self.endDate = data.endDate
-                self.budgetAmount = data.budgetAmount
             }
         }
     }
