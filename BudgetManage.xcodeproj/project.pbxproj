@@ -10,6 +10,7 @@
 		9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10928B359F90041C326 /* TextFieldClearButton.swift */; };
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
 		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
+		9838A11328B52A2E0041C326 /* CreateBudgetModalViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */; };
 		98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */; };
 		98B0436228B1E2F300BC762D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0436128B1E2F300BC762D /* ContentView.swift */; };
 		98B0436428B1E2F500BC762D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98B0436328B1E2F500BC762D /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		9838A10928B359F90041C326 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
+		9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBudgetModalViewProvider.swift; sourceTree = "<group>"; };
 		98B0435C28B1E2F300BC762D /* BudgetManage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetManage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetManageApp.swift; sourceTree = "<group>"; };
 		98B0436128B1E2F300BC762D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -108,6 +110,14 @@
 				9838A10E28B47E650041C326 /* BudgetListModalView.swift */,
 			);
 			path = Modals;
+			sourceTree = "<group>";
+		};
+		9838A11128B529AA0041C326 /* Provider */ = {
+			isa = PBXGroup;
+			children = (
+				9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */,
+			);
+			path = Provider;
 			sourceTree = "<group>";
 		};
 		98B0435328B1E2F300BC762D = {
@@ -181,6 +191,7 @@
 		98B0438F28B1F0BD00BC762D /* Budget */ = {
 			isa = PBXGroup;
 			children = (
+				9838A11128B529AA0041C326 /* Provider */,
 				9838A10B28B39E060041C326 /* State */,
 				98B0439D28B24A4600BC762D /* Components */,
 				98B0438A28B1E30F00BC762D /* BudgetView.swift */,
@@ -354,6 +365,7 @@
 				98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */,
 				98B0439C28B22E0800BC762D /* BudgetEmptyView.swift in Sources */,
 				98B0439A28B2186000BC762D /* BudgetStore.swift in Sources */,
+				9838A11328B52A2E0041C326 /* CreateBudgetModalViewProvider.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,
 				9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */,
 				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,

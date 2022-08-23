@@ -50,18 +50,13 @@ struct BudgetView: View {
                 }
             }
             .sheet(isPresented: $openedCreateBudgetModal) {
-                CreateBudgetModalView(isCreateMode: $openedCreateBudgetModal) { newBudget in
-                    let budget = Budget(data: newBudget)
-                    var tmpBudgets = self.budgets
-                    tmpBudgets.append(budget)
-                    for (index, element) in tmpBudgets.enumerated() {
-                        tmpBudgets[index].isActive = element.id == budget.id ? true : false
-                    }
-                    self.budgets = tmpBudgets
-                }
+                CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
             }
             .sheet(isPresented: $openedBudgetListModal) {
-                BudgetListModalView(showBudgetList: $openedBudgetListModal, budgets: $budgets)
+                BudgetListModalView(
+                    showBudgetList: $openedBudgetListModal,
+                    budgets: $budgets
+                )
             }
         }
     }

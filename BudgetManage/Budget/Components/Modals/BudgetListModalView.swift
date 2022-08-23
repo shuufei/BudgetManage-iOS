@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetListModalView: View {
     @Binding var showBudgetList: Bool
     @Binding var budgets: [Budget]
+    @State var openedCreateBudgetModal: Bool = false
 
     func getFormattedBudgetAmout(budgetAmount: Int) -> String {
         let formatter = NumberFormatter()
@@ -66,10 +67,14 @@ struct BudgetListModalView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
+                        self.openedCreateBudgetModal = true
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
+            }
+            .sheet(isPresented: self.$openedCreateBudgetModal) {
+                CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
             }
         }
     }
