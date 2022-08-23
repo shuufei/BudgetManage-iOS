@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetView: View {
     @Binding var budgets: [Budget]
     @State var openedCreateBudgetModal: Bool = false
+    @State var openedBudgetListModal: Bool = false
 
     var activeBudget: Budget? {
         let budget = self.budgets.first { $0.isActive == true }
@@ -38,11 +39,13 @@ struct BudgetView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    BudgetViewNavigationTitle(title: self.navigationTitle)
+                    BudgetViewNavigationTitle(title: self.navigationTitle, openedBudgetListModal: $openedBudgetListModal)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     BudgetViewMenu() {
                         self.openedCreateBudgetModal = true
+                    } onTapShowBudgetList: {
+                        self.openedBudgetListModal = true
                     }
                 }
             }
@@ -57,13 +60,19 @@ struct BudgetView: View {
                     self.budgets = tmpBudgets
                 }
             }
+            .sheet(isPresented: $openedBudgetListModal) {
+                BudgetListModalView(showBudgetList: $openedBudgetListModal, budgets: $budgets)
+            }
         }
     }
 }
 
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetView(budgets: .constant([]))
+        Group {
+            BudgetView(budgets: .constant([]))
+            BudgetView(budgets: .constant([]))
+        }
 //        BudgetView(budgets: .constant(Budget.sampleData))
     }
 }

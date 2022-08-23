@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BudgetViewMenu: View {
     let onTapCreateBudget: () -> Void
+    let onTapShowBudgetList: () -> Void
     
     var body: some View {
         Menu {
@@ -27,7 +28,9 @@ struct BudgetViewMenu: View {
             } label: {
                 Label("新しい予算を作成...", systemImage: "yensign.circle")
             }
-            Button {} label: {
+            Button {
+                onTapShowBudgetList()
+            } label: {
                 Label("予算一覧を表示", systemImage: "list.dash")
             }
             Divider()
@@ -45,6 +48,6 @@ struct BudgetViewMenu: View {
 
 struct BudgetViewMenu_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetViewMenu() {}
+        BudgetViewMenu() {} onTapShowBudgetList: {}
     }
 }

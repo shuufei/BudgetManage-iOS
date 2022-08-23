@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10928B359F90041C326 /* TextFieldClearButton.swift */; };
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
+		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
 		98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */; };
 		98B0436228B1E2F300BC762D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0436128B1E2F300BC762D /* ContentView.swift */; };
 		98B0436428B1E2F500BC762D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98B0436328B1E2F500BC762D /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		9838A10928B359F90041C326 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
+		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
 		98B0435C28B1E2F300BC762D /* BudgetManage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetManage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetManageApp.swift; sourceTree = "<group>"; };
 		98B0436128B1E2F300BC762D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,15 @@
 				9838A10C28B39E120041C326 /* NumbersOnly.swift */,
 			);
 			path = State;
+			sourceTree = "<group>";
+		};
+		9838A11028B4809A0041C326 /* Modals */ = {
+			isa = PBXGroup;
+			children = (
+				98B0439E28B24A8D00BC762D /* CreateBudgetModalView.swift */,
+				9838A10E28B47E650041C326 /* BudgetListModalView.swift */,
+			);
+			path = Modals;
 			sourceTree = "<group>";
 		};
 		98B0435328B1E2F300BC762D = {
@@ -196,10 +207,10 @@
 		98B0439D28B24A4600BC762D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				9838A11028B4809A0041C326 /* Modals */,
 				98B0439028B201F300BC762D /* BudgetViewMenu.swift */,
 				98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */,
 				98B0439B28B22E0800BC762D /* BudgetEmptyView.swift */,
-				98B0439E28B24A8D00BC762D /* CreateBudgetModalView.swift */,
 				9838A10928B359F90041C326 /* TextFieldClearButton.swift */,
 			);
 			path = Components;
@@ -344,6 +355,7 @@
 				98B0439C28B22E0800BC762D /* BudgetEmptyView.swift in Sources */,
 				98B0439A28B2186000BC762D /* BudgetStore.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,
+				9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */,
 				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,
 				9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */,
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
