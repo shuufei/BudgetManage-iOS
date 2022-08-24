@@ -11,6 +11,7 @@
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
 		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
 		9838A11328B52A2E0041C326 /* CreateBudgetModalViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */; };
+		9838A11528B647B60041C326 /* BudgetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11428B647B60041C326 /* BudgetInfo.swift */; };
 		98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */; };
 		98B0436228B1E2F300BC762D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0436128B1E2F300BC762D /* ContentView.swift */; };
 		98B0436428B1E2F500BC762D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98B0436328B1E2F500BC762D /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
 		9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBudgetModalViewProvider.swift; sourceTree = "<group>"; };
+		9838A11428B647B60041C326 /* BudgetInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetInfo.swift; sourceTree = "<group>"; };
 		98B0435C28B1E2F300BC762D /* BudgetManage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetManage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetManageApp.swift; sourceTree = "<group>"; };
 		98B0436128B1E2F300BC762D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */,
 				98B0439B28B22E0800BC762D /* BudgetEmptyView.swift */,
 				9838A10928B359F90041C326 /* TextFieldClearButton.swift */,
+				9838A11428B647B60041C326 /* BudgetInfo.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				98B0439F28B24A8D00BC762D /* CreateBudgetModalView.swift in Sources */,
 				98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */,
 				98B0439C28B22E0800BC762D /* BudgetEmptyView.swift in Sources */,
+				9838A11528B647B60041C326 /* BudgetInfo.swift in Sources */,
 				98B0439A28B2186000BC762D /* BudgetStore.swift in Sources */,
 				9838A11328B52A2E0041C326 /* CreateBudgetModalViewProvider.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,

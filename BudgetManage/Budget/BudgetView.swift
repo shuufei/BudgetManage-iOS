@@ -25,39 +25,45 @@ struct BudgetView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                if let budget = activeBudget {
-                    Text("title: \(budget.title)")
-                    Text("startDate: \(budget.startDate.ISO8601Format())")
-                    Text("endDate: \(budget.endDate.ISO8601Format())")
-                    Text("budgetAmount: ¥\(budget.budgetAmount)")
-                } else {
-                    BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
-                }
-            }
-            .navigationTitle(self.navigationTitle)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    BudgetViewNavigationTitle(title: self.navigationTitle, openedBudgetListModal: $openedBudgetListModal)
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    BudgetViewMenu() {
-                        self.openedCreateBudgetModal = true
-                    } onTapShowBudgetList: {
-                        self.openedBudgetListModal = true
+                ZStack {
+                    if let budget = activeBudget {
+                        Color(UIColor.systemGray5)
+                        VStack {
+                            BudgetInfo(budget: budget)
+                            Spacer()
+                        }
+//                        List {
+//                            Section(header: Text("予算情報")) {
+//                            }
+//                            .headerProminence(.standard)
+//                        }
+                    } else {
+                        BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                     }
                 }
-            }
-            .sheet(isPresented: $openedCreateBudgetModal) {
-                CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
-            }
-            .sheet(isPresented: $openedBudgetListModal) {
-                BudgetListModalView(
-                    showBudgetList: $openedBudgetListModal,
-                    budgets: $budgets
-                )
-            }
+                .navigationTitle(self.navigationTitle)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        BudgetViewNavigationTitle(title: self.navigationTitle, openedBudgetListModal: $openedBudgetListModal)
+                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        BudgetViewMenu() {
+                            self.openedCreateBudgetModal = true
+                        } onTapShowBudgetList: {
+                            self.openedBudgetListModal = true
+                        }
+                    }
+                }
+                .sheet(isPresented: $openedCreateBudgetModal) {
+                    CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
+                }
+                .sheet(isPresented: $openedBudgetListModal) {
+                    BudgetListModalView(
+                        showBudgetList: $openedBudgetListModal,
+                        budgets: $budgets
+                    )
+                }
         }
     }
 }
@@ -65,9 +71,9 @@ struct BudgetView: View {
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            BudgetView(budgets: .constant([]))
-            BudgetView(budgets: .constant([]))
+//            BudgetView(budgets: .constant([]))
+//            BudgetView(budgets: .constant([]))
+            BudgetView(budgets: .constant(Budget.sampleData))
         }
-//        BudgetView(budgets: .constant(Budget.sampleData))
     }
 }
