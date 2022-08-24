@@ -50,7 +50,14 @@ struct BudgetListModalView: View {
                     }
                     .foregroundColor(.black)
                     .swipeActions {
-                        Button {} label: {
+                        Button {
+                            var tmpBudgets = self.budgets.filter { $0.id != budget.id }
+                            let index = tmpBudgets.firstIndex {$0.isActive == true}
+                            if index == nil {
+                                tmpBudgets[0].isActive = true
+                            }
+                            self.budgets = tmpBudgets
+                        } label: {
                             Text("削除")
                         }
                         .tint(.red)
