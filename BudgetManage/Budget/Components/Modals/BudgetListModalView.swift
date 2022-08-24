@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BudgetListModalView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var showBudgetList: Bool
     @Binding var budgets: [Budget]
     @State var openedCreateBudgetModal: Bool = false
@@ -24,6 +25,10 @@ struct BudgetListModalView: View {
     var body: some View {
         NavigationView {
             List {
+                if budgets.count == 0 {
+                    Text("予算が登録されていません")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
                 ForEach(budgets) { budget in
                     Button(role: .none) {
                         for (index, element) in self.budgets.enumerated() {
@@ -42,13 +47,12 @@ struct BudgetListModalView: View {
                                     .frame(width: 20)
                             }
                             Text(budget.title)
-                                .lineLimit(1)
                             Spacer()
                             Text(self.getFormattedBudgetAmout(budgetAmount: budget.budgetAmount))
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .foregroundColor(.black)
+                    .foregroundColor(self.colorScheme == .dark ? .white : .black)
                     .swipeActions {
                         Button {
                             var tmpBudgets = self.budgets.filter { $0.id != budget.id }

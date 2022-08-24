@@ -8,7 +8,19 @@
 import SwiftUI
 
 struct BudgetInfo: View {
+    @Environment(\.colorScheme) var colorScheme
     let budget: Budget
+    
+    var totalExpenseAmount: Int {
+        self.budget.expenses.reduce(0, {x, y in
+            x + y.amount
+        })
+    }
+    
+    var balanceAmount: Int {
+        self.budget.budgetAmount - self.totalExpenseAmount
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -23,19 +35,21 @@ struct BudgetInfo: View {
                     Text("タイトル")
                     Text("期間")
                     Text("予算額")
+                    Text("残額")
 //                    TODO: 残額を表示
                 }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(self.budget.title)
                     Text(Budget.Data.computedTitle(startDate: self.budget.startDate, endDate: self.budget.endDate))
                     Text("¥\(self.budget.budgetAmount)")
+                    Text("¥\(self.balanceAmount)")
                 }
                 .foregroundColor(.secondary)
             }
             .font(.caption)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.white)
+            .background(self.colorScheme == .dark ? .black : .white)
             .cornerRadius(12)
         }
         .padding()
