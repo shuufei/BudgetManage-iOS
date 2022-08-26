@@ -23,20 +23,12 @@ struct BudgetInfo: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Spacer()
-                    .frame(width: 16)
-                Text("予算情報")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .trailing, spacing: 3) {
                     Text("タイトル")
                     Text("期間")
                     Text("予算額")
                     Text("残額")
-//                    TODO: 残額を表示
                 }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(self.budget.title)

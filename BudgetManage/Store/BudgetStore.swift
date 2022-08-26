@@ -8,7 +8,7 @@
 import Foundation
 
 class BudgetStore: ObservableObject {
-    @Published var budgets: [Budget] = [] {
+    @Published var budgets: [Budget] = Budget.sampleData {
         didSet {
             print("--- didSet budgets: \(budgets)")
             Task {

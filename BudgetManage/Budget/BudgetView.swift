@@ -12,31 +12,24 @@ struct BudgetView: View {
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
 
-    var activeBudget: Budget? {
-        let budget = self.budgets.first { $0.isActive == true }
-        if budget == nil && self.budgets.count > 0 {
-            return self.budgets[0]
-        }
-        return budget
+    var activeBudgetIndex: Int {
+        let index = self.budgets.firstIndex { $0.isActive == true }
+        return index ?? 0
     }
     var navigationTitle: String {
-        return self.activeBudget?.title ?? "予算"
+        return self.budgets[self.activeBudgetIndex].title
     }
 
     var body: some View {
         NavigationView {
                 ZStack {
-                    if let budget = activeBudget {
+                    if self.budgets.count > 0 {
                         Color(UIColor.systemGray5)
                         VStack {
-                            BudgetInfo(budget: budget)
+                            BudgetInfo(budget: self.budgets[self.activeBudgetIndex])
+                            CategoryListView(budget: self.$budgets[self.activeBudgetIndex])
                             Spacer()
                         }
-//                        List {
-//                            Section(header: Text("予算情報")) {
-//                            }
-//                            .headerProminence(.standard)
-//                        }
                     } else {
                         BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                     }
