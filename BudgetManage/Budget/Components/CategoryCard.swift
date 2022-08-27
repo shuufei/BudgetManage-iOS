@@ -46,6 +46,18 @@ struct CategoryCard: View {
         CGFloat(1) - self.balanceAmountRate
     }
     
+    private func getBalanceAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
+        let sideSpacing = self.horizontalPadding * 2
+        let width = geometryWidth - sideSpacing;
+        return width >= 0 ? width : 0;
+    }
+    
+    private func getTotalExpenseAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
+        let sideSpacing = self.totalExpenseAmountRate * 2
+        let width = geometryWidth - sideSpacing;
+        return width >= 0 ? width : 0;
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -65,8 +77,8 @@ struct CategoryCard: View {
                     VStack(spacing: 2) {
                         HStack(spacing: 0) {
                             self.data.color
-                                .frame(width: (geometry.size.width - self.horizontalPadding * 2) * self.balanceAmountRate, height: self.barHeight)
-                            Color(UIColor.systemGray5).frame(width: (geometry.size.width - self.horizontalPadding * 2) * self.totalExpenseAmountRate, height: self.barHeight)
+                                .frame(width: self.getBalanceAmountBarWidth(geometry.size.width), height: self.barHeight)
+                            Color(UIColor.systemGray5).frame(width: self.getTotalExpenseAmountBarWidth(geometry.size.width), height: self.barHeight)
                         }
                         .cornerRadius(3)
                         HStack {

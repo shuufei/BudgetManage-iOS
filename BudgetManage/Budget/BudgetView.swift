@@ -30,6 +30,7 @@ struct BudgetView: View {
                             CategoryListView(budget: self.$budgets[self.activeBudgetIndex])
                             Spacer()
                         }
+                        AddExpenseButton()
                     } else {
                         BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                     }
