@@ -39,7 +39,8 @@ struct CategoryCard: View {
     }
     
     private var balanceAmountRate: CGFloat {
-        CGFloat(self.data.balanceAmount) / CGFloat(self.data.budgetAmount)
+        let rate = CGFloat(self.data.balanceAmount) / CGFloat(self.data.budgetAmount)
+        return rate.isNaN ? 0 : rate
     }
     
     private var totalExpenseAmountRate: CGFloat {
@@ -49,13 +50,13 @@ struct CategoryCard: View {
     private func getBalanceAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
         let sideSpacing = self.horizontalPadding * 2
         let width = geometryWidth - sideSpacing;
-        return width >= 0 ? width : 0;
+        return width >= 0 ? width * self.balanceAmountRate : 0;
     }
     
     private func getTotalExpenseAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
-        let sideSpacing = self.totalExpenseAmountRate * 2
+        let sideSpacing = self.horizontalPadding * 2
         let width = geometryWidth - sideSpacing;
-        return width >= 0 ? width : 0;
+        return width >= 0 ? width * self.totalExpenseAmountRate : 0;
     }
     
     var body: some View {
