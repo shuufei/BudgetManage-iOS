@@ -12,6 +12,8 @@ struct BudgetListModalView: View {
     @Binding var showBudgetList: Bool
     @Binding var budgets: [Budget]
     @State var openedCreateBudgetModal: Bool = false
+    @State private var showDeleteConfirmAlert: Bool = false
+    @State private var deletionTarget: Budget? = nil
 
     func getFormattedBudgetAmout(budgetAmount: Int) -> String {
         let formatter = NumberFormatter()
@@ -55,12 +57,8 @@ struct BudgetListModalView: View {
                     .foregroundColor(self.colorScheme == .dark ? .white : .black)
                     .swipeActions {
                         Button {
-                            var tmpBudgets = self.budgets.filter { $0.id != budget.id }
-                            let index = tmpBudgets.firstIndex {$0.isActive == true}
-                            if index == nil {
-                                tmpBudgets[0].isActive = true
-                            }
-                            self.budgets = tmpBudgets
+                            self.showDeleteConfirmAlert = true
+                            self.deletionTarget = budget
                         } label: {
                             Text("削除")
                         }
@@ -86,6 +84,18 @@ struct BudgetListModalView: View {
             }
             .sheet(isPresented: self.$openedCreateBudgetModal) {
                 CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
+            }
+            .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { budget in
+                    Button("削除", role: .destructive) {
+                        var tmpBudgets = self.budgets.filter { $0.id != budget.id }
+                        let index = tmpBudgets.firstIndex {$0.isActive == true}
+                        if index == nil && tmpBudgets.count != 0 {
+                            tmpBudgets[0].isActive = true
+                        }
+                        self.budgets = tmpBudgets
+                    }
+            } message: { budget in
+                Text("予算を削除すると、予算に紐づく出費記録も削除されます。")
             }
         }
     }
