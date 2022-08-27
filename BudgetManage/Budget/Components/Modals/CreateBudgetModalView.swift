@@ -14,6 +14,12 @@ struct CreateBudgetModalView: View {
     @State var endDate: Date = Date()
     @ObservedObject var budgetAmount = NumbersOnly()
     let onCreate: (_ newBudget: Budget.Data) -> Void
+    
+    private func create() {
+        let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: Int(self.budgetAmount.value) ?? 0)
+        onCreate(data)
+        self.isCreateMode = false
+    }
 
     var body: some View {
         NavigationView {
@@ -35,19 +41,22 @@ struct CreateBudgetModalView: View {
                 Section(header: Text("予算額")) {
                     AmountTextField(value: $budgetAmount.value)
                 }
+                Button {
+                    self.create()
+                } label: {
+                    Text("作成")
+                        .padding(.vertical, 4)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .listRowBackground(Color.red.opacity(0))
+                .listRowInsets(EdgeInsets())
             }
                 .navigationTitle("新規予算")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("キャンセル") {
-                            self.isCreateMode = false
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("作成") {
-                            let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: Int(self.budgetAmount.value) ?? 0)
-                            onCreate(data)
                             self.isCreateMode = false
                         }
                     }

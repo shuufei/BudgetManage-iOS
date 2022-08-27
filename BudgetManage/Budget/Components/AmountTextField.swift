@@ -13,7 +13,7 @@ struct AmountTextField: View {
     var body: some View {
         HStack {
             Text("¥")
-            TextField("50,000", text: self.$value)
+            TextField("0", text: self.$value)
                 .modifier(TextFieldClearButton(text: self.$value))
                 .keyboardType(.numberPad)
         }
