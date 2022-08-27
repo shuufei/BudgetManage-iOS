@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-fileprivate struct AppendExpenseButton: View {
-    let amount: Int
-    let action: () -> Void
-    var body: some View {
-        Button {
-            self.action()
-        } label: {
-            Label("¥\(self.amount)", systemImage: "plus")
-                .frame(maxWidth: .infinity)
-        }
-    }
-}
-
 struct AddExpenseModalView: View {
     @Binding var showModalView: Bool
     @Binding var currentBudget: Budget
@@ -42,46 +29,7 @@ struct AddExpenseModalView: View {
         NavigationView {
             List {
                 Section(header: Text("金額")) {
-                    HStack {
-                        AmountTextField(value: self.$amount.value)
-                    }
-                    VStack {
-                        HStack {
-                            AppendExpenseButton(amount: 10000) {
-                                if let current = Int(amount.value) {
-                                    self.amount.value =  String(current + 10000)
-                                } else {
-                                    self.amount.value = String(10000)
-                                }
-                            }
-                            AppendExpenseButton(amount: 5000) {
-                                if let current = Int(amount.value) {
-                                    self.amount.value =  String(current + 5000)
-                                } else {
-                                    self.amount.value = String(5000)
-                                }
-                            }
-                        }
-                        HStack {
-                            AppendExpenseButton(amount: 1000) {
-                                if let current = Int(amount.value) {
-                                    self.amount.value =  String(current + 1000)
-                                } else {
-                                    self.amount.value = String(1000)
-                                }
-                            }
-                            AppendExpenseButton(amount: 500){
-                                if let current = Int(amount.value) {
-                                    self.amount.value =  String(current + 500)
-                                } else {
-                                    self.amount.value = String(500)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.vertical, 8)
-                    .buttonStyle(.bordered)
-                    .tint(.blue)
+                    AmountTextField(value: self.$amount.value)
                 }
                 Section {
                     DatePicker(selection: self.$expenseDate, displayedComponents: .date) {
