@@ -8,16 +8,34 @@
 import SwiftUI
 
 struct AddExpenseButton: View {
+    @Binding var currentBudget: Budget
+    @State var showAddExpenseModal: Bool = false
+    
     var body: some View {
-        Button {} label: {
-            Label("出費", systemImage: "plus")
+        GeometryReader { geometry in
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        self.showAddExpenseModal = true
+                    } label: {
+                        Label("出費", systemImage: "plus")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                .padding(.horizontal, 16)
+            }
+            .padding(.vertical, 16)
+            .sheet(isPresented: self.$showAddExpenseModal) {
+                AddExpenseModalView(showModalView: self.$showAddExpenseModal, currentBudget: self.$currentBudget)
+            }
         }
-        .buttonStyle(.borderedProminent)
     }
 }
 
 struct AddExpenseButton_Previews: PreviewProvider {
     static var previews: some View {
-        AddExpenseButton()
+        AddExpenseButton(currentBudget: .constant(Budget.sampleData[0]))
     }
 }

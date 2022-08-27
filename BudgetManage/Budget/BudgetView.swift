@@ -27,10 +27,12 @@ struct BudgetView: View {
                         Color(UIColor.systemGray5)
                         VStack {
                             BudgetInfo(budget: self.budgets[self.activeBudgetIndex])
+                                .padding(.all, 12)
                             CategoryListView(budget: self.$budgets[self.activeBudgetIndex])
+                                .padding(.horizontal, 12)
                             Spacer()
                         }
-                        AddExpenseButton()
+                        AddExpenseButton(currentBudget: self.$budgets[self.activeBudgetIndex])
                     } else {
                         BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                     }

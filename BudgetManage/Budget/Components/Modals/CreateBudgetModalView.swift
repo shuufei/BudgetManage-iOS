@@ -33,11 +33,7 @@ struct CreateBudgetModalView: View {
                     }
                 }
                 Section(header: Text("予算額")) {
-                    HStack {
-                        Text("¥")
-                        TextField("50,000", text: $budgetAmount.value)
-                            .keyboardType(.numberPad)
-                    }
+                    AmountTextField(value: $budgetAmount.value)
                 }
             }
                 .navigationTitle("新規予算")

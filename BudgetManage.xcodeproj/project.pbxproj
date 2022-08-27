@@ -17,6 +17,8 @@
 		9838A11B28B65B810041C326 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11A28B65B810041C326 /* Category.swift */; };
 		9838A11D28B65C2E0041C326 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11C28B65C2E0041C326 /* Expense.swift */; };
 		9863988728B9DA8200CCBB1D /* AddExpenseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */; };
+		9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */; };
+		9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988A28B9E1B200CCBB1D /* AmountTextField.swift */; };
 		98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */; };
 		98B0436228B1E2F300BC762D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B0436128B1E2F300BC762D /* ContentView.swift */; };
 		98B0436428B1E2F500BC762D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98B0436328B1E2F500BC762D /* Assets.xcassets */; };
@@ -62,6 +64,8 @@
 		9838A11A28B65B810041C326 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		9838A11C28B65C2E0041C326 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
 		9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseButton.swift; sourceTree = "<group>"; };
+		9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseModalView.swift; sourceTree = "<group>"; };
+		9863988A28B9E1B200CCBB1D /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
 		98B0435C28B1E2F300BC762D /* BudgetManage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetManage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B0435F28B1E2F300BC762D /* BudgetManageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetManageApp.swift; sourceTree = "<group>"; };
 		98B0436128B1E2F300BC762D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 			children = (
 				98B0439E28B24A8D00BC762D /* CreateBudgetModalView.swift */,
 				9838A10E28B47E650041C326 /* BudgetListModalView.swift */,
+				9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */,
 			);
 			path = Modals;
 			sourceTree = "<group>";
@@ -241,6 +246,7 @@
 				9838A11628B65B3B0041C326 /* CategoryListView.swift */,
 				9838A11828B65B5E0041C326 /* CategoryCard.swift */,
 				9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */,
+				9863988A28B9E1B200CCBB1D /* AmountTextField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -389,6 +395,7 @@
 				9863988728B9DA8200CCBB1D /* AddExpenseButton.swift in Sources */,
 				98B0439A28B2186000BC762D /* BudgetStore.swift in Sources */,
 				9838A11328B52A2E0041C326 /* CreateBudgetModalViewProvider.swift in Sources */,
+				9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,
 				9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */,
 				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,
@@ -396,6 +403,7 @@
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
 				9838A11D28B65C2E0041C326 /* Expense.swift in Sources */,
 				98B0439628B20A5B00BC762D /* LogView.swift in Sources */,
+				9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

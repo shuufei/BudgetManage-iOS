@@ -31,7 +31,7 @@ struct CategoryListView: View {
             }
             .padding(.horizontal, 8)
             CategoryCard(budgetCategory: .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount)), expenses: self.uncategorizedExpenses)
-        }.padding(.horizontal)
+        }
     }
 }
 

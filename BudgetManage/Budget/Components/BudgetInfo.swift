@@ -44,7 +44,6 @@ struct BudgetInfo: View {
             .background(self.colorScheme == .dark ? .black : .white)
             .cornerRadius(8)
         }
-        .padding()
     }
 }
 
