@@ -47,6 +47,10 @@ struct CategoryCard: View {
         CGFloat(1) - self.balanceAmountRate
     }
     
+    private var isDeficit: Bool {
+        self.data.balanceAmount < 0
+    }
+    
     private func getBalanceAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
         let sideSpacing = self.horizontalPadding * 2
         let width = geometryWidth - sideSpacing;
@@ -74,6 +78,7 @@ struct CategoryCard: View {
                                 .font(.caption)
                             Text("¥\(self.data.balanceAmount)")
                                 .font(.headline)
+                                .foregroundColor(self.isDeficit ? .red : getDefaultForegroundColor(self.colorScheme))
                         }
                     }
                     VStack(spacing: 2) {
@@ -95,7 +100,7 @@ struct CategoryCard: View {
             }
             .padding(.horizontal, self.horizontalPadding)
             .padding(.vertical, self.verticalPadding)
-            .background(self.colorScheme == .dark ? .black : .white)
+            .background(getDefaultBackgroundColor(self.colorScheme))
             .cornerRadius(8)
         }
     }

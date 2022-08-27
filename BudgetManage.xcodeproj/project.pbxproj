@@ -16,6 +16,7 @@
 		9838A11928B65B5E0041C326 /* CategoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11828B65B5E0041C326 /* CategoryCard.swift */; };
 		9838A11B28B65B810041C326 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11A28B65B810041C326 /* Category.swift */; };
 		9838A11D28B65C2E0041C326 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A11C28B65C2E0041C326 /* Expense.swift */; };
+		983C7B2F28B9F95D008D75D3 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B2E28B9F95D008D75D3 /* ColorTheme.swift */; };
 		9863988728B9DA8200CCBB1D /* AddExpenseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */; };
 		9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */; };
 		9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988A28B9E1B200CCBB1D /* AmountTextField.swift */; };
@@ -63,6 +64,7 @@
 		9838A11828B65B5E0041C326 /* CategoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCard.swift; sourceTree = "<group>"; };
 		9838A11A28B65B810041C326 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		9838A11C28B65C2E0041C326 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
+		983C7B2E28B9F95D008D75D3 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
 		9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseButton.swift; sourceTree = "<group>"; };
 		9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseModalView.swift; sourceTree = "<group>"; };
 		9863988A28B9E1B200CCBB1D /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
@@ -137,6 +139,14 @@
 			path = Provider;
 			sourceTree = "<group>";
 		};
+		983C7B2D28B9F94A008D75D3 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				983C7B2E28B9F95D008D75D3 /* ColorTheme.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		98B0435328B1E2F300BC762D = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +170,7 @@
 		98B0435E28B1E2F300BC762D /* BudgetManage */ = {
 			isa = PBXGroup;
 			children = (
+				983C7B2D28B9F94A008D75D3 /* Utils */,
 				98B0439428B20A4D00BC762D /* Log */,
 				98B0438F28B1F0BD00BC762D /* Budget */,
 				98B0439728B2183300BC762D /* Store */,
@@ -402,6 +413,7 @@
 				9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */,
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
 				9838A11D28B65C2E0041C326 /* Expense.swift in Sources */,
+				983C7B2F28B9F95D008D75D3 /* ColorTheme.swift in Sources */,
 				98B0439628B20A5B00BC762D /* LogView.swift in Sources */,
 				9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */,
 			);

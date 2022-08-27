@@ -105,7 +105,7 @@ struct AddExpenseModalView: View {
                 .listRowBackground(Color.red.opacity(0))
                 .listRowInsets(EdgeInsets())
             }
-            .navigationTitle("出費")
+            .navigationTitle("登録")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
