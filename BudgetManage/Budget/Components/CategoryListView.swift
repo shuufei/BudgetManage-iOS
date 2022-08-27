@@ -22,13 +22,24 @@ struct CategoryListView: View {
     }
     
     var body: some View {
-        CategoryCard(budgetCategory: .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount)), expenses: self.uncategorizedExpenses)
-            .padding()
+        VStack {
+            HStack {
+                Text("カテゴリ")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+            .padding(.horizontal, 8)
+            CategoryCard(budgetCategory: .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount)), expenses: self.uncategorizedExpenses)
+        }.padding(.horizontal)
     }
 }
 
 struct CategoryListView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryListView(budget: .constant(Budget.sampleData[0]))
+        ZStack {
+            Color(UIColor.systemGray5)
+            CategoryListView(budget: .constant(Budget.sampleData[0]))
+        }
     }
 }

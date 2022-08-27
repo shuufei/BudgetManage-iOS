@@ -82,7 +82,7 @@ struct CategoryCard: View {
             .padding(.horizontal, self.horizontalPadding)
             .padding(.vertical, self.verticalPadding)
             .background(self.colorScheme == .dark ? .black : .white)
-            .cornerRadius(5)
+            .cornerRadius(8)
         }
     }
 }

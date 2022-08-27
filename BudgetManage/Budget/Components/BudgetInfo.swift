@@ -42,7 +42,7 @@ struct BudgetInfo: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(self.colorScheme == .dark ? .black : .white)
-            .cornerRadius(12)
+            .cornerRadius(8)
         }
         .padding()
     }

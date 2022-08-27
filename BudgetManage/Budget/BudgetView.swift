@@ -17,7 +17,7 @@ struct BudgetView: View {
         return index ?? 0
     }
     var navigationTitle: String {
-        return self.budgets[self.activeBudgetIndex].title
+        return self.budgets.indices.contains(self.activeBudgetIndex) ? self.budgets[self.activeBudgetIndex].title : "予算"
     }
 
     var body: some View {
