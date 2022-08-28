@@ -11,6 +11,7 @@ struct CategoryCard: View {
     @Environment(\.colorScheme) var colorScheme
     var budgetCategory: BudgetCategory
     
+    @State private var totalHeight = CGFloat(0)
     private let horizontalPadding: CGFloat = 12
     private let verticalPadding: CGFloat = 12
     private let barHeight: CGFloat = 20
@@ -47,7 +48,6 @@ struct CategoryCard: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
                 VStack(spacing: 8) {
                     HStack {
                         Text(self.data.title)
@@ -78,12 +78,18 @@ struct CategoryCard: View {
                         .foregroundColor(.secondary)
                     }
                 }
-            }
-            .padding(.horizontal, self.horizontalPadding)
-            .padding(.vertical, self.verticalPadding)
-            .background(getDefaultBackgroundColor(self.colorScheme))
-            .cornerRadius(8)
+                .padding(.horizontal, self.horizontalPadding)
+                .padding(.vertical, self.verticalPadding)
+                .background(getDefaultBackgroundColor(self.colorScheme))
+                .cornerRadius(8)
+                .background(GeometryReader { gp -> Color in
+                    DispatchQueue.main.async {
+                        self.totalHeight = gp.size.height
+                    }
+                    return Color.clear
+                })
         }
+        .frame(height: self.totalHeight)
     }
 }
 
