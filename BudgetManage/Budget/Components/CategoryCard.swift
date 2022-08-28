@@ -7,35 +7,16 @@
 
 import SwiftUI
 
-fileprivate struct CategoryCardData {
-    var title: String
-    var budgetAmount: Int
-    var balanceAmount: Int
-    var color: Color
-}
-
 struct CategoryCard: View {
     @Environment(\.colorScheme) var colorScheme
     var budgetCategory: BudgetCategory
-    var expenses: [Expense] = []
     
     private let horizontalPadding: CGFloat = 12
     private let verticalPadding: CGFloat = 12
     private let barHeight: CGFloat = 20
-    
-    private var totalExpenseAmount: Int {
-        self.expenses.reduce(0, { x, y in
-            x + y.amount
-        })
-    }
-    
-    private var data: CategoryCardData {
-        switch self.budgetCategory {
-        case let .uncategorized(uncategorized):
-            return CategoryCardData(title: uncategorized.title, budgetAmount: uncategorized.budgetAmount, balanceAmount: uncategorized.budgetAmount - self.totalExpenseAmount, color: Color(UIColor.systemGray))
-        case let .categorized(category, categoryTemplate):
-            return CategoryCardData(title: categoryTemplate.title, budgetAmount: category.budgetAmount, balanceAmount: category.budgetAmount - self.totalExpenseAmount, color: Color.green)
-        }
+
+    private var data: BudgetCategory.CategoryDisplayData {
+        self.budgetCategory.displayData()
     }
     
     private var balanceAmountRate: CGFloat {
@@ -108,6 +89,11 @@ struct CategoryCard: View {
 
 struct CategoryCard_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryCard(budgetCategory: .uncategorized(UnCategorized(title: "未分類", budgetAmount: 40000)), expenses: Expense.sampleData)
+        CategoryCard(
+            budgetCategory: .uncategorized(
+                UnCategorized(title: "未分類", budgetAmount: 40000),
+                Expense.sampleData
+            )
+        )
     }
 }

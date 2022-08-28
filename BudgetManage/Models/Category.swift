@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct CategoryTemplate: Codable, Hashable, Identifiable {
     var id: UUID
@@ -35,8 +36,39 @@ struct UnCategorized {
 }
 
 enum BudgetCategory {
-    case categorized(Category, CategoryTemplate)
-    case uncategorized(UnCategorized)
+    case categorized(Category, CategoryTemplate, [Expense])
+    case uncategorized(UnCategorized, [Expense])
+    
+    private func getTotalExpenseAmount(_ expenses: [Expense]) -> Int {
+        expenses.reduce(0, { x, y in
+            x + y.amount
+        })
+    }
+    
+    func displayData() -> CategoryDisplayData {
+        switch self {
+        case let .uncategorized(uncategorized, expenses):
+            return CategoryDisplayData(
+                title: uncategorized.title,
+                budgetAmount: uncategorized.budgetAmount,
+                balanceAmount: uncategorized.budgetAmount - self.getTotalExpenseAmount(expenses),
+                color: Color(UIColor.systemGray))
+        case let .categorized(category, categoryTemplate, expenses):
+            return CategoryDisplayData(
+                title: categoryTemplate.title,
+                budgetAmount: category.budgetAmount,
+                balanceAmount: category.budgetAmount - self.getTotalExpenseAmount(expenses),
+                color: Color.green
+            )
+        }
+    }
+    
+    struct CategoryDisplayData {
+        var title: String
+        var budgetAmount: Int
+        var balanceAmount: Int
+        var color: Color
+    }
 }
 
 extension CategoryTemplate {

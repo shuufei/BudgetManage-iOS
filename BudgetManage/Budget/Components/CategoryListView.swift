@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CategoryListView: View {
     @Binding var budget: Budget
+    @State var showCategoryDetail: Bool = false
     
     private var uncategorizedBudgetAmount: Int {
         let totalBudgetAmount = self.budget.categories.reduce(0, { x, y in
@@ -30,7 +31,15 @@ struct CategoryListView: View {
                 Spacer()
             }
             .padding(.horizontal, 8)
-            CategoryCard(budgetCategory: .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount)), expenses: self.uncategorizedExpenses)
+            CategoryCard(
+                budgetCategory: .uncategorized(
+                    UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount),
+                    self.uncategorizedExpenses
+                )
+            )
+        }
+        .sheet(isPresented: self.$showCategoryDetail) {
+            
         }
     }
 }
