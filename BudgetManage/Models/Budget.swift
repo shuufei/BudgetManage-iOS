@@ -16,6 +16,17 @@ struct Budget: Hashable, Codable, Identifiable {
     var isActive: Bool?
     var categories: [Category] = []
     var expenses: [Expense] = []
+    
+    var uncategorizedBudgetAmount: Int {
+        let totalBudgetAmount = self.categories.reduce(0, { x, y in
+            x + y.budgetAmount
+        })
+        return self.budgetAmount - totalBudgetAmount
+    }
+    
+    var uncategorizedExpenses: [Expense] {
+        self.expenses.filter { $0.categoryId == nil }
+    }
 
     struct Data {
         var title: String

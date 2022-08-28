@@ -10,17 +10,7 @@ import SwiftUI
 struct CategoryListView: View {
     @Binding var budget: Budget
     @State var showCategoryDetail: Bool = false
-    
-    private var uncategorizedBudgetAmount: Int {
-        let totalBudgetAmount = self.budget.categories.reduce(0, { x, y in
-            x + y.budgetAmount
-        })
-        return budget.budgetAmount - totalBudgetAmount
-    }
-    
-    private var uncategorizedExpenses: [Expense] {
-        self.budget.expenses.filter { $0.categoryId == nil }
-    }
+    @State private var selectedBudgetCategoryId: UUID? = nil
     
     var body: some View {
         VStack {
@@ -31,15 +21,39 @@ struct CategoryListView: View {
                 Spacer()
             }
             .padding(.horizontal, 8)
-            CategoryCard(
-                budgetCategory: .uncategorized(
-                    UnCategorized(title: "未分類", budgetAmount: self.uncategorizedBudgetAmount),
-                    self.uncategorizedExpenses
-                )
-            )
+            VStack(spacing: 8) {
+                Button(role: .none) {
+                    self.selectedBudgetCategoryId = nil
+                    self.showCategoryDetail = true
+                } label: {
+                    CategoryCard(
+                        budgetCategory: .uncategorized(
+                            UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount),
+                            self.budget.uncategorizedExpenses
+                        )
+                    )
+                }
+                .buttonStyle(.plain)
+                Button(role: .none) {
+                    self.selectedBudgetCategoryId = nil
+                    self.showCategoryDetail = true
+                } label: {
+                    CategoryCard(
+                        budgetCategory: .uncategorized(
+                            UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount),
+                            self.budget.uncategorizedExpenses
+                        )
+                    )
+                }
+                .buttonStyle(.plain)
+            }
         }
         .sheet(isPresented: self.$showCategoryDetail) {
-            
+            CategoryDetailModalView(
+                budget: self.$budget,
+                selectedCategoryId: self.$selectedBudgetCategoryId,
+                showModalView: self.$showCategoryDetail
+            )
         }
     }
 }

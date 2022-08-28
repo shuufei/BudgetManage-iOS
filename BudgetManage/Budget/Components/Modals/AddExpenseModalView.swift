@@ -27,31 +27,8 @@ struct AddExpenseModalView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("金額")) {
-                    AmountTextField(value: self.$amount.value)
-                }
-                Section {
-                    DatePicker(selection: self.$expenseDate, displayedComponents: .date) {
-                        Text("出費日")
-                    }
-                    TextField("メモ", text: self.$memo)
-                        .modifier(TextFieldClearButton(text: self.$memo))
-                }
-                Button {
-                    self.add()
-                } label: {
-                    HStack(alignment: .center) {
-                        Image(systemName: "plus")
-                        Text("追加")
-                            .padding(.vertical, 4)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .disabled(self.amount.value.isEmpty)
-                .buttonStyle(.borderedProminent)
-                .listRowBackground(Color.red.opacity(0))
-                .listRowInsets(EdgeInsets())
+            AddExpenseView(budget: self.$currentBudget) {
+                self.showModalView = false
             }
             .navigationTitle("登録")
             .navigationBarTitleDisplayMode(.inline)
