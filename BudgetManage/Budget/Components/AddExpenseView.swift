@@ -9,13 +9,12 @@ import SwiftUI
 
 struct AddExpenseView: View {
     @Binding var budget: Budget
-    @ObservedObject var amount = NumbersOnly()
+    var onAdd: () -> Void
     
+    @ObservedObject private var amount = NumbersOnly()
     @State private var expenseDate = Date()
     @State private var memo = ""
     @State private var includeTime: Bool = true
-    
-    var onAdd: () -> Void
     
     private func add() {
         let amount = Int(self.amount.value) ?? 0;
@@ -58,7 +57,7 @@ struct AddExpenseView: View {
         }
     }
 }
-
+//
 struct AddExpenseView_Previews: PreviewProvider {
     static var previews: some View {
         AddExpenseView(budget: .constant(Budget.sampleData[0]), onAdd: {})

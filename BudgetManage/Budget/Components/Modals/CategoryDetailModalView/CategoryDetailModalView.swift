@@ -22,21 +22,9 @@ struct CategoryDetailModalView: View {
     var body: some View {
         NavigationView {
             VStack {
-                HStack {
-                    Text(self.category.displayData().title)
-                        .font(.headline)
-                    Spacer()
-                    HStack {
-                        Text("残り")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("¥\(self.category.displayData().balanceAmount)")
-                            .font(.headline)
-                    }
-                }
-                .padding(.top, 24)
-                .padding(.horizontal, 32)
-
+                CategoryTitle(category: self.category)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 12)
                 switch self.selectedView {
                 case .addExpense:
                     AddExpenseView(budget: self.$budget) {
