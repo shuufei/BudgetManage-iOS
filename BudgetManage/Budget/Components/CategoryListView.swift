@@ -21,7 +21,7 @@ struct CategoryListView: View {
                 Spacer()
             }
             .padding(.horizontal, 8)
-            VStack(spacing: 8) {
+            VStack(spacing: 12) {
                 Button(role: .none) {
                     self.selectedBudgetCategoryId = nil
                     self.showCategoryDetail = true

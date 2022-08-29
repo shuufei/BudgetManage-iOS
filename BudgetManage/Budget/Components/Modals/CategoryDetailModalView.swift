@@ -12,7 +12,7 @@ struct CategoryDetailModalView: View {
     @Binding var selectedCategoryId: UUID?
     @Binding var showModalView: Bool
     
-    @State private var selectedView: CategoryDetailView = .addExpense
+    @State private var selectedView: CategoryDetailViewType = .addExpense
     
     private var category: BudgetCategory {
 //        TODO: category指定された場合の処理を追加
@@ -43,7 +43,7 @@ struct CategoryDetailModalView: View {
                         self.showModalView = false
                     }
                 case .detail:
-                    Text("詳細")
+                    CategoryDetailView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId)
                 }
             }
             .background(Color(UIColor.systemGray6))
@@ -57,8 +57,8 @@ struct CategoryDetailModalView: View {
                 }
                 ToolbarItem(placement: .principal) {
                     Picker("", selection: self.$selectedView) {
-                        Text("出費").tag(CategoryDetailView.addExpense)
-                        Text("詳細").tag(CategoryDetailView.detail)
+                        Text("出費").tag(CategoryDetailViewType.addExpense)
+                        Text("詳細").tag(CategoryDetailViewType.detail)
                     }
                     .pickerStyle(.segmented)
                     .frame(width: 150)
@@ -78,6 +78,6 @@ struct CategoryDetailModalView_Previews: PreviewProvider {
     }
 }
 
-enum CategoryDetailView {
+enum CategoryDetailViewType {
     case addExpense, detail
 }

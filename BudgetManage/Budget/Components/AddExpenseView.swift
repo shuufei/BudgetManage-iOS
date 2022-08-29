@@ -13,6 +13,7 @@ struct AddExpenseView: View {
     
     @State private var expenseDate = Date()
     @State private var memo = ""
+    @State private var includeTime: Bool = true
     
     var onAdd: () -> Void
     
@@ -20,7 +21,7 @@ struct AddExpenseView: View {
         let amount = Int(self.amount.value) ?? 0;
         self.budget.expenses.append(
             Expense(
-                date: self.expenseDate, amount: amount, categoryId: nil, memo: self.memo
+                date: self.expenseDate, amount: amount, categoryId: nil, memo: self.memo, excludeTimeInDate: !self.includeTime
             )
         )
         self.onAdd()
@@ -30,10 +31,13 @@ struct AddExpenseView: View {
             Section(header: Text("金額")) {
                 AmountTextField(value: self.$amount.value)
             }
-            Section {
-                DatePicker(selection: self.$expenseDate, displayedComponents: .date) {
-                    Text("出費日")
+            Section(header: Text("出費日")) {
+                DatePicker("日時", selection: self.$expenseDate, displayedComponents: self.includeTime ? [.date, .hourAndMinute] : .date)
+                Toggle(isOn: self.$includeTime) {
+                    Text("時間を含める")
                 }
+            }
+            Section {
                 TextField("メモ", text: self.$memo)
                     .modifier(TextFieldClearButton(text: self.$memo))
             }

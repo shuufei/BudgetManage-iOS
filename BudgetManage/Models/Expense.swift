@@ -11,15 +11,17 @@ struct Expense: Codable, Hashable, Identifiable {
     var id: UUID
     var date: Date
     var amount: Int
-    var categoryId: String?
+    var categoryId: UUID?
     var memo: String?
+    var excludeTimeInDate: Bool?
     
-    init(date: Date, amount: Int, categoryId: String? = nil, memo: String? = nil) {
+    init(date: Date, amount: Int, categoryId: UUID? = nil, memo: String? = nil, excludeTimeInDate: Bool? = nil) {
         self.id = UUID()
         self.date = date
         self.amount = amount
         self.categoryId = categoryId
         self.memo = memo
+        self.excludeTimeInDate = excludeTimeInDate
     }
 }
 
