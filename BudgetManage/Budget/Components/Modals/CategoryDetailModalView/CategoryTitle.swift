@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct CategoryTitle: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var category: BudgetCategory
+    var isDeficit: Bool {
+        self.category.displayData().balanceAmount < 0
+    }
+    
     var body: some View {
         HStack {
             Text(self.category.displayData().title)
@@ -20,6 +26,7 @@ struct CategoryTitle: View {
                     .foregroundColor(.secondary)
                 Text("¥\(self.category.displayData().balanceAmount)")
                     .font(.headline)
+                    .foregroundColor(self.isDeficit ? .red : getDefaultForegroundColor(self.colorScheme))
             }
         }
         .listRowInsets(EdgeInsets())

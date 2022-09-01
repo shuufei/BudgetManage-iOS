@@ -32,8 +32,10 @@ struct AddExpenseView: View {
             }
             Section(header: Text("出費日")) {
                 DatePicker("日時", selection: self.$expenseDate, displayedComponents: self.includeTime ? [.date, .hourAndMinute] : .date)
+                    .foregroundColor(.secondary)
                 Toggle(isOn: self.$includeTime) {
                     Text("時間を含める")
+                        .foregroundColor(.secondary)
                 }
             }
             Section {
