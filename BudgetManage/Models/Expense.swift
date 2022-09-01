@@ -12,16 +12,16 @@ struct Expense: Codable, Hashable, Identifiable {
     var date: Date
     var amount: Int
     var categoryId: UUID?
-    var memo: String?
-    var excludeTimeInDate: Bool?
+    var memo: String
+    var includeTimeInDate: Bool
     
-    init(date: Date, amount: Int, categoryId: UUID? = nil, memo: String? = nil, excludeTimeInDate: Bool? = nil) {
+    init(date: Date, amount: Int, categoryId: UUID? = nil, memo: String? = nil, includeTimeInDate: Bool? = nil) {
         self.id = UUID()
         self.date = date
         self.amount = amount
         self.categoryId = categoryId
-        self.memo = memo
-        self.excludeTimeInDate = excludeTimeInDate
+        self.memo = memo ?? ""
+        self.includeTimeInDate = includeTimeInDate ?? true
     }
 }
 

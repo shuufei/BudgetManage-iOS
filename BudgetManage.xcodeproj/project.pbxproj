@@ -21,6 +21,7 @@
 		983C7B3328BB7FDC008D75D3 /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B3228BB7FDC008D75D3 /* AddExpenseView.swift */; };
 		983C7B3528BCEFA1008D75D3 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B3428BCEFA1008D75D3 /* CategoryDetailView.swift */; };
 		983C7B3728BD0058008D75D3 /* CategoryTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B3628BD0058008D75D3 /* CategoryTitle.swift */; };
+		983C7B3C28C0E14F008D75D3 /* EditExpenseModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B3B28C0E14F008D75D3 /* EditExpenseModalView.swift */; };
 		9863988728B9DA8200CCBB1D /* AddExpenseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */; };
 		9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */; };
 		9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988A28B9E1B200CCBB1D /* AmountTextField.swift */; };
@@ -73,6 +74,7 @@
 		983C7B3228BB7FDC008D75D3 /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
 		983C7B3428BCEFA1008D75D3 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		983C7B3628BD0058008D75D3 /* CategoryTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTitle.swift; sourceTree = "<group>"; };
+		983C7B3B28C0E14F008D75D3 /* EditExpenseModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExpenseModalView.swift; sourceTree = "<group>"; };
 		9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseButton.swift; sourceTree = "<group>"; };
 		9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseModalView.swift; sourceTree = "<group>"; };
 		9863988A28B9E1B200CCBB1D /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				98B0439E28B24A8D00BC762D /* CreateBudgetModalView.swift */,
 				9838A10E28B47E650041C326 /* BudgetListModalView.swift */,
 				9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */,
+				983C7B3B28C0E14F008D75D3 /* EditExpenseModalView.swift */,
 			);
 			path = Modals;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				98B0439628B20A5B00BC762D /* LogView.swift in Sources */,
 				9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */,
 				983C7B3528BCEFA1008D75D3 /* CategoryDetailView.swift in Sources */,
+				983C7B3C28C0E14F008D75D3 /* EditExpenseModalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,7 +20,7 @@ struct AddExpenseView: View {
         let amount = Int(self.amount.value) ?? 0;
         self.budget.expenses.append(
             Expense(
-                date: self.expenseDate, amount: amount, categoryId: nil, memo: self.memo, excludeTimeInDate: !self.includeTime
+                date: self.expenseDate, amount: amount, categoryId: nil, memo: self.memo, includeTimeInDate: self.includeTime
             )
         )
         self.onAdd()

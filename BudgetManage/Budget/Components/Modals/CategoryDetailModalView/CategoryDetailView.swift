@@ -14,15 +14,18 @@ struct CategoryDetailView: View {
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: Expense? = nil
     
+    @State private var showEditModalView: Bool = false
+    @State private var editTarget: Expense? = nil
+    
     private var expenses: [Expense] {
         self.budget.expenses.filter {
             $0.categoryId == self.selectedCategoryId
         }
     }
     
-    private func getFormattedDate(date: Date, excludeTime: Bool = true) -> String {
+    private func getFormattedDate(date: Date, includeTime: Bool = true) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "y年M月d日\(excludeTime ? "" : " h:m")"
+        formatter.dateFormat = "y年M月d日\(includeTime ? " h:m" : "")"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
     }
@@ -32,14 +35,14 @@ struct CategoryDetailView: View {
             Section(header: Text("出費")) {
                 ForEach(self.expenses) { expense in
                     HStack {
-                        Text(self.getFormattedDate(date: expense.date, excludeTime: expense.excludeTimeInDate ?? false))
+                        Text(self.getFormattedDate(date: expense.date, includeTime: expense.includeTimeInDate))
                             .fixedSize(horizontal: true, vertical: true)
                         Spacer()
-                        if !(expense.memo ?? "").isEmpty {
+                        if !(expense.memo).isEmpty {
                             VStack(alignment: .trailing) {
                                 Text("¥\(expense.amount)")
                                     .font(.callout)
-                                Text(expense.memo ?? "")
+                                Text(expense.memo)
                                     .foregroundColor(.secondary)
                                     .font(.caption)
                             }
@@ -57,6 +60,8 @@ struct CategoryDetailView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
+                            self.showEditModalView = true
+                            self.editTarget = expense
                         } label: {
                             Text("編集")
                         }
@@ -72,6 +77,12 @@ struct CategoryDetailView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: self.$showEditModalView) {
+            let index = self.budget.expenses.firstIndex { el in
+                el.id == self.editTarget?.id
+            }
+            EditExpenseModalView(expense: self.$budget.expenses[index!], showModalView: self.$showEditModalView)
         }
     }
 }
