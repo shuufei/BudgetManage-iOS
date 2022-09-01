@@ -39,7 +39,7 @@ struct CategoryDetailModalView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
+                    Button(self.selectedView == .addExpense ? "キャンセル" : "閉じる") {
                         self.showModalView = false
                     }
                 }
