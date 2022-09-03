@@ -51,6 +51,24 @@ struct CategoryDetailModalView: View {
                     .pickerStyle(.segmented)
                     .frame(width: 150)
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    if self.selectedCategoryId != nil && self.selectedView == .detail {
+                        Menu {
+                            Button {} label: {
+                                Label("編集", systemImage: "pencil.circle")
+                            }
+                            Button(role: .destructive) {} label: {
+                                Label("削除...", systemImage: "trash")
+                            }
+                        } label: {
+                            Button {} label: {
+                                Image(systemName: "ellipsis")
+                            }
+                            .accessibilityLabel("open menu")
+                        }
+                    }
+                }
+                
             }
         }
     }
