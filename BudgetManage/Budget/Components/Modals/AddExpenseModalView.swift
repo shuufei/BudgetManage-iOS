@@ -30,7 +30,7 @@ struct AddExpenseModalView: View {
             AddExpenseView(budget: self.$currentBudget) {
                 self.showModalView = false
             }
-            .navigationTitle("登録")
+            .navigationTitle("出費 追加")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
