@@ -27,7 +27,7 @@ struct CategoryDetailModalView: View {
                     .padding(.top, 12)
                 switch self.selectedView {
                 case .addExpense:
-                    AddExpenseView(budget: self.$budget) {
+                    CategoryAddExpenseView(budget: self.$budget) {
                         self.showModalView = false
                     }
                 case .detail:

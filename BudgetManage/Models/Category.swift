@@ -68,6 +68,10 @@ enum BudgetCategory {
         var budgetAmount: Int
         var balanceAmount: Int
         var color: Color
+        
+        var totalExpenseAmount: Int {
+            self.budgetAmount - self.balanceAmount
+        }
     }
 }
 

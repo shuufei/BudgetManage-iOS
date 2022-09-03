@@ -17,6 +17,11 @@ struct CategoryDetailView: View {
     @State private var showEditModalView: Bool = false
     @State private var editTarget: Expense? = nil
     
+    private var category: BudgetCategory {
+//        TODO: category指定された場合の処理を追加
+        .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
+    }
+    
     private var expenses: [Expense] {
         self.budget.expenses.filter {
             $0.categoryId == self.selectedCategoryId
@@ -32,6 +37,32 @@ struct CategoryDetailView: View {
 
     var body: some View {
         List {
+            Section {
+                CategoryBudgetBar(
+                    budgetCategory: self.category
+                )
+                .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
+            }
+            Section(header: Text("カテゴリ情報")) {
+                HStack {
+                    Text("予算額")
+                    Spacer()
+                    Text("¥\(self.category.displayData().budgetAmount)")
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("出費合計")
+                    Spacer()
+                    Text("¥\(self.category.displayData().totalExpenseAmount)")
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("残額")
+                    Spacer()
+                    Text("¥\(self.category.displayData().balanceAmount)")
+                        .foregroundColor(.secondary)
+                }
+            }
             Section(header: Text("出費")) {
                 ForEach(self.expenses) { expense in
                     HStack {
@@ -83,6 +114,16 @@ struct CategoryDetailView: View {
                 el.id == self.editTarget?.id
             }
             EditExpenseModalView(expense: self.$budget.expenses[index!], showModalView: self.$showEditModalView)
+        }
+        .onAppear {
+            if #available(iOS 15, *) {
+                UITableView.appearance().contentInset.top = -25
+            }
+        }
+        .onDisappear {
+            if #available(iOS 15, *) {
+                UITableView.appearance().contentInset.top = .zero
+            }
         }
     }
 }
