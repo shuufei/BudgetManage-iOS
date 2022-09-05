@@ -19,6 +19,10 @@ struct CategoryListView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
+                Button {} label: {
+                    Label("追加", systemImage: "plus")
+                        .font(.callout)
+                }
             }
             .padding(.horizontal, 8)
             VStack(spacing: 12) {

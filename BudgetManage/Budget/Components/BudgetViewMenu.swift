@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetViewMenu: View {
     let onTapCreateBudget: () -> Void
     let onTapShowBudgetList: () -> Void
+    let onTapShowCategoryList: () -> Void
     
     var body: some View {
         Menu {
@@ -24,17 +25,19 @@ struct BudgetViewMenu: View {
             }
             Divider()
             Button {
-                onTapCreateBudget()
+                self.onTapCreateBudget()
             } label: {
                 Label("新しい予算を作成...", systemImage: "yensign.circle")
             }
             Button {
-                onTapShowBudgetList()
+                self.onTapShowBudgetList()
             } label: {
                 Label("予算一覧を表示", systemImage: "list.dash")
             }
             Divider()
-            Button {} label: {
+            Button {
+                self.onTapShowCategoryList()
+            } label: {
                 Label("カテゴリ一覧を表示", systemImage: "list.dash")
             }
         } label: {
@@ -48,6 +51,6 @@ struct BudgetViewMenu: View {
 
 struct BudgetViewMenu_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetViewMenu() {} onTapShowBudgetList: {}
+        BudgetViewMenu() {} onTapShowBudgetList: {} onTapShowCategoryList: {}
     }
 }

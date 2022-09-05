@@ -11,6 +11,7 @@ struct BudgetView: View {
     @Binding var budgets: [Budget]
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
+    @State var openedCategoryListModal: Bool = false
 
     var activeBudgetIndex: Int {
         let index = self.budgets.firstIndex { $0.isActive == true }
@@ -48,17 +49,22 @@ struct BudgetView: View {
                             self.openedCreateBudgetModal = true
                         } onTapShowBudgetList: {
                             self.openedBudgetListModal = true
+                        } onTapShowCategoryList: {
+                            self.openedCategoryListModal = true
                         }
                     }
                 }
-                .sheet(isPresented: $openedCreateBudgetModal) {
+                .sheet(isPresented: self.$openedCreateBudgetModal) {
                     CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
                 }
-                .sheet(isPresented: $openedBudgetListModal) {
+                .sheet(isPresented: self.$openedBudgetListModal) {
                     BudgetListModalView(
                         showBudgetList: $openedBudgetListModal,
                         budgets: $budgets
                     )
+                }
+                .sheet(isPresented: self.$openedCategoryListModal) {
+                    CategoryListModalView(showModalView: self.$openedCategoryListModal)
                 }
         }
     }

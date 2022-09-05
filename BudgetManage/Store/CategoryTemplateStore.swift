@@ -1,5 +1,5 @@
 //
-//  FileBaseStore.swift
+//  CategoryStore.swift
 //  BudgetManage
 //
 //  Created by shuuhei hanashiro on 2022/09/05.
@@ -7,33 +7,40 @@
 
 import Foundation
 
-class FileBaseStore {
-    static func load(fileURL: @escaping () throws -> URL) async throws -> [Budget] {
+class CategoryTemplateStore: ObservableObject {
+    @Published var categories: [CategoryTemplate] = []
+    
+    private static func fileURL() throws -> URL {
+        try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            .appendingPathComponent("category-template.data")
+    }
+    
+    static func load() async throws -> [CategoryTemplate] {
         try await withCheckedThrowingContinuation { continuation in
-            load(fileURL: fileURL) { result in
+            load { result in
                 switch result {
                 case .failure(let error):
                     continuation.resume(throwing: error)
-                case .success(let budgets):
-                    continuation.resume(returning: budgets)
+                case .success(let categoryTemplates):
+                    continuation.resume(returning: categoryTemplates)
                 }
             }
         }
     }
     
-    static func load(fileURL: @escaping () throws -> URL, completion: @escaping (Result<[Budget], Error>) -> Void) {
+    static func load(completion: @escaping (Result<[CategoryTemplate], Error>) -> Void) {
         DispatchQueue.global(qos: .background).async {
             do {
-                let fileURL = try fileURL()
+                let fileURL = try self.fileURL()
                 guard let file = try? FileHandle(forReadingFrom: fileURL) else {
                     DispatchQueue.main.async {
                         completion(.success([]))
                     }
                     return
                 }
-                let budgets = try JSONDecoder().decode([Budget].self, from: file.availableData)
+                let cateogyTemplates = try JSONDecoder().decode([CategoryTemplate].self, from: file.availableData)
                 DispatchQueue.main.async {
-                    completion(.success(budgets))
+                    completion(.success(cateogyTemplates))
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -44,28 +51,28 @@ class FileBaseStore {
     }
     
     @discardableResult
-    static func save(budgets: [Budget], fileURL: @escaping () throws -> URL) async throws -> Int {
+    static func save(categoryTemplates: [CategoryTemplate]) async throws -> Int {
         try await withCheckedThrowingContinuation { continuation in
-            save(budgets: budgets, fileURL: fileURL) { result in
+            save(categoryTemplates: categoryTemplates) { result in
                 switch result {
                 case .failure(let error):
                     continuation.resume(throwing: error)
-                case .success(let budgetsSaved):
-                    continuation.resume(returning: budgetsSaved)
+                case .success(let categoryTemplatesSaved):
+                    continuation.resume(returning: categoryTemplatesSaved)
                 }
                 
             }
         }
     }
     
-    static func save(budgets: [Budget], fileURL: @escaping () throws -> URL, completion: @escaping (Result<Int, Error>) -> Void) {
+    static func save(categoryTemplates: [CategoryTemplate], completion: @escaping (Result<Int, Error>) -> Void) {
         DispatchQueue.global(qos: .background).async {
             do {
-                let data = try JSONEncoder().encode(budgets)
-                let outfile = try fileURL()
+                let data = try JSONEncoder().encode(categoryTemplates)
+                let outfile = try self.fileURL()
                 try data.write(to: outfile)
                 DispatchQueue.main.async {
-                    completion(.success(budgets.count))
+                    completion(.success(categoryTemplates.count))
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -74,5 +81,5 @@ class FileBaseStore {
             }
         }
     }
-}
 
+}
