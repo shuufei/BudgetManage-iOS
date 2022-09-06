@@ -67,6 +67,7 @@ struct BudgetView: View {
                 .sheet(isPresented: self.$openedCategoryListModal) {
                     CategoryTemplateListModalView(
                         categoryTemplates: self.$categoryTemplates,
+                        budgetExpenses: self.budgets.count > 0 ? self.$budgets[self.activeBudgetIndex].expenses : .constant([]),
                         showModalView: self.$openedCategoryListModal
                     )
                 }

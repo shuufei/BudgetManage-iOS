@@ -9,8 +9,12 @@ import SwiftUI
 
 struct CategoryTemplateListModalView: View {
     @Binding var categoryTemplates: [CategoryTemplate]
+    @Binding var budgetExpenses: [Expense]
     @Binding var showModalView: Bool
     @State var showCreateCategoryTemplateModalView: Bool = false
+    
+    @State private var showDeleteConfirmAlert: Bool = false
+    @State private var deletionTarget: CategoryTemplate? = nil
 
     var body: some View {
         NavigationView {
@@ -37,8 +41,8 @@ struct CategoryTemplateListModalView: View {
                     }
                     .swipeActions {
                         Button(role: .destructive) {
-//                            self.showDeleteConfirmAlert = true
-//                            self.deletionTarget = expense
+                            self.showDeleteConfirmAlert = true
+                            self.deletionTarget = categoryTemplate
                         } label: {
                             Text("削除")
                         }
@@ -73,6 +77,22 @@ struct CategoryTemplateListModalView: View {
                     self.categoryTemplates.append(categoryTemplate)
                 }
             }
+            .alert("カテゴリの削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { categoryTemplate in
+                    Button("削除", role: .destructive) {
+                        let expenses = self.budgetExpenses.map { expense -> Expense in
+                            var tmp = expense
+                            if tmp.categoryId == deletionTarget?.id {
+                                tmp.categoryId = nil
+                            }
+                            return tmp
+                        }
+                        self.budgetExpenses = expenses
+                        let categoryTemplates = self.categoryTemplates.filter { $0.id != categoryTemplate.id }
+                        self.categoryTemplates = categoryTemplates
+                    }
+            } message: { categoryTemplate in
+                Text("カテゴリを削除しますか?\n削除したカテゴリが紐づいてる出費は未分類になります。")
+            }
         }
     }
 }
@@ -81,6 +101,7 @@ struct CategoryListModalView_Previews: PreviewProvider {
     static var previews: some View {
         CategoryTemplateListModalView(
             categoryTemplates: .constant([]),
+            budgetExpenses: .constant([]),
             showModalView: .constant(true)
         )
     }

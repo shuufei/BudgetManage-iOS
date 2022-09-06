@@ -30,6 +30,7 @@ struct BudgetListModalView: View {
                 if budgets.count == 0 {
                     Text("予算が登録されていません")
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowBackground(Color.black.opacity(0))
                 }
                 ForEach(budgets) { budget in
                     Button(role: .none) {
