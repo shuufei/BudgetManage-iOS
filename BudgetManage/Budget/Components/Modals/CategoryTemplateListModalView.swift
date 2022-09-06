@@ -29,15 +29,14 @@ struct CategoryTemplateListModalView: View {
                 }
                 ForEach(self.categoryTemplates) { categoryTemplate in
                     HStack {
-                        ZStack {
+                        HStack {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(categoryTemplate.theme.mainColor)
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(categoryTemplate.theme.accentColor)
                             Text(categoryTemplate.title)
-                                .padding(.all, 6)
-                                .padding(.horizontal, 16)
+                            Spacer()
                         }
-                        .foregroundColor(categoryTemplate.theme.accentColor)
-                        .fixedSize(horizontal: true, vertical: true)
                     }
                     .swipeActions {
                         Button(role: .destructive) {
