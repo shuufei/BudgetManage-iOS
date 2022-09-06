@@ -8,7 +8,18 @@
 import Foundation
 
 class CategoryTemplateStore: ObservableObject {
-    @Published var categories: [CategoryTemplate] = []
+    @Published var categories: [CategoryTemplate] = [] {
+        didSet {
+            print("--- didSet categories: \(categories)")
+            Task {
+                do {
+                    try await CategoryTemplateStore.save(categoryTemplates: self.categories)
+                } catch {
+//                    TODO: handling error
+                }
+            }
+        }
+    }
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)

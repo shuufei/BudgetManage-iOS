@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var store = BudgetStore()
+    @StateObject private var budgetStore = BudgetStore()
+    @StateObject private var categoryTemplateStore = CategoryTemplateStore()
 
     var body: some View {
         TabView {
-            BudgetView(budgets: $store.budgets)
+            BudgetView(
+                budgets: $budgetStore.budgets,
+                categoryTemplates: self.$categoryTemplateStore.categories
+            )
                 .tabItem {
                     Label("予算", systemImage: "yensign.circle")
                 }
@@ -23,8 +27,9 @@ struct ContentView: View {
         }
         .task {
             do {
-                store.budgets = try await BudgetStore.load()
-                print(store.budgets.count)
+                self.budgetStore.budgets = try await BudgetStore.load()
+                self.categoryTemplateStore.categories = try await CategoryTemplateStore.load()
+                print(self.budgetStore.budgets.count)
             } catch {
 //                        TODO: handling error
             }

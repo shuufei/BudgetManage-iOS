@@ -25,8 +25,12 @@
 		983C7B3E28C2E770008D75D3 /* CategoryBudgetBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B3D28C2E770008D75D3 /* CategoryBudgetBar.swift */; };
 		983C7B4228C2F294008D75D3 /* CategoryAddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4128C2F294008D75D3 /* CategoryAddExpenseView.swift */; };
 		983C7B4428C606A2008D75D3 /* CreateCategoryModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4328C606A2008D75D3 /* CreateCategoryModalView.swift */; };
-		983C7B4628C607EF008D75D3 /* CategoryListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4528C607EF008D75D3 /* CategoryListModalView.swift */; };
+		983C7B4628C607EF008D75D3 /* CategoryTemplateListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4528C607EF008D75D3 /* CategoryTemplateListModalView.swift */; };
 		983C7B4A28C62315008D75D3 /* CategoryTemplateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4928C62315008D75D3 /* CategoryTemplateStore.swift */; };
+		983C7B4C28C77310008D75D3 /* CreateCategoryTemplateModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4B28C77310008D75D3 /* CreateCategoryTemplateModalView.swift */; };
+		983C7B4E28C77B45008D75D3 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B4D28C77B45008D75D3 /* Theme.swift */; };
+		983C7B5128C77D55008D75D3 /* ThemePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B5028C77D55008D75D3 /* ThemePicker.swift */; };
+		983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983C7B5228C77D86008D75D3 /* ThemeView.swift */; };
 		9863988728B9DA8200CCBB1D /* AddExpenseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */; };
 		9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */; };
 		9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863988A28B9E1B200CCBB1D /* AmountTextField.swift */; };
@@ -83,8 +87,12 @@
 		983C7B3D28C2E770008D75D3 /* CategoryBudgetBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryBudgetBar.swift; sourceTree = "<group>"; };
 		983C7B4128C2F294008D75D3 /* CategoryAddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryAddExpenseView.swift; sourceTree = "<group>"; };
 		983C7B4328C606A2008D75D3 /* CreateCategoryModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryModalView.swift; sourceTree = "<group>"; };
-		983C7B4528C607EF008D75D3 /* CategoryListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListModalView.swift; sourceTree = "<group>"; };
+		983C7B4528C607EF008D75D3 /* CategoryTemplateListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTemplateListModalView.swift; sourceTree = "<group>"; };
 		983C7B4928C62315008D75D3 /* CategoryTemplateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTemplateStore.swift; sourceTree = "<group>"; };
+		983C7B4B28C77310008D75D3 /* CreateCategoryTemplateModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryTemplateModalView.swift; sourceTree = "<group>"; };
+		983C7B4D28C77B45008D75D3 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		983C7B5028C77D55008D75D3 /* ThemePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePicker.swift; sourceTree = "<group>"; };
+		983C7B5228C77D86008D75D3 /* ThemeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeView.swift; sourceTree = "<group>"; };
 		9863988628B9DA8200CCBB1D /* AddExpenseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseButton.swift; sourceTree = "<group>"; };
 		9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseModalView.swift; sourceTree = "<group>"; };
 		9863988A28B9E1B200CCBB1D /* AmountTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountTextField.swift; sourceTree = "<group>"; };
@@ -150,7 +158,8 @@
 				9863988828B9DFCB00CCBB1D /* AddExpenseModalView.swift */,
 				983C7B3B28C0E14F008D75D3 /* EditExpenseModalView.swift */,
 				983C7B4328C606A2008D75D3 /* CreateCategoryModalView.swift */,
-				983C7B4528C607EF008D75D3 /* CategoryListModalView.swift */,
+				983C7B4528C607EF008D75D3 /* CategoryTemplateListModalView.swift */,
+				983C7B4B28C77310008D75D3 /* CreateCategoryTemplateModalView.swift */,
 			);
 			path = Modals;
 			sourceTree = "<group>";
@@ -180,6 +189,15 @@
 				983C7B3628BD0058008D75D3 /* CategoryTitle.swift */,
 			);
 			path = CategoryDetailModalView;
+			sourceTree = "<group>";
+		};
+		983C7B4F28C77D47008D75D3 /* ThemePicker */ = {
+			isa = PBXGroup;
+			children = (
+				983C7B5028C77D55008D75D3 /* ThemePicker.swift */,
+				983C7B5228C77D86008D75D3 /* ThemeView.swift */,
+			);
+			path = ThemePicker;
 			sourceTree = "<group>";
 		};
 		98B0435328B1E2F300BC762D = {
@@ -249,6 +267,7 @@
 				98B0438D28B1E41300BC762D /* Budget.swift */,
 				9838A11A28B65B810041C326 /* Category.swift */,
 				9838A11C28B65C2E0041C326 /* Expense.swift */,
+				983C7B4D28C77B45008D75D3 /* Theme.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -284,6 +303,7 @@
 		98B0439D28B24A4600BC762D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				983C7B4F28C77D47008D75D3 /* ThemePicker */,
 				9838A11028B4809A0041C326 /* Modals */,
 				98B0439028B201F300BC762D /* BudgetViewMenu.swift */,
 				98B0439228B2089300BC762D /* BudgetViewNavigationTitle.swift */,
@@ -434,6 +454,7 @@
 				98B0436228B1E2F300BC762D /* ContentView.swift in Sources */,
 				983C7B3128BB38BB008D75D3 /* CategoryDetailModalView.swift in Sources */,
 				98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */,
+				983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */,
 				98B0438E28B1E41300BC762D /* Budget.swift in Sources */,
 				983C7B4228C2F294008D75D3 /* CategoryAddExpenseView.swift in Sources */,
 				9838A11928B65B5E0041C326 /* CategoryCard.swift in Sources */,
@@ -451,12 +472,15 @@
 				983C7B4428C606A2008D75D3 /* CreateCategoryModalView.swift in Sources */,
 				9863988B28B9E1B200CCBB1D /* AmountTextField.swift in Sources */,
 				98B0436028B1E2F300BC762D /* BudgetManageApp.swift in Sources */,
+				983C7B4C28C77310008D75D3 /* CreateCategoryTemplateModalView.swift in Sources */,
+				983C7B5128C77D55008D75D3 /* ThemePicker.swift in Sources */,
 				9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */,
 				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,
 				9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */,
 				983C7B3E28C2E770008D75D3 /* CategoryBudgetBar.swift in Sources */,
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
-				983C7B4628C607EF008D75D3 /* CategoryListModalView.swift in Sources */,
+				983C7B4628C607EF008D75D3 /* CategoryTemplateListModalView.swift in Sources */,
+				983C7B4E28C77B45008D75D3 /* Theme.swift in Sources */,
 				9838A11D28B65C2E0041C326 /* Expense.swift in Sources */,
 				983C7B2F28B9F95D008D75D3 /* ColorTheme.swift in Sources */,
 				983C7B3328BB7FDC008D75D3 /* AddExpenseView.swift in Sources */,

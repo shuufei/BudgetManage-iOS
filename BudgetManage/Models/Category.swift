@@ -11,10 +11,12 @@ import SwiftUI
 struct CategoryTemplate: Codable, Hashable, Identifiable {
     var id: UUID
     var title: String
+    var theme: Theme
     
-    init(title: String) {
+    init(title: String, theme: Theme) {
         self.id = UUID()
         self.title = title
+        self.theme = theme
     }
 }
 
@@ -77,8 +79,8 @@ enum BudgetCategory {
 
 extension CategoryTemplate {
     static let sampleData = [
-        CategoryTemplate(title: "食費"),
-        CategoryTemplate(title: "飲み代"),
+        CategoryTemplate(title: "食費", theme: .yellow),
+        CategoryTemplate(title: "飲み代", theme: .indigo),
     ]
 }
 

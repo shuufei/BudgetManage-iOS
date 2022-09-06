@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BudgetView: View {
     @Binding var budgets: [Budget]
+    @Binding var categoryTemplates: [CategoryTemplate]
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
     @State var openedCategoryListModal: Bool = false
@@ -64,7 +65,10 @@ struct BudgetView: View {
                     )
                 }
                 .sheet(isPresented: self.$openedCategoryListModal) {
-                    CategoryListModalView(showModalView: self.$openedCategoryListModal)
+                    CategoryTemplateListModalView(
+                        categoryTemplates: self.$categoryTemplates,
+                        showModalView: self.$openedCategoryListModal
+                    )
                 }
         }
     }
@@ -75,7 +79,7 @@ struct BudgetView_Previews: PreviewProvider {
         Group {
 //            BudgetView(budgets: .constant([]))
 //            BudgetView(budgets: .constant([]))
-            BudgetView(budgets: .constant(Budget.sampleData))
+            BudgetView(budgets: .constant(Budget.sampleData), categoryTemplates: .constant([]))
         }
     }
 }
