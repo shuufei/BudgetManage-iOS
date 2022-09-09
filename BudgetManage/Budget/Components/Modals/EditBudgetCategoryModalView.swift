@@ -164,7 +164,7 @@ struct EditBudgetCategoryModalView: View {
                 )
                 .listRowBackground(Color.black.opacity(0))
             }
-            .navigationTitle("カテゴリの追加 削除")
+            .navigationTitle("予算のカテゴリ編集")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

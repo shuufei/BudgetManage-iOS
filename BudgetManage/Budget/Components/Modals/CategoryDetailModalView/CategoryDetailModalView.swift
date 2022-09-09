@@ -11,27 +11,32 @@ struct CategoryDetailModalView: View {
     @Binding var budget: Budget
     @Binding var selectedCategoryId: UUID?
     @Binding var showModalView: Bool
+    @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var selectedView: CategoryDetailViewType = .addExpense
     
-    private var category: BudgetCategory {
-//        TODO: category指定された場合の処理を追加
-        .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
+    private var budgetCategory: BudgetCategory {
+        if let category = self.budget.categories.first(where: { $0.id == self.selectedCategoryId }), let categoryTemplate = self.categoryTemplates.first(where: { $0.id == category.categoryTemplateId })  {
+            let categoryExpenses = self.budget.expenses.filter { $0.categoryId == category.id }
+            return .categorized(category, categoryTemplate, categoryExpenses)
+        } else {
+            return .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
+        }
     }
     
     var body: some View {
         NavigationView {
             VStack {
-                CategoryTitle(category: self.category)
+                CategoryTitle(category: self.budgetCategory)
                     .padding(.horizontal, 24)
                     .padding(.top, 12)
                 switch self.selectedView {
                 case .addExpense:
-                    CategoryAddExpenseView(budget: self.$budget) {
+                    CategoryAddExpenseView(budget: self.$budget, categoryId: self.selectedCategoryId) {
                         self.showModalView = false
                     }
                 case .detail:
-                    CategoryDetailView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId)
+                    CategoryDetailView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId, budgetCategory: self.budgetCategory)
                 }
             }
             .background(Color(UIColor.systemGray6))
@@ -55,7 +60,7 @@ struct CategoryDetailModalView: View {
                     if self.selectedCategoryId != nil && self.selectedView == .detail {
                         Menu {
                             Button {} label: {
-                                Label("編集", systemImage: "pencil.circle")
+                                Label("編集", systemImage: "pencil")
                             }
                             Button(role: .destructive) {} label: {
                                 Label("削除...", systemImage: "trash")
@@ -79,7 +84,8 @@ struct CategoryDetailModalView_Previews: PreviewProvider {
         CategoryDetailModalView(
             budget: .constant(Budget.sampleData[0]),
             selectedCategoryId: .constant(Budget.sampleData[0].categories[0].id),
-            showModalView: .constant(true)
+            showModalView: .constant(true),
+            categoryTemplates: .constant(CategoryTemplate.sampleData)
         )
     }
 }

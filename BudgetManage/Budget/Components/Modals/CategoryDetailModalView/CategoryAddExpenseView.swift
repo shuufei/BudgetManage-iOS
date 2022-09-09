@@ -9,10 +9,11 @@ import SwiftUI
 
 struct CategoryAddExpenseView: View {
     @Binding var budget: Budget
+    var categoryId: UUID?
     var onAdded: () -> Void
 
     var body: some View {
-        AddExpenseView(budget: self.$budget) {
+        AddExpenseView(budget: self.$budget, categoryId: self.categoryId) {
             self.onAdded()
         }
 //        .onAppear {

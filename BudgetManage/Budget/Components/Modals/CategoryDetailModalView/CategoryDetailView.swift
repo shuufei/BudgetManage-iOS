@@ -17,10 +17,12 @@ struct CategoryDetailView: View {
     @State private var showEditModalView: Bool = false
     @State private var editTarget: Expense? = nil
     
-    private var category: BudgetCategory {
-//        TODO: category指定された場合の処理を追加
-        .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
-    }
+    let budgetCategory: BudgetCategory
+    
+//    private var category: BudgetCategory {
+////        TODO: category指定された場合の処理を追加
+//        .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
+//    }
     
     private var expenses: [Expense] {
         self.budget.expenses.filter {
@@ -39,7 +41,7 @@ struct CategoryDetailView: View {
         List {
             Section {
                 CategoryBudgetBar(
-                    budgetCategory: self.category
+                    budgetCategory: self.budgetCategory
                 )
                 .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
             }
@@ -47,19 +49,19 @@ struct CategoryDetailView: View {
                 HStack {
                     Text("予算額")
                     Spacer()
-                    Text("¥\(self.category.displayData().budgetAmount)")
+                    Text("¥\(self.budgetCategory.displayData().budgetAmount)")
                         .foregroundColor(.secondary)
                 }
                 HStack {
                     Text("出費合計")
                     Spacer()
-                    Text("¥\(self.category.displayData().totalExpenseAmount)")
+                    Text("¥\(self.budgetCategory.displayData().totalExpenseAmount)")
                         .foregroundColor(.secondary)
                 }
                 HStack {
                     Text("残額")
                     Spacer()
-                    Text("¥\(self.category.displayData().balanceAmount)")
+                    Text("¥\(self.budgetCategory.displayData().balanceAmount)")
                         .foregroundColor(.secondary)
                 }
             }
@@ -138,7 +140,8 @@ struct CategoryDetailView_Previews: PreviewProvider {
     static var previews: some View {
         CategoryDetailView(
             budget: .constant(Budget.sampleData[0]),
-            selectedCategoryId: .constant(nil)
+            selectedCategoryId: .constant(nil),
+            budgetCategory: .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
         )
     }
 }
