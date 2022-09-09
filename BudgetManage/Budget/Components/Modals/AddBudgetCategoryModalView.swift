@@ -73,6 +73,11 @@ struct AddBudgetCategoryModalView: View {
     var body: some View {
         NavigationView {
             List {
+                Text("\(self.tmpBudget.title)の予算へのカテゴリの追加, 削除")
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(Color.black.opacity(0))
+                    .listRowInsets(EdgeInsets())
                 Section(header: Text("追加済み")) {
                     if self.tmpBudget.categories.isEmpty {
                         Text("追加されているカテゴリはありません")
@@ -88,7 +93,7 @@ struct AddBudgetCategoryModalView: View {
                             HStack {
                                 HStack {
                                     CategoryTemplateLabel(title: category.title, mainColor: category.mainColor, accentColor: category.accentColor)
-                                    Text("\(category.budgetAmount)")
+                                    Text("¥\(category.budgetAmount)")
                                         .foregroundColor(.secondary)
                                 }
                                 Spacer()
@@ -160,6 +165,14 @@ struct AddBudgetCategoryModalView: View {
             }
             .onAppear {
                 self.tmpBudget = self.budget
+                if #available(iOS 15, *) {
+                    UITableView.appearance().contentInset.top = -25
+                }
+            }
+            .onDisappear {
+                if #available(iOS 15, *) {
+                    UITableView.appearance().contentInset.top = .zero
+                }
             }
             .alert("カテゴリの削除", isPresented: self.$showRemoveConfirmAlert) {
                 Button("削除", role: .destructive) {
