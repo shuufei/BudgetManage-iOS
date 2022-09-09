@@ -39,7 +39,7 @@ struct CategoryBudgetBar: View {
         GeometryReader { geometry in
             VStack(spacing: 2) {
                 HStack(spacing: 0) {
-                    self.data.color
+                    self.data.mainColor
                         .frame(width: self.getBalanceAmountBarWidth(geometry.size.width), height: self.barHeight)
                     Color(UIColor.systemGray5).frame(width: self.getTotalExpenseAmountBarWidth(geometry.size.width), height: self.barHeight)
                 }

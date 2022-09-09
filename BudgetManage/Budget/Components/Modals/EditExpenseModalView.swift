@@ -42,8 +42,8 @@ struct EditExpenseModalView: View {
                         self.showModalView = false
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("更新") {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("保存") {
                         self.data.amount = Int(self.amount.value) ?? 0
                         self.expense = self.data
                         self.showModalView = false

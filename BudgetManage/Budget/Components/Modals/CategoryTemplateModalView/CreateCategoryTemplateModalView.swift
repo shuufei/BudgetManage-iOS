@@ -23,6 +23,7 @@ struct CreateCategoryTemplateModalView: View {
             List {
                 Section {
                     TextField("カテゴリ名", text: self.$title)
+                        .modifier(TextFieldClearButton(text: self.$title))
                     ThemePicker(selection: self.$colorSelection)
                 }
                 Button {

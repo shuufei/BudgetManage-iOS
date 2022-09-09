@@ -54,13 +54,17 @@ enum BudgetCategory {
                 title: uncategorized.title,
                 budgetAmount: uncategorized.budgetAmount,
                 balanceAmount: uncategorized.budgetAmount - self.getTotalExpenseAmount(expenses),
-                color: Color(UIColor.systemGray))
+                mainColor: Color(UIColor.systemGray),
+                accentColor: .primary
+            )
         case let .categorized(category, categoryTemplate, expenses):
             return CategoryDisplayData(
                 title: categoryTemplate.title,
                 budgetAmount: category.budgetAmount,
                 balanceAmount: category.budgetAmount - self.getTotalExpenseAmount(expenses),
-                color: Color.green
+                mainColor: categoryTemplate.theme.mainColor,
+                accentColor: categoryTemplate.theme.accentColor,
+                categoryTemplateId: categoryTemplate.id
             )
         }
     }
@@ -69,7 +73,9 @@ enum BudgetCategory {
         var title: String
         var budgetAmount: Int
         var balanceAmount: Int
-        var color: Color
+        var mainColor: Color
+        var accentColor: Color
+        var categoryTemplateId: UUID?
         
         var totalExpenseAmount: Int {
             self.budgetAmount - self.balanceAmount

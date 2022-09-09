@@ -30,7 +30,10 @@ struct BudgetView: View {
                         VStack {
                             BudgetInfo(budget: self.budgets[self.activeBudgetIndex])
                                 .padding(.all, 12)
-                            CategoryListView(budget: self.$budgets[self.activeBudgetIndex])
+                            CategoryListView(
+                                budget: self.$budgets[self.activeBudgetIndex],
+                                categoryTemplates: self.$categoryTemplates
+                            )
                                 .padding(.horizontal, 12)
                             Spacer()
                         }

@@ -9,8 +9,12 @@ import SwiftUI
 
 struct CategoryListView: View {
     @Binding var budget: Budget
-    @State var showCategoryDetail: Bool = false
+    @Binding var categoryTemplates: [CategoryTemplate]
+    
+    @State private var showCategoryDetailModalView: Bool = false
     @State private var selectedBudgetCategoryId: UUID? = nil
+    
+    @State private var showAddBudgetCategoryModalView: Bool = false
     
     var body: some View {
         VStack {
@@ -19,8 +23,10 @@ struct CategoryListView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Button {} label: {
-                    Label("追加", systemImage: "plus")
+                Button {
+                    self.showAddBudgetCategoryModalView = true
+                } label: {
+                    Text("編集")
                         .font(.callout)
                 }
             }
@@ -28,7 +34,7 @@ struct CategoryListView: View {
             VStack(spacing: 12) {
                 Button(role: .none) {
                     self.selectedBudgetCategoryId = nil
-                    self.showCategoryDetail = true
+                    self.showCategoryDetailModalView = true
                 } label: {
                     CategoryCard(
                         budgetCategory: .uncategorized(
@@ -40,7 +46,7 @@ struct CategoryListView: View {
                 .buttonStyle(.plain)
                 Button(role: .none) {
                     self.selectedBudgetCategoryId = nil
-                    self.showCategoryDetail = true
+                    self.showCategoryDetailModalView = true
                 } label: {
                     CategoryCard(
                         budgetCategory: .uncategorized(
@@ -52,11 +58,18 @@ struct CategoryListView: View {
                 .buttonStyle(.plain)
             }
         }
-        .sheet(isPresented: self.$showCategoryDetail) {
+        .sheet(isPresented: self.$showCategoryDetailModalView) {
             CategoryDetailModalView(
                 budget: self.$budget,
                 selectedCategoryId: self.$selectedBudgetCategoryId,
-                showModalView: self.$showCategoryDetail
+                showModalView: self.$showCategoryDetailModalView
+            )
+        }
+        .sheet(isPresented: self.$showAddBudgetCategoryModalView) {
+            AddBudgetCategoryModalView(
+                showModalView: self.$showAddBudgetCategoryModalView,
+                budget: self.$budget,
+                categoryTemplates: self.$categoryTemplates
             )
         }
     }
@@ -66,7 +79,10 @@ struct CategoryListView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color(UIColor.systemGray5)
-            CategoryListView(budget: .constant(Budget.sampleData[0]))
+            CategoryListView(
+                budget: .constant(Budget.sampleData[0]),
+                categoryTemplates: .constant(CategoryTemplate.sampleData)
+            )
         }
     }
 }

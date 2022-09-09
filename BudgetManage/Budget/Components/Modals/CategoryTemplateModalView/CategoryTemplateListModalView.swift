@@ -15,6 +15,9 @@ struct CategoryTemplateListModalView: View {
     
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: CategoryTemplate? = nil
+    
+    @State private var showEditModalView: Bool = false
+    @State private var editTarget: CategoryTemplate? = nil
 
     var body: some View {
         NavigationView {
@@ -46,8 +49,8 @@ struct CategoryTemplateListModalView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
-//                            self.showEditModalView = true
-//                            self.editTarget = expense
+                            self.showEditModalView = true
+                            self.editTarget = categoryTemplate
                         } label: {
                             Text("編集")
                         }
@@ -91,6 +94,12 @@ struct CategoryTemplateListModalView: View {
                     }
             } message: { categoryTemplate in
                 Text("カテゴリを削除しますか?\n削除したカテゴリが紐づいてる出費は未分類になります。")
+            }
+            .sheet(isPresented: self.$showEditModalView) {
+                let index = self.categoryTemplates.firstIndex { el in
+                    el.id == self.editTarget?.id
+                }
+                EditCategoryTemplateModalView(categoryTemplate: self.$categoryTemplates[index!], showModalView: self.$showEditModalView)
             }
         }
     }

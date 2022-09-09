@@ -64,6 +64,12 @@ struct CategoryDetailView: View {
                 }
             }
             Section(header: Text("出費")) {
+                if self.expenses.count == 0 {
+                    Text("出費がまだありません")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .listRowBackground(Color.black.opacity(0))
+                        .foregroundColor(.secondary)
+                }
                 ForEach(self.expenses) { expense in
                     HStack {
                         Text(self.getFormattedDate(date: expense.date, includeTime: expense.includeTimeInDate))
