@@ -7,20 +7,21 @@
 
 import SwiftUI
 
-struct AddBudgetCategoryModalView: View {
+struct EditBudgetCategoryModalView: View {
     @Binding var showModalView: Bool
     @Binding var budget: Budget
     @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var showAddConfirmAlert: Bool = false
     @State private var addTarget: CategoryTemplate? = nil
+    @ObservedObject var categoryBudgetAmount = NumbersOnly()
     
     @State private var showRemoveConfirmAlert: Bool = false
     @State private var removeTarget: CategoryTemplate? = nil
+    
+    @State private var showCreateCategoryTemplateModalView: Bool = false
 
     @State private var tmpBudget: Budget = Budget(startDate: Date(), endDate: Date(), budgetAmount: 0)
-
-    @ObservedObject var categoryBudgetAmount = NumbersOnly()
     
     private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
         self.tmpBudget.categories.map { category in
@@ -75,6 +76,7 @@ struct AddBudgetCategoryModalView: View {
             List {
                 Text("\(self.tmpBudget.title)の予算へのカテゴリの追加, 削除")
                     .font(.caption)
+                    .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .listRowBackground(Color.black.opacity(0))
                     .listRowInsets(EdgeInsets())
@@ -133,6 +135,20 @@ struct AddBudgetCategoryModalView: View {
                         }
                     }
                 }
+                
+                HStack {
+                    Spacer()
+                    Button {
+                        self.showCreateCategoryTemplateModalView = true
+                    } label: {
+                        Text("新しいカテゴリを作成")
+                    }
+                    .buttonStyle(.borderless)
+                    Spacer()
+                }
+                .listRowBackground(Color.black.opacity(0))
+                .listRowSeparator(.hidden)
+                
                 AddBudgetCategoryAlert(
                     textfieldText: self.$categoryBudgetAmount.value,
                     showingAlert: self.$showAddConfirmAlert,
@@ -186,13 +202,18 @@ struct AddBudgetCategoryModalView: View {
                 }
                 Text("\(self.tmpBudget.title)から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
             }
+            .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
+                CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
+                    self.categoryTemplates.append(categoryTemplate)
+                }
+            }
         }
     }
 }
 
 struct CreateBudgetCategoryModalView_Previews: PreviewProvider {
     static var previews: some View {
-        AddBudgetCategoryModalView(
+        EditBudgetCategoryModalView(
             showModalView: .constant(true),
             budget: .constant(Budget.sampleData[0]),
             categoryTemplates: .constant(CategoryTemplate.sampleData)
