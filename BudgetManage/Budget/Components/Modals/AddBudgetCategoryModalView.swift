@@ -36,6 +36,12 @@ struct AddBudgetCategoryModalView: View {
         }
     }
     
+    private var appendableCategoryTemplates: [CategoryTemplate] {
+        self.categoryTemplates.filter { categoryTemplate in
+            self.tmpBudget.categories.first { $0.categoryTemplateId == categoryTemplate.id } == nil
+        }
+    }
+    
     private func addBudgetCategory() -> Void {
         if addTarget == nil {
             return
@@ -101,27 +107,23 @@ struct AddBudgetCategoryModalView: View {
                             .listRowBackground(Color.black.opacity(0))
                             .font(.callout)
                     }
-                    ForEach(self.categoryTemplates) { categoryTemplate in
-                        if self.tmpBudget.categories.first { $0.categoryTemplateId == categoryTemplate.id } != nil {
+                    if self.appendableCategoryTemplates.isEmpty {
+                        Text("追加可能なカテゴリがありません")
+                            .listRowBackground(Color.black.opacity(0))
+                            .font(.callout)
+                    }
+                    ForEach(self.appendableCategoryTemplates) { categoryTemplate in
+                        Button(role: .none) {
+                            self.showAddConfirmAlert = true
+                            self.addTarget = categoryTemplate
+                        } label: {
                             HStack {
                                 CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
                                 Spacer()
-                                Text("追加済み")
-                                    .foregroundColor(.secondary)
-                            }
-                        } else {
-                            Button(role: .none) {
-                                self.showAddConfirmAlert = true
-                                self.addTarget = categoryTemplate
-                            } label: {
-                                HStack {
-                                    CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
-                                    Spacer()
-                                    Image(systemName: "plus.circle.fill")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.green)
-                                }
+                                Image(systemName: "plus.circle.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(.green)
                             }
                         }
                     }
