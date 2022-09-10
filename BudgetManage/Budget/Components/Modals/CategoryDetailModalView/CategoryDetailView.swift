@@ -32,7 +32,7 @@ struct CategoryDetailView: View {
     
     private func getFormattedDate(date: Date, includeTime: Bool = true) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "y年M月d日\(includeTime ? " h:m" : "")"
+        formatter.dateFormat = "y年M月d日\(includeTime ? " HH:mm" : "")"
         formatter.locale = Locale(identifier: "ja_JP")
         return formatter.string(from: date)
     }

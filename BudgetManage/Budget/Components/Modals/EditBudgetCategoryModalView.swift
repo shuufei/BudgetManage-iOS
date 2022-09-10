@@ -59,11 +59,11 @@ struct EditBudgetCategoryModalView: View {
     }
     
     private func removeBudgetCategory() -> Void {
-        if let categoryTemplate = self.removeTarget {
+        if let categoryTemplate = self.removeTarget, let category = self.tmpBudget.categories.first(where: { $0.categoryTemplateId == categoryTemplate.id }) {
             self.tmpBudget.categories = self.tmpBudget.categories.filter { $0.categoryTemplateId != categoryTemplate.id }
             self.tmpBudget.expenses = self.tmpBudget.expenses.map { expense in
                 var tmp = expense
-                if expense.categoryId == categoryTemplate.id {
+                if expense.categoryId == category.id {
                     tmp.categoryId = nil
                 }
                 return tmp
