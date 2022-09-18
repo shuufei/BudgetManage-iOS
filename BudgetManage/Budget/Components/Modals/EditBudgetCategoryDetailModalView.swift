@@ -14,7 +14,7 @@ struct EditBudgetCategoryDetailModalView: View {
     @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var categoryTemplateId: UUID = UUID()
-    @State private var budgetAmount = NumbersOnly()
+    @ObservedObject private var budgetAmount = NumbersOnly()
     
     @State private var initialized: Bool = false
     
@@ -33,10 +33,7 @@ struct EditBudgetCategoryDetailModalView: View {
         NavigationView {
             List {
                 Section(header: Text("予算額")) {
-                    HStack {
-                        Text("¥")
-                        TextField("予算額", text: self.$budgetAmount.value)
-                    }
+                    AmountTextField(value: self.$budgetAmount.value)
                 }
                 Section(header: Text("カテゴリ")) {
                     Picker("カテゴリを選択", selection: self.$categoryTemplateId) {
