@@ -50,6 +50,7 @@ struct BudgetListModalView: View {
                                     .frame(width: 20)
                             }
                             Text(budget.title)
+                                .lineLimit(1)
                             Spacer()
                             Text(self.getFormattedBudgetAmout(budgetAmount: budget.budgetAmount))
                                 .foregroundColor(.secondary)

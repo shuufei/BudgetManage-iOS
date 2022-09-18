@@ -10,6 +10,7 @@ import SwiftUI
 struct CategoryDetailView: View {
     @Binding var budget: Budget
     @Binding var selectedCategoryId: UUID?
+    @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: Expense? = nil
@@ -141,6 +142,7 @@ struct CategoryDetailView_Previews: PreviewProvider {
         CategoryDetailView(
             budget: .constant(Budget.sampleData[0]),
             selectedCategoryId: .constant(nil),
+            categoryTemplates: .constant(CategoryTemplate.sampleData),
             budgetCategory: .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
         )
     }

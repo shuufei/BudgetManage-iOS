@@ -15,6 +15,8 @@ struct CategoryDetailModalView: View {
     
     @State private var selectedView: CategoryDetailViewType = .addExpense
     
+    @State private var showEditBudgetCategoryModalView: Bool = false
+    
     private var budgetCategory: BudgetCategory {
         if let category = self.budget.categories.first(where: { $0.id == self.selectedCategoryId }), let categoryTemplate = self.categoryTemplates.first(where: { $0.id == category.categoryTemplateId })  {
             let categoryExpenses = self.budget.expenses.filter { $0.categoryId == category.id }
@@ -36,7 +38,12 @@ struct CategoryDetailModalView: View {
                         self.showModalView = false
                     }
                 case .detail:
-                    CategoryDetailView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId, budgetCategory: self.budgetCategory)
+                    CategoryDetailView(
+                        budget: self.$budget,
+                        selectedCategoryId: self.$selectedCategoryId,
+                        categoryTemplates: self.$categoryTemplates,
+                        budgetCategory: self.budgetCategory
+                    )
                 }
             }
             .background(Color(UIColor.systemGray6))
@@ -59,7 +66,9 @@ struct CategoryDetailModalView: View {
                 ToolbarItem(placement: .primaryAction) {
                     if self.selectedCategoryId != nil && self.selectedView == .detail {
                         Menu {
-                            Button {} label: {
+                            Button {
+                                self.showEditBudgetCategoryModalView = true
+                            } label: {
                                 Label("編集", systemImage: "pencil")
                             }
                             Button(role: .destructive) {} label: {
@@ -74,6 +83,9 @@ struct CategoryDetailModalView: View {
                     }
                 }
                 
+            }
+            .sheet(isPresented: self.$showEditBudgetCategoryModalView) {
+                EditBudgetCategoryDetailModalView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId, showModalView: self.$showEditBudgetCategoryModalView, categoryTemplates: self.$categoryTemplates)
             }
         }
     }
