@@ -16,6 +16,7 @@ struct CategoryDetailModalView: View {
     @State private var selectedView: CategoryDetailViewType = .addExpense
     
     @State private var showEditBudgetCategoryModalView: Bool = false
+    @State private var showDeleteConfirmAlert: Bool = false
     
     private var budgetCategory: BudgetCategory {
         if let category = self.budget.categories.first(where: { $0.id == self.selectedCategoryId }), let categoryTemplate = self.categoryTemplates.first(where: { $0.id == category.categoryTemplateId })  {
@@ -71,7 +72,9 @@ struct CategoryDetailModalView: View {
                             } label: {
                                 Label("編集", systemImage: "pencil")
                             }
-                            Button(role: .destructive) {} label: {
+                            Button(role: .destructive) {
+                                self.showDeleteConfirmAlert = true
+                            } label: {
                                 Label("削除...", systemImage: "trash")
                             }
                         } label: {
@@ -83,6 +86,22 @@ struct CategoryDetailModalView: View {
                     }
                 }
                 
+            }
+            .alert("予算カテゴリの削除", isPresented: self.$showDeleteConfirmAlert) {
+                Button("削除", role: .destructive) {
+                    self.budget.categories = self.budget.categories.filter { $0.id != self.selectedCategoryId }
+                    self.budget.expenses = self.budget.expenses.map { expense in
+                        var tmp = expense
+                        if expense.categoryId == self.selectedCategoryId {
+                            tmp.categoryId = nil
+                        }
+                        return tmp
+                    }
+                    self.showDeleteConfirmAlert = false
+                    self.showModalView = false
+                }
+            } message: {
+                Text("予算からカテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
             }
             .sheet(isPresented: self.$showEditBudgetCategoryModalView) {
                 EditBudgetCategoryDetailModalView(budget: self.$budget, selectedCategoryId: self.$selectedCategoryId, showModalView: self.$showEditBudgetCategoryModalView, categoryTemplates: self.$categoryTemplates)
