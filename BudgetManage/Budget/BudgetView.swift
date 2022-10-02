@@ -61,10 +61,9 @@ struct BudgetView: View {
                     )
                 }
                 .sheet(isPresented: self.$openedBudgetListModal) {
-//                    BudgetListModalView(
-//                        showBudgetList: $openedBudgetListModal,
-//                        budgets: Binding.init(
-//                    )
+                    BudgetListModalView(
+                        showBudgetList: $openedBudgetListModal
+                    )
                 }
                 .sheet(isPresented: self.$openedCategoryListModal) {
 //                    CategoryTemplateListModalView(
