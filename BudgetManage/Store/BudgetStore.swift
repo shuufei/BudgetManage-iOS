@@ -20,6 +20,25 @@ class BudgetStore: ObservableObject {
             }
         }
     }
+    var selectedBudgetIndex: Int? {
+        let index = self.budgets.firstIndex { $0.isActive == true }
+        return index ?? nil
+    }
+    var selectedBudget: Budget? {
+        get {
+            let budget = self.budgets.first { $0.isActive == true }
+            return budget ?? nil
+        }
+        set(value) {
+            if let index = self.selectedBudgetIndex, let budget = value {
+                self.budgets[index] = budget
+            }
+        }
+    }
+    var selectedBudgetId: UUID? {
+        let budget = self.selectedBudget
+        return  budget?.id ?? nil
+    }
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)

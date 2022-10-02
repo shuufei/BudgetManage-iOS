@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var budgetStore = BudgetStore()
-    @StateObject private var categoryTemplateStore = CategoryTemplateStore()
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
 
     var body: some View {
         TabView {
-            BudgetView(
-                budgets: $budgetStore.budgets,
-                categoryTemplates: self.$categoryTemplateStore.categories
-            )
+            BudgetView()
                 .tabItem {
                     Label("予算", systemImage: "yensign.circle")
                 }
@@ -40,5 +37,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }

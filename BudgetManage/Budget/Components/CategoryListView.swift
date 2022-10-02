@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct CategoryListView: View {
-    @Binding var budget: Budget
-    @Binding var categoryTemplates: [CategoryTemplate]
-    
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @State private var showCategoryDetailModalView: Bool = false
     @State private var selectedBudgetCategoryId: UUID? = nil
     
     @State private var showAddBudgetCategoryModalView: Bool = false
     
     private func getCategoryTemplate(categoryTemplateId: UUID) -> CategoryTemplate? {
-        self.categoryTemplates.first { $0.id == categoryTemplateId }
+        self.categoryTemplateStore.categories.first { $0.id == categoryTemplateId }
     }
     
     private func getCategoryExpenses(categoryId: UUID) -> [Expense] {
-        self.budget.expenses.filter { $0.categoryId == categoryId }
+        self.budgetStore.selectedBudget?.expenses.filter { $0.categoryId == categoryId } ?? []
     }
     
     private func getBudgetCategory(category: Category) -> BudgetCategory {
@@ -48,45 +48,47 @@ struct CategoryListView: View {
             }
             .padding(.horizontal, 8)
             VStack(spacing: 12) {
-                ForEach(self.budget.categories) { category in
+                if let budget = self.budgetStore.selectedBudget {
+                    ForEach(budget.categories) { category in
+                        Button(role: .none) {
+                            self.selectedBudgetCategoryId = category.id
+                            self.showCategoryDetailModalView = true
+                        } label: {
+                            CategoryCard(
+                                budgetCategory: self.getBudgetCategory(category: category)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+
                     Button(role: .none) {
-                        self.selectedBudgetCategoryId = category.id
+                        self.selectedBudgetCategoryId = nil
                         self.showCategoryDetailModalView = true
                     } label: {
                         CategoryCard(
-                            budgetCategory: self.getBudgetCategory(category: category)
+                            budgetCategory: .uncategorized(
+                                UnCategorized(
+                                    title: "未分類",
+                                    budgetAmount: budget.uncategorizedBudgetAmount
+                                ),
+                                budget.uncategorizedExpenses
+                            )
                         )
                     }
                     .buttonStyle(.plain)
                 }
                 
-                Button(role: .none) {
-                    self.selectedBudgetCategoryId = nil
-                    self.showCategoryDetailModalView = true
-                } label: {
-                    CategoryCard(
-                        budgetCategory: .uncategorized(
-                            UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount),
-                            self.budget.uncategorizedExpenses
-                        )
-                    )
-                }
-                .buttonStyle(.plain)
             }
         }
         .sheet(isPresented: self.$showCategoryDetailModalView) {
             CategoryDetailModalView(
-                budget: self.$budget,
                 selectedCategoryId: self.$selectedBudgetCategoryId,
-                showModalView: self.$showCategoryDetailModalView,
-                categoryTemplates: self.$categoryTemplates
+                showModalView: self.$showCategoryDetailModalView
             )
         }
         .sheet(isPresented: self.$showAddBudgetCategoryModalView) {
             EditBudgetCategoryModalView(
-                showModalView: self.$showAddBudgetCategoryModalView,
-                budget: self.$budget,
-                categoryTemplates: self.$categoryTemplates
+                showModalView: self.$showAddBudgetCategoryModalView
             )
         }
     }
@@ -96,10 +98,9 @@ struct CategoryListView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color(UIColor.systemGray5)
-            CategoryListView(
-                budget: .constant(Budget.sampleData[0]),
-                categoryTemplates: .constant(CategoryTemplate.sampleData)
-            )
+            CategoryListView()
+                .environmentObject(BudgetStore())
+                .environmentObject(CategoryTemplateStore())
         }
     }
 }

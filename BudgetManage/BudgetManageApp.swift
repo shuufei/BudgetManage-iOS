@@ -12,6 +12,8 @@ struct BudgetManageApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(BudgetStore())
+                .environmentObject(CategoryTemplateStore())
         }
     }
 }

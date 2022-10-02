@@ -9,25 +9,10 @@ import SwiftUI
 
 struct AddExpenseModalView: View {
     @Binding var showModalView: Bool
-    @Binding var currentBudget: Budget
-    @ObservedObject var amount = NumbersOnly()
-    
-    @State private var expenseDate = Date()
-    @State private var memo = ""
-    
-    private func add() {
-        let amount = Int(self.amount.value) ?? 0;
-        self.currentBudget.expenses.append(
-            Expense(
-                date: self.expenseDate, amount: amount, categoryId: nil, memo: self.memo
-            )
-        )
-        self.showModalView = false
-    }
     
     var body: some View {
         NavigationView {
-            AddExpenseView(budget: self.$currentBudget) {
+            AddExpenseView() {
                 self.showModalView = false
             }
             .navigationTitle("出費 追加")
@@ -45,6 +30,6 @@ struct AddExpenseModalView: View {
 
 struct AddExpenseModalView_Previews: PreviewProvider {
     static var previews: some View {
-        AddExpenseModalView(showModalView: .constant(false), currentBudget: .constant(Budget.sampleData[0]))
+        AddExpenseModalView(showModalView: .constant(false))
     }
 }

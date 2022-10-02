@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AddExpenseButton: View {
-    @Binding var currentBudget: Budget
     @State var showAddExpenseModal: Bool = false
     
     var body: some View {
@@ -28,7 +27,7 @@ struct AddExpenseButton: View {
             }
             .padding(.vertical, 16)
             .sheet(isPresented: self.$showAddExpenseModal) {
-                AddExpenseModalView(showModalView: self.$showAddExpenseModal, currentBudget: self.$currentBudget)
+                AddExpenseModalView(showModalView: self.$showAddExpenseModal)
             }
         }
     }
@@ -36,6 +35,6 @@ struct AddExpenseButton: View {
 
 struct AddExpenseButton_Previews: PreviewProvider {
     static var previews: some View {
-        AddExpenseButton(currentBudget: .constant(Budget.sampleData[0]))
+        AddExpenseButton()
     }
 }

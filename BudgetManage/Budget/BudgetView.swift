@@ -8,36 +8,33 @@
 import SwiftUI
 
 struct BudgetView: View {
-    @Binding var budgets: [Budget]
-    @Binding var categoryTemplates: [CategoryTemplate]
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
     @State var openedCategoryListModal: Bool = false
 
-    var activeBudgetIndex: Int {
-        let index = self.budgets.firstIndex { $0.isActive == true }
-        return index ?? 0
+    var categoryTemplates: [CategoryTemplate] {
+        self.categoryTemplateStore.categories
     }
+
     var navigationTitle: String {
-        return self.budgets.indices.contains(self.activeBudgetIndex) ? self.budgets[self.activeBudgetIndex].title : "予算"
+        return self.budgetStore.selectedBudget?.title ?? "予算"
     }
 
     var body: some View {
         NavigationView {
                 ZStack {
-                    if self.budgets.count > 0 {
+                    if self.budgetStore.selectedBudget != nil {
                         Color(UIColor.systemGray5)
                         VStack {
-                            BudgetInfo(budget: self.budgets[self.activeBudgetIndex])
+                            BudgetInfo(budget: self.budgetStore.selectedBudget!)
                                 .padding(.all, 12)
-                            CategoryListView(
-                                budget: self.$budgets[self.activeBudgetIndex],
-                                categoryTemplates: self.$categoryTemplates
-                            )
+                            CategoryListView()
                                 .padding(.horizontal, 12)
                             Spacer()
                         }
-                        AddExpenseButton(currentBudget: self.$budgets[self.activeBudgetIndex])
+                        AddExpenseButton()
                     } else {
                         BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                     }
@@ -59,20 +56,20 @@ struct BudgetView: View {
                     }
                 }
                 .sheet(isPresented: self.$openedCreateBudgetModal) {
-                    CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
+//                    CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
                 }
                 .sheet(isPresented: self.$openedBudgetListModal) {
-                    BudgetListModalView(
-                        showBudgetList: $openedBudgetListModal,
-                        budgets: $budgets
-                    )
+//                    BudgetListModalView(
+//                        showBudgetList: $openedBudgetListModal,
+//                        budgets: Binding.init(
+//                    )
                 }
                 .sheet(isPresented: self.$openedCategoryListModal) {
-                    CategoryTemplateListModalView(
-                        categoryTemplates: self.$categoryTemplates,
-                        budgetExpenses: self.budgets.count > 0 ? self.$budgets[self.activeBudgetIndex].expenses : .constant([]),
-                        showModalView: self.$openedCategoryListModal
-                    )
+//                    CategoryTemplateListModalView(
+//                        categoryTemplates: self.$categoryTemplates,
+//                        budgetExpenses: self.budgets.count > 0 ? self.$budgets[self.activeBudgetIndex].expenses : .constant([]),
+//                        showModalView: self.$openedCategoryListModal
+//                    )
                 }
         }
     }
@@ -81,9 +78,9 @@ struct BudgetView: View {
 struct BudgetView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-//            BudgetView(budgets: .constant([]))
-//            BudgetView(budgets: .constant([]))
-            BudgetView(budgets: .constant(Budget.sampleData), categoryTemplates: .constant([]))
+            BudgetView()
+                .environmentObject(BudgetStore())
+                .environmentObject(CategoryTemplateStore())
         }
     }
 }

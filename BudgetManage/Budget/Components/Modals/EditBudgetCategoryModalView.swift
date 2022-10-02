@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct EditBudgetCategoryModalView: View {
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @Binding var showModalView: Bool
-    @Binding var budget: Budget
-    @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var showAddConfirmAlert: Bool = false
     @State private var addTarget: CategoryTemplate? = nil
     @ObservedObject var categoryBudgetAmount = NumbersOnly()
-    
+
     @State private var showRemoveConfirmAlert: Bool = false
     @State private var removeTarget: CategoryTemplate? = nil
     
@@ -25,7 +26,7 @@ struct EditBudgetCategoryModalView: View {
     
     private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
         self.tmpBudget.categories.map { category in
-            let categoryTemplate = self.categoryTemplates.first { $0.id == category.categoryTemplateId }
+            let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
             return BudgetCategory.CategoryDisplayData(
                 title: categoryTemplate!.title,
                 budgetAmount: category.budgetAmount,
@@ -38,7 +39,7 @@ struct EditBudgetCategoryModalView: View {
     }
     
     private var appendableCategoryTemplates: [CategoryTemplate] {
-        self.categoryTemplates.filter { categoryTemplate in
+        self.categoryTemplateStore.categories.filter { categoryTemplate in
             self.tmpBudget.categories.first { $0.categoryTemplateId == categoryTemplate.id } == nil
         }
     }
@@ -88,7 +89,7 @@ struct EditBudgetCategoryModalView: View {
                     }
                     ForEach(self.budgetCategories, id: \.title) { category in
                         Button(role: .none) {
-                            let categoryTemplate = self.categoryTemplates.first { $0.id == category.categoryTemplateId }
+                            let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
                             self.removeTarget = categoryTemplate
                             self.showRemoveConfirmAlert = true
                         } label: {
@@ -109,7 +110,7 @@ struct EditBudgetCategoryModalView: View {
                     }
                 }
                 Section(header: Text("カテゴリ一覧")) {
-                    if self.categoryTemplates.isEmpty {
+                    if self.categoryTemplateStore.categories.isEmpty {
                         Text("カテゴリが登録されていません")
                             .listRowBackground(Color.black.opacity(0))
                             .font(.callout)
@@ -174,13 +175,15 @@ struct EditBudgetCategoryModalView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("完了") {
-                        self.budget = self.tmpBudget
+                        self.budgetStore.selectedBudget = self.tmpBudget
                         self.showModalView = false
                     }
                 }
             }
             .onAppear {
-                self.tmpBudget = self.budget
+                if let budget = self.budgetStore.selectedBudget {
+                    self.tmpBudget = budget
+                }
                 if #available(iOS 15, *) {
                     UITableView.appearance().contentInset.top = -25
                 }
@@ -204,7 +207,7 @@ struct EditBudgetCategoryModalView: View {
             }
             .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
                 CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
-                    self.categoryTemplates.append(categoryTemplate)
+                    self.categoryTemplateStore.categories.append(categoryTemplate)
                 }
             }
         }
@@ -214,9 +217,9 @@ struct EditBudgetCategoryModalView: View {
 struct CreateBudgetCategoryModalView_Previews: PreviewProvider {
     static var previews: some View {
         EditBudgetCategoryModalView(
-            showModalView: .constant(true),
-            budget: .constant(Budget.sampleData[0]),
-            categoryTemplates: .constant(CategoryTemplate.sampleData)
+            showModalView: .constant(true)
         )
+            .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }

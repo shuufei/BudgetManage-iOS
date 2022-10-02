@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct EditBudgetCategoryDetailModalView: View {
-    @Binding var budget: Budget
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @Binding var selectedCategoryId: UUID?
     @Binding var showModalView: Bool
-    @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var categoryTemplateId: UUID = UUID()
     @ObservedObject private var budgetAmount = NumbersOnly()
@@ -19,13 +20,17 @@ struct EditBudgetCategoryDetailModalView: View {
     @State private var initialized: Bool = false
     
     private func update() {
-        let index = self.budget.categories.firstIndex { $0.id == self.selectedCategoryId }
-        if index == nil {
-            return
-        }
-        if let budgetAmountValue = Int(self.budgetAmount.value) {
-            self.budget.categories[index!].budgetAmount = budgetAmountValue
-            self.budget.categories[index!].categoryTemplateId = self.categoryTemplateId
+        if let budget = self.budgetStore.selectedBudget {
+            let index = budget.categories.firstIndex { $0.id == self.selectedCategoryId }
+            if index == nil {
+                return
+            }
+            if let budgetAmountValue = Int(self.budgetAmount.value) {
+                var tmpBudget = budget
+                tmpBudget.categories[index!].budgetAmount = budgetAmountValue
+                tmpBudget.categories[index!].categoryTemplateId = self.categoryTemplateId
+                self.budgetStore.selectedBudget = tmpBudget
+            }
         }
     }
 
@@ -37,7 +42,7 @@ struct EditBudgetCategoryDetailModalView: View {
                 }
                 Section(header: Text("カテゴリ")) {
                     Picker("カテゴリを選択", selection: self.$categoryTemplateId) {
-                        ForEach(self.categoryTemplates) { categoryTemplate in
+                        ForEach(self.categoryTemplateStore.categories) { categoryTemplate in
                             CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
                         }
                     }
@@ -52,7 +57,7 @@ struct EditBudgetCategoryDetailModalView: View {
                 if self.initialized {
                    return
                 }
-                if let category = self.budget.categories.first(where: { $0.id == self.selectedCategoryId }) {
+                if let budget = self.budgetStore.selectedBudget, let category = budget.categories.first(where: { $0.id == self.selectedCategoryId }) {
                     self.categoryTemplateId = category.categoryTemplateId
                     self.budgetAmount.value = String(category.budgetAmount)
                 }
@@ -78,6 +83,10 @@ struct EditBudgetCategoryDetailModalView: View {
 struct EditBudgetCategoryDetailModalView_Previews: PreviewProvider {
     static var previews: some View {
         EditBudgetCategoryDetailModalView(
-            budget: .constant(Budget.sampleData[0]), selectedCategoryId: .constant(Budget.sampleData[0].categories[0].id), showModalView: .constant(true), categoryTemplates: .constant(CategoryTemplate.sampleData))
+            selectedCategoryId: .constant(Budget.sampleData[0].categories[0].id),
+            showModalView: .constant(true)
+        )
+            .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }

@@ -8,27 +8,22 @@
 import SwiftUI
 
 struct CategoryDetailView: View {
-    @Binding var budget: Budget
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @Binding var selectedCategoryId: UUID?
-    @Binding var categoryTemplates: [CategoryTemplate]
     
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: Expense? = nil
-    
-    @State private var showEditModalView: Bool = false
+
     @State private var editTarget: Expense? = nil
     
     let budgetCategory: BudgetCategory
     
-//    private var category: BudgetCategory {
-////        TODO: category指定された場合の処理を追加
-//        .uncategorized(UnCategorized(title: "未分類", budgetAmount: self.budget.uncategorizedBudgetAmount), self.budget.uncategorizedExpenses)
-//    }
-    
     private var expenses: [Expense] {
-        self.budget.expenses.filter {
+        self.budgetStore.selectedBudget?.expenses.filter {
             $0.categoryId == self.selectedCategoryId
-        }
+        } ?? []
     }
     
     private func getFormattedDate(date: Date, includeTime: Bool = true) -> String {
@@ -100,7 +95,6 @@ struct CategoryDetailView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
-                            self.showEditModalView = true
                             self.editTarget = expense
                         } label: {
                             Text("編集")
@@ -109,8 +103,15 @@ struct CategoryDetailView: View {
                     }
                     .alert("出費の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { expense in
                             Button("削除", role: .destructive) {
-                                let expenses = self.budget.expenses.filter { $0.id != expense.id }
-                                self.budget.expenses = expenses
+                                self.showDeleteConfirmAlert = false
+                                self.deletionTarget  = nil
+                                if var budget = self.budgetStore.selectedBudget {
+                                    budget.expenses = budget.expenses.filter { $0.id != expense.id }
+                                    // NOTE: https://developer.apple.com/forums/thread/676885
+                                    DispatchQueue.main.async {
+                                        self.budgetStore.selectedBudget = budget
+                                    }
+                                }
                             }
                     } message: { expense in
                         Text("出費の記録を削除しますか?")
@@ -118,11 +119,15 @@ struct CategoryDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: self.$showEditModalView) {
-            let index = self.budget.expenses.firstIndex { el in
-                el.id == self.editTarget?.id
+        .sheet(item: self.$editTarget) { editTarget in
+            if var budget = self.budgetStore.selectedBudget, let expenseIndex = budget.expenses.firstIndex(where: { el in
+                el.id == editTarget.id
+            }), let expense = budget.expenses[expenseIndex] {
+                EditExpenseModalView(expense: expense) { expense in
+                    budget.expenses[expenseIndex] = expense
+                    self.budgetStore.selectedBudget = budget
+                }
             }
-            EditExpenseModalView(expense: self.$budget.expenses[index!], showModalView: self.$showEditModalView)
         }
         .onAppear {
             if #available(iOS 15, *) {
@@ -140,10 +145,10 @@ struct CategoryDetailView: View {
 struct CategoryDetailView_Previews: PreviewProvider {
     static var previews: some View {
         CategoryDetailView(
-            budget: .constant(Budget.sampleData[0]),
             selectedCategoryId: .constant(nil),
-            categoryTemplates: .constant(CategoryTemplate.sampleData),
             budgetCategory: .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
         )
+            .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }

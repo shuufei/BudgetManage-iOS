@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct EditExpenseModalView: View {
+    @Environment(\.dismiss) var dismiss
     @ObservedObject private var amount = NumbersOnly()
     
-    @Binding var expense: Expense
-    @Binding var showModalView: Bool
+    var expense: Expense
+    var onSave: (_ expense: Expense) -> Void
     
     @State var data: Expense = Expense(date: Date(), amount: 0)
 
@@ -39,14 +40,14 @@ struct EditExpenseModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") {
-                        self.showModalView = false
+                        self.dismiss()
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("保存") {
                         self.data.amount = Int(self.amount.value) ?? 0
-                        self.expense = self.data
-                        self.showModalView = false
+                        onSave(self.data)
+                        self.dismiss()
                     }
                 }
             }
@@ -60,6 +61,6 @@ struct EditExpenseModalView: View {
 
 struct EditExpenseModalView_Previews: PreviewProvider {
     static var previews: some View {
-        EditExpenseModalView(expense: .constant(Expense.sampleData[0]), showModalView: .constant(true))
+        EditExpenseModalView(expense: Expense.sampleData[0]) { _ in }
     }
 }

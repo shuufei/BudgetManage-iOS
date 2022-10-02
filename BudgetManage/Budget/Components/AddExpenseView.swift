@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddExpenseView: View {
-    @Binding var budget: Budget
+    @EnvironmentObject private var budgetStore: BudgetStore
     var categoryId: UUID?
     var onAdd: () -> Void
     
@@ -19,11 +19,18 @@ struct AddExpenseView: View {
     
     private func add() {
         let amount = Int(self.amount.value) ?? 0;
-        self.budget.expenses.append(
-            Expense(
-                date: self.expenseDate, amount: amount, categoryId: self.categoryId, memo: self.memo, includeTimeInDate: self.includeTime
+        if var budget = self.budgetStore.selectedBudget {
+            budget.expenses.append(
+                Expense(
+                    date: self.expenseDate,
+                    amount: amount,
+                    categoryId: self.categoryId,
+                    memo: self.memo,
+                    includeTimeInDate: self.includeTime
+                )
             )
-        )
+            self.budgetStore.selectedBudget = budget
+        }
         self.onAdd()
     }
     var body: some View {
@@ -63,6 +70,7 @@ struct AddExpenseView: View {
 //
 struct AddExpenseView_Previews: PreviewProvider {
     static var previews: some View {
-        AddExpenseView(budget: .constant(Budget.sampleData[0]), onAdd: {})
+        AddExpenseView(onAdd: {})
+            .environmentObject(BudgetStore())
     }
 }
