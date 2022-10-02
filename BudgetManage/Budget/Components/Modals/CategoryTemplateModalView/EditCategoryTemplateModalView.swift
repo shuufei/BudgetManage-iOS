@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct EditCategoryTemplateModalView: View {
-    
-    @Binding var categoryTemplate: CategoryTemplate
-    @Binding var showModalView: Bool
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
+    var categoryTemplateId: UUID
     
     @State private var data: CategoryTemplate = CategoryTemplate(title: "", theme: .yellow)
-    
     @State private var initialized: Bool = false
     
     var body: some View {
@@ -28,8 +28,10 @@ struct EditCategoryTemplateModalView: View {
                     if self.initialized {
                         return
                     }
-                    self.data = self.categoryTemplate
-                    self.initialized = true
+                    if let categoryTemplate = self.categoryTemplateStore.categories.first(where: { $0.id == self.categoryTemplateId }) {
+                        self.data = categoryTemplate
+                        self.initialized = true
+                    }
                 }
             }
             .navigationTitle("カテゴリの編集")
@@ -37,13 +39,15 @@ struct EditCategoryTemplateModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") {
-                        self.showModalView = false
+                        self.dismiss()
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("保存") {
-                        self.categoryTemplate = self.data
-                        self.showModalView = false
+                        if let index = self.categoryTemplateStore.categories.firstIndex(where: { $0.id == self.categoryTemplateId }) {
+                            self.categoryTemplateStore.categories[index] = self.data
+                        }
+                        self.dismiss()
                     }
                 }
             }
@@ -54,8 +58,8 @@ struct EditCategoryTemplateModalView: View {
 struct EditCategoryTemplateModalView_Previews: PreviewProvider {
     static var previews: some View {
         EditCategoryTemplateModalView(
-            categoryTemplate: .constant(CategoryTemplate(title: "dummy", theme: .yellow)),
-            showModalView: .constant(true)
+            categoryTemplateId: CategoryTemplate.sampleData[0].id
         )
+            .environmentObject(CategoryTemplateStore())
     }
 }

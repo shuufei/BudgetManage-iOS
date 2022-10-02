@@ -8,21 +8,22 @@
 import SwiftUI
 
 struct CategoryTemplateListModalView: View {
-    @Binding var categoryTemplates: [CategoryTemplate]
-    @Binding var budgetExpenses: [Expense]
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @Binding var showModalView: Bool
-    @State var showCreateCategoryTemplateModalView: Bool = false
-    
+
+    @State private var showCreateCategoryTemplateModalView: Bool = false
+
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: CategoryTemplate? = nil
-    
-    @State private var showEditModalView: Bool = false
+
     @State private var editTarget: CategoryTemplate? = nil
 
     var body: some View {
         NavigationView {
             List {
-                if self.categoryTemplates.count == 0 {
+                if self.categoryTemplateStore.categories.count == 0 {
                     HStack {
                         Spacer()
                         Text("カテゴリが登録されていません")
@@ -30,7 +31,7 @@ struct CategoryTemplateListModalView: View {
                     }
                     .listRowBackground(Color.red.opacity(0))
                 }
-                ForEach(self.categoryTemplates) { categoryTemplate in
+                ForEach(self.categoryTemplateStore.categories) { categoryTemplate in
                     HStack {
                         HStack {
                             RoundedRectangle(cornerRadius: 4)
@@ -49,7 +50,6 @@ struct CategoryTemplateListModalView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
-                            self.showEditModalView = true
                             self.editTarget = categoryTemplate
                         } label: {
                             Text("編集")
@@ -76,30 +76,32 @@ struct CategoryTemplateListModalView: View {
             }
             .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
                 CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
-                    self.categoryTemplates.append(categoryTemplate)
+                    self.categoryTemplateStore.categories.append(categoryTemplate)
                 }
             }
             .alert("カテゴリの削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { categoryTemplate in
                     Button("削除", role: .destructive) {
-                        let expenses = self.budgetExpenses.map { expense -> Expense in
-                            var tmp = expense
-                            if tmp.categoryId == deletionTarget?.id {
-                                tmp.categoryId = nil
+                        if var budget = self.budgetStore.selectedBudget {
+                            let expenses = budget.expenses.map { expense -> Expense in
+                                var tmp = expense
+                                if tmp.categoryId == deletionTarget?.id {
+                                    tmp.categoryId = nil
+                                }
+                                return tmp
                             }
-                            return tmp
+                            budget.expenses = expenses
+                            self.budgetStore.selectedBudget = budget
+                            let categoryTemplates = self.categoryTemplateStore.categories.filter { $0.id != categoryTemplate.id }
+                            self.categoryTemplateStore.categories = categoryTemplates
                         }
-                        self.budgetExpenses = expenses
-                        let categoryTemplates = self.categoryTemplates.filter { $0.id != categoryTemplate.id }
-                        self.categoryTemplates = categoryTemplates
                     }
             } message: { categoryTemplate in
                 Text("カテゴリを削除しますか?\n削除したカテゴリが紐づいてる出費は未分類になります。")
             }
-            .sheet(isPresented: self.$showEditModalView) {
-                let index = self.categoryTemplates.firstIndex { el in
-                    el.id == self.editTarget?.id
-                }
-                EditCategoryTemplateModalView(categoryTemplate: self.$categoryTemplates[index!], showModalView: self.$showEditModalView)
+            .sheet(item: self.$editTarget) { editTarget in
+                EditCategoryTemplateModalView(
+                    categoryTemplateId: editTarget.id
+                )
             }
         }
     }
@@ -108,9 +110,9 @@ struct CategoryTemplateListModalView: View {
 struct CategoryListModalView_Previews: PreviewProvider {
     static var previews: some View {
         CategoryTemplateListModalView(
-            categoryTemplates: .constant([]),
-            budgetExpenses: .constant([]),
             showModalView: .constant(true)
         )
+            .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }
