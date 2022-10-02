@@ -56,7 +56,9 @@ struct BudgetView: View {
                     }
                 }
                 .sheet(isPresented: self.$openedCreateBudgetModal) {
-//                    CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
+                    CreateBudgetModalViewProvider(
+                        openedCreateBudgetModal: self.$openedCreateBudgetModal
+                    )
                 }
                 .sheet(isPresented: self.$openedBudgetListModal) {
 //                    BudgetListModalView(

@@ -85,7 +85,9 @@ struct BudgetListModalView: View {
                 }
             }
             .sheet(isPresented: self.$openedCreateBudgetModal) {
-                CreateBudgetModalViewProvider(openedCreateBudgetModal: self.$openedCreateBudgetModal, budgets: self.$budgets)
+                CreateBudgetModalViewProvider(
+                    openedCreateBudgetModal: self.$openedCreateBudgetModal
+                )
             }
             .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { budget in
                     Button("削除", role: .destructive) {
