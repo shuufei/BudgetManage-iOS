@@ -12,16 +12,7 @@ struct ContentView: View {
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
 
     var body: some View {
-        TabView {
-            BudgetView()
-                .tabItem {
-                    Label("予算", systemImage: "yensign.circle")
-                }
-            LogView()
-                .tabItem {
-                    Label("出費履歴", systemImage: "list.bullet")
-                }
-        }
+        BudgetView()
         .task {
             do {
                 self.budgetStore.budgets = try await BudgetStore.load()

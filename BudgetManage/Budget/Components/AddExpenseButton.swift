@@ -24,6 +24,7 @@ struct AddExpenseButton: View {
                     .buttonStyle(.borderedProminent)
                 }
                 .padding(.horizontal, 16)
+                .padding(.bottom, 32)
             }
             .padding(.vertical, 16)
             .sheet(isPresented: self.$showAddExpenseModal) {

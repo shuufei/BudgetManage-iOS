@@ -27,12 +27,15 @@ struct BudgetView: View {
                 ZStack {
                     if self.budgetStore.selectedBudget != nil {
                         Color(UIColor.systemGray5)
-                        VStack {
-                            BudgetInfo(budget: self.budgetStore.selectedBudget!)
-                                .padding(.all, 12)
-                            CategoryListView()
-                                .padding(.horizontal, 12)
-                            Spacer()
+                        ScrollView {
+                            VStack {
+                                BudgetInfo(budget: self.budgetStore.selectedBudget!)
+                                    .padding(.all, 12)
+                                CategoryListView()
+                                    .padding(.horizontal, 12)
+                                Spacer()
+                            }
+                            .padding(.bottom, 96)
                         }
                         AddExpenseButton()
                     } else {
@@ -70,6 +73,7 @@ struct BudgetView: View {
                         showModalView: self.$openedCategoryListModal
                     )
                 }
+                .ignoresSafeArea(edges: [.bottom])
         }
     }
 }
