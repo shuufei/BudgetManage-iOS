@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @State var openedEditBudgetModal: Bool = false
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
     @State var openedCategoryListModal: Bool = false
@@ -50,11 +51,20 @@ struct BudgetView: View {
                     }
                     ToolbarItem(placement: .primaryAction) {
                         BudgetViewMenu() {
+                            self.openedEditBudgetModal = true
+                        } onTapCreateBudget: {
                             self.openedCreateBudgetModal = true
                         } onTapShowBudgetList: {
                             self.openedBudgetListModal = true
                         } onTapShowCategoryList: {
                             self.openedCategoryListModal = true
+                        }
+                    }
+                }
+                .sheet(isPresented: self.$openedEditBudgetModal) {
+                    if let selectedBudget = self.budgetStore.selectedBudget {
+                        EditBudgetModalView(budget: selectedBudget) { budget in
+                            self.budgetStore.selectedBudget = budget
                         }
                     }
                 }

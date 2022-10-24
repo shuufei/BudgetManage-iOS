@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct BudgetViewMenu: View {
+    let onTapEditBudget: () -> Void
     let onTapCreateBudget: () -> Void
     let onTapShowBudgetList: () -> Void
     let onTapShowCategoryList: () -> Void
     
     var body: some View {
         Menu {
+            Button {
+                self.onTapEditBudget()
+            } label: {
+                Label("予算を編集...", systemImage: "pencil")
+            }
             Button {} label: {
                 Label("予算を複製...", systemImage: "square.on.square")
             }
@@ -46,11 +52,5 @@ struct BudgetViewMenu: View {
             }
             .accessibilityLabel("open menu")
         }
-    }
-}
-
-struct BudgetViewMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        BudgetViewMenu() {} onTapShowBudgetList: {} onTapShowCategoryList: {}
     }
 }
