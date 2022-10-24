@@ -25,15 +25,17 @@ struct BudgetInfo: View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .trailing, spacing: 3) {
-                    Text("タイトル")
+                    Text("予算名")
                     Text("期間")
                     Text("予算額")
+                    Text("利用額")
                     Text("残額")
                 }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(self.budget.title)
                     Text(Budget.Data.computedTitle(startDate: self.budget.startDate, endDate: self.budget.endDate))
                     Text("¥\(self.budget.budgetAmount)")
+                    Text("¥\(self.totalExpenseAmount)")
                     Text("¥\(self.balanceAmount)")
                 }
                 .foregroundColor(.secondary)
