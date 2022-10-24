@@ -16,6 +16,8 @@ struct BudgetListModalView: View {
     @State private var openedCreateBudgetModal: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: Budget? = nil
+    
+    @State private var editTarget: Budget? = nil
 
     func getFormattedBudgetAmout(budgetAmount: Int) -> String {
         let formatter = NumberFormatter()
@@ -67,6 +69,12 @@ struct BudgetListModalView: View {
                             Text("削除")
                         }
                         .tint(.red)
+                        Button(role: .none) {
+                            self.editTarget = budget
+                        } label: {
+                            Text("編集")
+                        }
+                        .tint(.gray)
                     }
                 }
             }
@@ -102,6 +110,14 @@ struct BudgetListModalView: View {
                     }
             } message: { budget in
                 Text("予算を削除すると、予算に紐づく出費記録も削除されます。")
+            }
+            .sheet(item: self.$editTarget) { editTarget in
+                EditBudgetModalView(budget: editTarget) { budget in
+                    if let index = self.budgetStore.budgets.firstIndex(where: {el in el.id == editTarget.id}) {
+                        self.budgetStore.budgets[index] = budget
+                    }
+                }
+                
             }
         }
     }
