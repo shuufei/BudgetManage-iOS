@@ -69,7 +69,7 @@ enum BudgetCategory {
         }
     }
     
-    struct CategoryDisplayData {
+    struct CategoryDisplayData: Hashable {
         var title: String
         var budgetAmount: Int
         var balanceAmount: Int

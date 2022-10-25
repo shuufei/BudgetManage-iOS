@@ -87,7 +87,7 @@ struct EditBudgetCategoryModalView: View {
                             .listRowBackground(Color.black.opacity(0))
                             .font(.callout)
                     }
-                    ForEach(self.budgetCategories, id: \.title) { category in
+                    ForEach(Array(self.budgetCategories.enumerated()), id: \.element) { index, category in
                         Button(role: .none) {
                             let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
                             self.removeTarget = categoryTemplate
