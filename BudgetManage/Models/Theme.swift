@@ -8,27 +8,26 @@
 import SwiftUI
 
 enum Theme: String, CaseIterable, Identifiable, Codable {
-    case yellow
-    case orange
-    case magenta
-    case navy
-    case sky
+    case red
     case poppy
+    case orange
     case tan
-    case teal
-    case buttercup
-    case indigo
-    case lavender
     case oxblood
+    case yellow
+    case green
+    case teal
+    case sky
+    case indigo
+    case navy
     case periwinkle
     case purple
-    case seafoam
     case bubblegum
+    case magenta
     
     var accentColor: Color {
         switch self {
-        case .bubblegum, .buttercup, .lavender, .orange, .periwinkle, .poppy, .seafoam, .sky, .tan, .teal, .yellow: return .black
-        case .indigo, .magenta, .navy, .oxblood, .purple: return .white
+        case .bubblegum, .orange, .periwinkle, .poppy, .sky, .tan, .teal, .yellow: return .black
+        case .indigo, .magenta, .navy, .oxblood, .purple, .red, .green: return .white
         }
     }
     var mainColor: Color {
@@ -41,6 +40,10 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .yellow:
             return "イエロー"
+        case .red:
+            return "レッド"
+        case .green:
+            return "グリーン"
         case .orange:
             return "オレンジ"
         case .magenta:
@@ -55,20 +58,14 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
             return "タン"
         case .teal:
             return "ティールブルー"
-        case .buttercup:
-            return "バターカップ"
         case .indigo:
             return "インディゴ"
-        case .lavender:
-            return"ラベンダー"
         case .oxblood:
             return "オックスブラッド"
         case .periwinkle:
             return "ペリウィンクル"
         case .purple:
             return "パープル"
-        case .seafoam:
-            return "シーフォームグリーン"
         case .bubblegum:
             return "バブルガム"
         }

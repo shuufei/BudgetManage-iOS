@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddExpenseView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     var categoryId: UUID?
     var onAdd: () -> Void
     
@@ -16,6 +17,13 @@ struct AddExpenseView: View {
     @State private var expenseDate = Date()
     @State private var memo = ""
     @State private var includeTime: Bool = true
+    
+    private var theme: Theme? {
+        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
+            return categoryTemplate.theme
+        }
+        return nil
+    }
     
     private func add() {
         let amount = Int(self.amount.value) ?? 0;
@@ -36,7 +44,7 @@ struct AddExpenseView: View {
     var body: some View {
         List {
             Section(header: Text("金額")) {
-                AmountTextField(value: self.$amount.value)
+                AmountTextField(value: self.$amount.value, theme: self.theme)
             }
             Section(header: Text("出費日")) {
                 DatePicker("日時", selection: self.$expenseDate, displayedComponents: self.includeTime ? [.date, .hourAndMinute] : .date)
@@ -62,6 +70,7 @@ struct AddExpenseView: View {
             }
             .disabled(self.amount.value.isEmpty)
             .buttonStyle(.borderedProminent)
+            .tint(self.theme?.mainColor ?? .blue)
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
         }
@@ -72,5 +81,6 @@ struct AddExpenseView_Previews: PreviewProvider {
     static var previews: some View {
         AddExpenseView(onAdd: {})
             .environmentObject(BudgetStore())
+            .environmentObject(CategoryTemplateStore())
     }
 }
