@@ -17,12 +17,22 @@ struct AddExpenseView: View {
     @State private var expenseDate = Date()
     @State private var memo = ""
     @State private var includeTime: Bool = true
+    @State private var selectedCategoryId: UUID?
+    
+    private let UNCATEGORIZED_UUID_FOR_PICKER = UUID()
     
     private var theme: Theme? {
         if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
             return categoryTemplate.theme
         }
         return nil
+    }
+    
+    private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
+        if let categories = self.budgetStore.selectedBudget?.categories {
+            return getBudgetCategorieDisplayDataList(categories: categories, categoryTemplates: self.categoryTemplateStore.categories)
+        }
+        return []
     }
     
     private func add() {
@@ -32,7 +42,7 @@ struct AddExpenseView: View {
                 Expense(
                     date: self.expenseDate,
                     amount: amount,
-                    categoryId: self.categoryId,
+                    categoryId: self.categoryId ?? self.selectedCategoryId,
                     memo: self.memo,
                     includeTimeInDate: self.includeTime
                 )
@@ -55,6 +65,20 @@ struct AddExpenseView: View {
                 }
             }
             Section {
+                if self.categoryId == nil, let categories = self.budgetCategories, categories.count >= 1 {
+//                    REF: https://stackoverflow.com/questions/65924526/deselecting-item-from-a-picker-swiftui
+                    Picker("カテゴリ", selection: Binding(self.$selectedCategoryId, deselectTo: self.UNCATEGORIZED_UUID_FOR_PICKER)) {
+                        Text("リセット").tag(self.UNCATEGORIZED_UUID_FOR_PICKER)
+                        
+                        ForEach(categories, id: \.categoryId) { category in
+                            CategoryTemplateLabel(
+                                title: category.title,
+                                mainColor: category.mainColor,
+                                accentColor: category.accentColor
+                            ).tag(category.categoryId)
+                        }
+                    }
+                }
                 TextField("メモ", text: self.$memo)
                     .modifier(TextFieldClearButton(text: self.$memo))
             }
@@ -76,11 +100,11 @@ struct AddExpenseView: View {
         }
     }
 }
-//
-struct AddExpenseView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddExpenseView(onAdd: {})
-            .environmentObject(BudgetStore())
-            .environmentObject(CategoryTemplateStore())
+
+fileprivate extension Binding where Value: Equatable {
+    init(_ source: Binding<Value>, deselectTo value: Value) {
+        self.init(get: { source.wrappedValue },
+                  set: { source.wrappedValue = $0 == source.wrappedValue ? value : $0 }
+        )
     }
 }

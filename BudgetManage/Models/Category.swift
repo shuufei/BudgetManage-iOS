@@ -76,6 +76,7 @@ enum BudgetCategory {
         var mainColor: Color
         var accentColor: Color
         var categoryTemplateId: UUID?
+        var categoryId: UUID?
         
         var totalExpenseAmount: Int {
             self.budgetAmount - self.balanceAmount
@@ -95,4 +96,19 @@ extension Category {
         Category(categoryTemplateId: CategoryTemplate.sampleData[0].id, budgetAmount: 40000),
         Category(categoryTemplateId: CategoryTemplate.sampleData[1].id, budgetAmount: 50000),
     ]
+}
+
+func getBudgetCategorieDisplayDataList(categories: [Category], categoryTemplates: [CategoryTemplate]) -> [BudgetCategory.CategoryDisplayData] {
+    categories.map { category in
+        let categoryTemplate = categoryTemplates.first { $0.id == category.categoryTemplateId }
+        return BudgetCategory.CategoryDisplayData(
+            title: categoryTemplate!.title,
+            budgetAmount: category.budgetAmount,
+            balanceAmount: 0,
+            mainColor: categoryTemplate!.theme.mainColor,
+            accentColor: categoryTemplate!.theme.accentColor,
+            categoryTemplateId: categoryTemplate!.id,
+            categoryId: category.id
+        )
+    }
 }

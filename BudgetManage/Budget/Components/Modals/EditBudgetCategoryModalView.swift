@@ -25,17 +25,7 @@ struct EditBudgetCategoryModalView: View {
     @State private var tmpBudget: Budget = Budget(startDate: Date(), endDate: Date(), budgetAmount: 0)
     
     private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
-        self.tmpBudget.categories.map { category in
-            let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
-            return BudgetCategory.CategoryDisplayData(
-                title: categoryTemplate!.title,
-                budgetAmount: category.budgetAmount,
-                balanceAmount: 0,
-                mainColor: categoryTemplate!.theme.mainColor,
-                accentColor: categoryTemplate!.theme.accentColor,
-                categoryTemplateId: categoryTemplate!.id
-            )
-        }
+        return getBudgetCategorieDisplayDataList(categories: self.tmpBudget.categories, categoryTemplates: self.categoryTemplateStore.categories)
     }
     
     private var appendableCategoryTemplates: [CategoryTemplate] {
