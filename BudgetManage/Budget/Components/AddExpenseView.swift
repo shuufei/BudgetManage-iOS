@@ -81,7 +81,7 @@ struct AddExpenseView: View {
             }
             .disabled(self.amount.value.isEmpty)
             .buttonStyle(.borderedProminent)
-            .tint(self.theme?.mainColor ?? .blue)
+            .tint(self.theme?.mainColor ?? .gray)
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
         }

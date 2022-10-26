@@ -17,9 +17,9 @@ fileprivate struct AppendExpenseButton: View {
         } label: {
             Label("¥\(self.amount)", systemImage: "plus")
                 .frame(maxWidth: .infinity)
-                .foregroundColor(self.theme?.mainColor ?? .blue)
+                .foregroundColor(self.theme?.mainColor ?? .primary)
         }
-        .tint(self.theme?.mainColor ?? .blue)
+        .tint(self.theme?.mainColor ?? .primary)
     }
 }
 
