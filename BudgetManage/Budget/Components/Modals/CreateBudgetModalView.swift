@@ -15,6 +15,10 @@ struct CreateBudgetModalView: View {
     @ObservedObject var budgetAmount = NumbersOnly()
     let onCreate: (_ newBudget: Budget.Data) -> Void
     
+    private var isDisabled: Bool {
+        return self.title.isEmpty
+    }
+    
     private func create() {
         let data = Budget.Data(title: self.title, startDate: self.startDate, endDate: self.endDate, budgetAmount: Int(self.budgetAmount.value) ?? 0)
         onCreate(data)
@@ -48,6 +52,7 @@ struct CreateBudgetModalView: View {
                         .padding(.vertical, 4)
                         .frame(maxWidth: .infinity)
                 }
+                .disabled(self.isDisabled)
                 .buttonStyle(.borderedProminent)
                 .listRowBackground(Color.red.opacity(0))
                 .listRowInsets(EdgeInsets())
