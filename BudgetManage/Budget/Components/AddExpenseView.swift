@@ -20,7 +20,7 @@ struct AddExpenseView: View {
     @State private var selectedCategoryId: UUID?
     
     private var theme: Theme? {
-        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
+        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.selectedCategoryId ?? self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
             return categoryTemplate.theme
         }
         return nil
