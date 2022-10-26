@@ -13,8 +13,10 @@ struct EditExpenseModalView: View {
     
     var expense: Expense
     var onSave: (_ expense: Expense) -> Void
-    
-    @State var data: Expense = Expense(date: Date(), amount: 0)
+
+    @State private var selectedCategoryId: UUID?
+    @State private var data: Expense = Expense(date: Date(), amount: 0)
+    @State private var initialized: Bool = false
 
     var body: some View {
         NavigationView {
@@ -31,6 +33,7 @@ struct EditExpenseModalView: View {
                     }
                 }
                 Section {
+                    BudgetCategoryPicker(selectedCategoryId: self.$selectedCategoryId)
                     TextField("メモ", text: self.$data.memo)
                         .modifier(TextFieldClearButton(text: self.$data.memo))
                 }
@@ -46,21 +49,21 @@ struct EditExpenseModalView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("保存") {
                         self.data.amount = Int(self.amount.value) ?? 0
+                        self.data.categoryId = self.selectedCategoryId
                         onSave(self.data)
                         self.dismiss()
                     }
                 }
             }
             .onAppear {
+                if self.initialized {
+                    return
+                }
                 self.amount.value = String(self.expense.amount)
                 self.data = self.expense
+                self.selectedCategoryId = self.expense.categoryId
+                self.initialized = true
             }
         }
-    }
-}
-
-struct EditExpenseModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditExpenseModalView(expense: Expense.sampleData[0]) { _ in }
     }
 }
