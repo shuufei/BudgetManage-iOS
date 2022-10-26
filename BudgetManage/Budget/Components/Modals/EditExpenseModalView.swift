@@ -9,6 +9,8 @@ import SwiftUI
 
 struct EditExpenseModalView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var budgetStore: BudgetStore
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @ObservedObject private var amount = NumbersOnly()
     
     var expense: Expense
@@ -17,12 +19,19 @@ struct EditExpenseModalView: View {
     @State private var selectedCategoryId: UUID?
     @State private var data: Expense = Expense(date: Date(), amount: 0)
     @State private var initialized: Bool = false
+    
+    private var theme: Theme? {
+        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.selectedCategoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
+            return categoryTemplate.theme
+        }
+        return nil
+    }
 
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("金額")) {
-                    AmountTextField(value: self.$amount.value)
+                    AmountTextField(value: self.$amount.value, theme: self.theme)
                 }
                 Section(header: Text("出費日")) {
                     DatePicker("日時", selection: self.$data.date, displayedComponents: self.data.includeTimeInDate ? [.date, .hourAndMinute] : .date)
