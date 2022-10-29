@@ -87,7 +87,7 @@ enum BudgetCategory {
 extension CategoryTemplate {
     static let sampleData = [
         CategoryTemplate(title: "食費", theme: .yellow),
-        CategoryTemplate(title: "飲み代", theme: .indigo),
+        CategoryTemplate(title: "飲み代", theme: .red),
     ]
 }
 

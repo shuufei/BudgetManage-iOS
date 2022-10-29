@@ -12,13 +12,10 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
     case poppy
     case orange
     case tan
-    case oxblood
     case yellow
     case green
     case teal
     case sky
-    case indigo
-    case navy
     case periwinkle
     case purple
     case bubblegum
@@ -27,7 +24,7 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
     var accentColor: Color {
         switch self {
         case .bubblegum, .orange, .periwinkle, .poppy, .sky, .tan, .teal, .yellow: return .black
-        case .indigo, .magenta, .navy, .oxblood, .purple, .red, .green: return .white
+        case .magenta, .purple, .red, .green: return .white
         }
     }
     var mainColor: Color {
@@ -48,8 +45,6 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
             return "オレンジ"
         case .magenta:
             return "マジェンダ"
-        case .navy:
-            return "ネイビー"
         case .sky:
             return "スカイブルー"
         case .poppy:
@@ -58,10 +53,6 @@ enum Theme: String, CaseIterable, Identifiable, Codable {
             return "タン"
         case .teal:
             return "ティールブルー"
-        case .indigo:
-            return "インディゴ"
-        case .oxblood:
-            return "オックスブラッド"
         case .periwinkle:
             return "ペリウィンクル"
         case .purple:
