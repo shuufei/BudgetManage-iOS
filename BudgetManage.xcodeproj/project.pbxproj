@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7048357F2906D7EE00224DBD /* EditBudgetModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */; };
 		704835812909749400224DBD /* BudgetCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704835802909749400224DBD /* BudgetCategoryPicker.swift */; };
+		70483583290AC0FE00224DBD /* DragDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70483582290AC0FE00224DBD /* DragDelegate.swift */; };
 		9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10928B359F90041C326 /* TextFieldClearButton.swift */; };
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
 		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
@@ -77,6 +78,7 @@
 /* Begin PBXFileReference section */
 		7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBudgetModalView.swift; sourceTree = "<group>"; };
 		704835802909749400224DBD /* BudgetCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategoryPicker.swift; sourceTree = "<group>"; };
+		70483582290AC0FE00224DBD /* DragDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragDelegate.swift; sourceTree = "<group>"; };
 		9838A10928B359F90041C326 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				983C7B2E28B9F95D008D75D3 /* ColorTheme.swift */,
+				70483582290AC0FE00224DBD /* DragDelegate.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 			files = (
 				98B0436228B1E2F300BC762D /* ContentView.swift in Sources */,
 				983C7B3128BB38BB008D75D3 /* CategoryDetailModalView.swift in Sources */,
+				70483583290AC0FE00224DBD /* DragDelegate.swift in Sources */,
 				983C7B5528CAF888008D75D3 /* EditCategoryTemplateModalView.swift in Sources */,
 				98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */,
 				983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */,

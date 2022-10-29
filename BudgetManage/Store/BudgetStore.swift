@@ -10,7 +10,7 @@ import Foundation
 class BudgetStore: ObservableObject {
     @Published var budgets: [Budget] = Budget.sampleData {
         didSet {
-            print("--- didSet budgets: \(budgets)")
+//            print("--- didSet budgets: \(budgets)")
             Task {
                 do {
                     try await BudgetStore.save(budgets: self.budgets)

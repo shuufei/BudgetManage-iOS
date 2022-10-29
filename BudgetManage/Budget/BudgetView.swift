@@ -25,65 +25,65 @@ struct BudgetView: View {
 
     var body: some View {
         NavigationView {
-                ZStack {
-                    if self.budgetStore.selectedBudget != nil {
-                        Color(UIColor.systemGray5)
-                        ScrollView {
-                            VStack {
-                                BudgetInfo(budget: self.budgetStore.selectedBudget!)
-                                    .padding(.all, 12)
-                                CategoryListView()
-                                    .padding(.horizontal, 12)
-                                Spacer()
-                            }
-                            .padding(.bottom, 96)
+            ZStack {
+                if self.budgetStore.selectedBudget != nil {
+                    Color(UIColor.systemGray5)
+                    ScrollView {
+                        VStack {
+                            BudgetInfo(budget: self.budgetStore.selectedBudget!)
+                                .padding(.all, 12)
+                            CategoryListView()
+                                .padding(.horizontal, 12)
+                            Spacer()
                         }
-                        AddExpenseButton()
-                    } else {
-                        BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
+                        .padding(.bottom, 96)
+                    }
+                    AddExpenseButton()
+                } else {
+                    BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
+                }
+            }
+            .navigationTitle(self.navigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    BudgetViewNavigationTitle(title: self.navigationTitle, openedBudgetListModal: $openedBudgetListModal)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    BudgetViewMenu() {
+                        self.openedEditBudgetModal = true
+                    } onTapCreateBudget: {
+                        self.openedCreateBudgetModal = true
+                    } onTapShowBudgetList: {
+                        self.openedBudgetListModal = true
+                    } onTapShowCategoryList: {
+                        self.openedCategoryListModal = true
                     }
                 }
-                .navigationTitle(self.navigationTitle)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        BudgetViewNavigationTitle(title: self.navigationTitle, openedBudgetListModal: $openedBudgetListModal)
-                    }
-                    ToolbarItem(placement: .primaryAction) {
-                        BudgetViewMenu() {
-                            self.openedEditBudgetModal = true
-                        } onTapCreateBudget: {
-                            self.openedCreateBudgetModal = true
-                        } onTapShowBudgetList: {
-                            self.openedBudgetListModal = true
-                        } onTapShowCategoryList: {
-                            self.openedCategoryListModal = true
-                        }
+            }
+            .sheet(isPresented: self.$openedEditBudgetModal) {
+                if let selectedBudget = self.budgetStore.selectedBudget {
+                    EditBudgetModalView(budget: selectedBudget) { budget in
+                        self.budgetStore.selectedBudget = budget
                     }
                 }
-                .sheet(isPresented: self.$openedEditBudgetModal) {
-                    if let selectedBudget = self.budgetStore.selectedBudget {
-                        EditBudgetModalView(budget: selectedBudget) { budget in
-                            self.budgetStore.selectedBudget = budget
-                        }
-                    }
-                }
-                .sheet(isPresented: self.$openedCreateBudgetModal) {
-                    CreateBudgetModalViewProvider(
-                        openedCreateBudgetModal: self.$openedCreateBudgetModal
-                    )
-                }
-                .sheet(isPresented: self.$openedBudgetListModal) {
-                    BudgetListModalView(
-                        showBudgetList: $openedBudgetListModal
-                    )
-                }
-                .sheet(isPresented: self.$openedCategoryListModal) {
-                    CategoryTemplateListModalView(
-                        showModalView: self.$openedCategoryListModal
-                    )
-                }
-                .ignoresSafeArea(edges: [.bottom])
+            }
+            .sheet(isPresented: self.$openedCreateBudgetModal) {
+                CreateBudgetModalViewProvider(
+                    openedCreateBudgetModal: self.$openedCreateBudgetModal
+                )
+            }
+            .sheet(isPresented: self.$openedBudgetListModal) {
+                BudgetListModalView(
+                    showBudgetList: $openedBudgetListModal
+                )
+            }
+            .sheet(isPresented: self.$openedCategoryListModal) {
+                CategoryTemplateListModalView(
+                    showModalView: self.$openedCategoryListModal
+                )
+            }
+            .ignoresSafeArea(edges: [.bottom])
         }
     }
 }

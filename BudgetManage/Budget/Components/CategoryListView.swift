@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct CategoryListView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
@@ -15,6 +16,8 @@ struct CategoryListView: View {
     @State private var selectedBudgetCategoryId: UUID? = nil
     
     @State private var showAddBudgetCategoryModalView: Bool = false
+    
+    @State private var dragging: Category?
     
     private func getCategoryTemplate(categoryTemplateId: UUID) -> CategoryTemplate? {
         self.categoryTemplateStore.categories.first { $0.id == categoryTemplateId }
@@ -58,8 +61,19 @@ struct CategoryListView: View {
                                 budgetCategory: self.getBudgetCategory(category: category)
                             )
                         }
+                        .opacity(self.dragging?.id == category.id ? 0.4 : 1)
                         .buttonStyle(.plain)
+                        .onDrag {
+                            self.dragging = category
+                            return NSItemProvider(object: budget.id.uuidString as NSString)
+                        }
+                        .onDrop(of: [UTType.text], delegate: BudgetCategoryDragDelegate(
+                            item: category,
+                            budgetStore: self.budgetStore,
+                            current: $dragging
+                        ))
                     }
+                    .onMove(perform: {_, _ in})
 
                     Button(role: .none) {
                         self.selectedBudgetCategoryId = nil
@@ -104,3 +118,30 @@ struct CategoryListView_Previews: PreviewProvider {
         }
     }
 }
+
+struct BudgetCategoryDragDelegate: DropDelegate {
+    let item: Category
+    var budgetStore: BudgetStore
+    @Binding var current: Category?
+    
+    func dropEntered(info: DropInfo) {
+        if item != current, self.budgetStore.selectedBudget != nil {
+            let from = self.budgetStore.selectedBudget!.categories.firstIndex(of: current!)!
+            let to = self.budgetStore.selectedBudget!.categories.firstIndex(of: item)!
+            if self.budgetStore.selectedBudget!.categories[to].id != current!.id {
+                self.budgetStore.selectedBudget!.categories.move(fromOffsets: IndexSet(integer: from),
+                              toOffset: to > from ? to + 1 : to)
+            }
+        }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        return DropProposal(operation: .move)
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        current = nil
+        return true
+    }
+}
+

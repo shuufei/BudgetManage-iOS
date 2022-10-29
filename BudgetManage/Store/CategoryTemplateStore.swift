@@ -10,7 +10,7 @@ import Foundation
 class CategoryTemplateStore: ObservableObject {
     @Published var categories: [CategoryTemplate] = [] {
         didSet {
-            print("--- didSet categories: \(categories)")
+//            print("--- didSet categories: \(categories)")
             Task {
                 do {
                     try await CategoryTemplateStore.save(categoryTemplates: self.categories)
