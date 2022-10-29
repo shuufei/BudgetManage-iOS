@@ -10,16 +10,27 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    
+    @State private var loading = false
 
     var body: some View {
-        BudgetView()
+        VStack {
+            if !loading {
+                BudgetView()
+            } else {
+                Spacer()
+                ProgressView()
+                Spacer()
+            }
+                
+        }
         .task {
             do {
                 self.budgetStore.budgets = try await BudgetStore.load()
                 self.categoryTemplateStore.categories = try await CategoryTemplateStore.load()
                 print(self.budgetStore.budgets.count)
             } catch {
-//                        TODO: handling error
+                //                        TODO: handling error
             }
         }
     }
