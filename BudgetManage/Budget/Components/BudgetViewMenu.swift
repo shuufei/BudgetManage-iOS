@@ -10,6 +10,7 @@ import SwiftUI
 struct BudgetViewMenu: View {
     let onTapEditBudget: () -> Void
     let onTapCreateBudget: () -> Void
+    let onTapDeleteBudget: () -> Void
     let onTapShowBudgetList: () -> Void
     let onTapShowCategoryList: () -> Void
     
@@ -27,7 +28,9 @@ struct BudgetViewMenu: View {
 //            Button {} label: {
 //                Label("カテゴリを並び替え...", systemImage: "arrow.up.arrow.down")
 //            }
-            Button(role: .destructive) {} label: {
+            Button(role: .destructive) {
+                self.onTapDeleteBudget()
+            } label: {
                 Label("予算を削除...", systemImage: "trash")
             }
             Divider()

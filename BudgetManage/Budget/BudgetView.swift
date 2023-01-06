@@ -14,6 +14,7 @@ struct BudgetView: View {
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
     @State var openedCategoryListModal: Bool = false
+    @State private var showDeleteConfirmAlert: Bool = false
 
     var categoryTemplates: [CategoryTemplate] {
         self.categoryTemplateStore.categories
@@ -54,6 +55,8 @@ struct BudgetView: View {
                         self.openedEditBudgetModal = true
                     } onTapCreateBudget: {
                         self.openedCreateBudgetModal = true
+                    } onTapDeleteBudget: {
+                        self.showDeleteConfirmAlert = true
                     } onTapShowBudgetList: {
                         self.openedBudgetListModal = true
                     } onTapShowCategoryList: {
@@ -82,6 +85,18 @@ struct BudgetView: View {
                 CategoryTemplateListModalView(
                     showModalView: self.$openedCategoryListModal
                 )
+            }
+            .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.budgetStore.selectedBudget) { budget in
+                    Button("削除", role: .destructive) {
+                        var tmpBudgets = self.budgetStore.budgets.filter { $0.id != budget.id }
+                        let index = tmpBudgets.firstIndex {$0.isActive == true}
+                        if index == nil && tmpBudgets.count != 0 {
+                            tmpBudgets[0].isActive = true
+                        }
+                        self.budgetStore.budgets = tmpBudgets
+                    }
+            } message: { budget in
+                Text("予算を削除すると、予算に紐づく出費記録も削除されます。")
             }
             .ignoresSafeArea(edges: [.bottom])
         }
