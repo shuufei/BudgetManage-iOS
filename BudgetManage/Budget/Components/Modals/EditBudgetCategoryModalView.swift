@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct EditBudgetCategoryModalView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
-
-    @Binding var showModalView: Bool
     
     @State private var showAddConfirmAlert: Bool = false
     @State private var addTarget: CategoryTemplate? = nil
@@ -61,154 +60,150 @@ struct EditBudgetCategoryModalView: View {
             }
         }
     }
+    
+    private func commit() {
+        self.budgetStore.selectedBudget = self.tmpBudget
+        self.dismiss()
+    }
+    
+    @State private var presentingConfirmationDialog: Bool = false
+    private var isModified: Bool {
+        get {
+            self.budgetStore.selectedBudget != self.tmpBudget
+        }
+    }
 
     var body: some View {
-        NavigationView {
-            List {
-                Text("\(self.tmpBudget.title)の予算へのカテゴリの追加, 削除")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(Color.black.opacity(0))
-                    .listRowInsets(EdgeInsets())
-                Section(header: Text("追加済み")) {
-                    if self.tmpBudget.categories.isEmpty {
-                        Text("追加されているカテゴリはありません")
-                            .listRowBackground(Color.black.opacity(0))
-                            .font(.callout)
-                    }
-                    ForEach(Array(self.budgetCategories.enumerated()), id: \.element) { index, category in
-                        Button(role: .none) {
-                            let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
-                            self.removeTarget = categoryTemplate
-                            self.showRemoveConfirmAlert = true
-                        } label: {
-                            HStack {
-                                HStack {
-                                    CategoryTemplateLabel(title: category.title, mainColor: category.mainColor, accentColor: category.accentColor)
-                                    Text("¥\(category.budgetAmount)")
-                                        .foregroundColor(.secondary)
-                                }
-                                Spacer()
-                                Image(systemName: "minus.circle.fill")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.red)
-                                
-                            }
-                        }
-                    }
+        List {
+            Text("\(self.tmpBudget.title)の予算へのカテゴリの追加, 削除")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .listRowBackground(Color.black.opacity(0))
+                .listRowInsets(EdgeInsets())
+            Section(header: Text("追加済み")) {
+                if self.tmpBudget.categories.isEmpty {
+                    Text("追加されているカテゴリはありません")
+                        .listRowBackground(Color.black.opacity(0))
+                        .font(.callout)
                 }
-                Section(header: Text("カテゴリ一覧")) {
-                    if self.categoryTemplateStore.categories.isEmpty {
-                        Text("カテゴリが登録されていません")
-                            .listRowBackground(Color.black.opacity(0))
-                            .font(.callout)
-                    }
-                    if self.appendableCategoryTemplates.isEmpty {
-                        Text("追加可能なカテゴリがありません")
-                            .listRowBackground(Color.black.opacity(0))
-                            .font(.callout)
-                    }
-                    ForEach(self.appendableCategoryTemplates) { categoryTemplate in
-                        Button(role: .none) {
-                            self.showAddConfirmAlert = true
-                            self.addTarget = categoryTemplate
-                        } label: {
-                            HStack {
-                                CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
-                                Spacer()
-                                Image(systemName: "plus.circle.fill")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.green)
-                            }
-                        }
-                    }
-                }
-                
-                HStack {
-                    Spacer()
-                    Button {
-                        self.showCreateCategoryTemplateModalView = true
+                ForEach(Array(self.budgetCategories.enumerated()), id: \.element) { index, category in
+                    Button(role: .none) {
+                        let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
+                        self.removeTarget = categoryTemplate
+                        self.showRemoveConfirmAlert = true
                     } label: {
-                        Text("新しいカテゴリを作成")
-                    }
-                    .buttonStyle(.borderless)
-                    Spacer()
-                }
-                .listRowBackground(Color.black.opacity(0))
-                .listRowSeparator(.hidden)
-                
-                AddBudgetCategoryAlert(
-                    textfieldText: self.$categoryBudgetAmount.value,
-                    showingAlert: self.$showAddConfirmAlert,
-                    budgetTitle: self.tmpBudget.title,
-                    categoryTitle: self.addTarget?.title ?? "",
-                    cancelButtonAction: {
-                        self.resetAddAlert()
-                    },
-                    addButtonAction: {
-                        self.addBudgetCategory()
-                        self.resetAddAlert()
-                    }
-                )
-                .listRowBackground(Color.black.opacity(0))
-            }
-            .navigationTitle("予算のカテゴリ編集")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
-                        self.showModalView = false
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("完了") {
-                        self.budgetStore.selectedBudget = self.tmpBudget
-                        self.showModalView = false
+                        HStack {
+                            HStack {
+                                CategoryTemplateLabel(title: category.title, mainColor: category.mainColor, accentColor: category.accentColor)
+                                Text("¥\(category.budgetAmount)")
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "minus.circle.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.red)
+                            
+                        }
                     }
                 }
             }
-            .onAppear {
-                if let budget = self.budgetStore.selectedBudget {
-                    self.tmpBudget = budget
+            Section(header: Text("カテゴリ一覧")) {
+                if self.categoryTemplateStore.categories.isEmpty {
+                    Text("カテゴリが登録されていません")
+                        .listRowBackground(Color.black.opacity(0))
+                        .font(.callout)
                 }
-                if #available(iOS 15, *) {
-                    UITableView.appearance().contentInset.top = -25
+                if self.appendableCategoryTemplates.isEmpty {
+                    Text("追加可能なカテゴリがありません")
+                        .listRowBackground(Color.black.opacity(0))
+                        .font(.callout)
+                }
+                ForEach(self.appendableCategoryTemplates) { categoryTemplate in
+                    Button(role: .none) {
+                        self.showAddConfirmAlert = true
+                        self.addTarget = categoryTemplate
+                    } label: {
+                        HStack {
+                            CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
+                            Spacer()
+                            Image(systemName: "plus.circle.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.green)
+                        }
+                    }
                 }
             }
-            .onDisappear {
-                if #available(iOS 15, *) {
-                    UITableView.appearance().contentInset.top = .zero
+            
+            HStack {
+                Spacer()
+                Button {
+                    self.showCreateCategoryTemplateModalView = true
+                } label: {
+                    Text("新しいカテゴリを作成")
                 }
+                .buttonStyle(.borderless)
+                Spacer()
             }
-            .alert("カテゴリの削除", isPresented: self.$showRemoveConfirmAlert) {
-                Button("削除", role: .destructive) {
-                    self.removeBudgetCategory()
-                    self.showRemoveConfirmAlert = false
-                    self.removeTarget = nil
+            .listRowBackground(Color.black.opacity(0))
+            .listRowSeparator(.hidden)
+            
+            AddBudgetCategoryAlert(
+                textfieldText: self.$categoryBudgetAmount.value,
+                showingAlert: self.$showAddConfirmAlert,
+                budgetTitle: self.tmpBudget.title,
+                categoryTitle: self.addTarget?.title ?? "",
+                cancelButtonAction: {
+                    self.resetAddAlert()
+                },
+                addButtonAction: {
+                    self.addBudgetCategory()
+                    self.resetAddAlert()
                 }
-            } message: {
-                if self.removeTarget == nil {
-                    Text("エラー")
-                }
-                Text("\(self.tmpBudget.title)から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
+            )
+            .listRowBackground(Color.black.opacity(0))
+        }
+        .navigationTitle("予算のカテゴリ編集")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if let budget = self.budgetStore.selectedBudget {
+                self.tmpBudget = budget
             }
-            .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
-                CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
-                    self.categoryTemplateStore.categories.append(categoryTemplate)
-                }
+            if #available(iOS 15, *) {
+                UITableView.appearance().contentInset.top = -25
             }
         }
+        .onDisappear {
+            if #available(iOS 15, *) {
+                UITableView.appearance().contentInset.top = .zero
+            }
+        }
+        .alert("カテゴリの削除", isPresented: self.$showRemoveConfirmAlert) {
+            Button("削除", role: .destructive) {
+                self.removeBudgetCategory()
+                self.showRemoveConfirmAlert = false
+                self.removeTarget = nil
+            }
+        } message: {
+            if self.removeTarget == nil {
+                Text("エラー")
+            }
+            Text("\(self.tmpBudget.title)から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
+        }
+        .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
+            CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
+                self.categoryTemplateStore.categories.append(categoryTemplate)
+            }
+        }
+        .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
     }
 }
 
 struct CreateBudgetCategoryModalView_Previews: PreviewProvider {
     static var previews: some View {
-        EditBudgetCategoryModalView(
-            showModalView: .constant(true)
-        )
+        EditBudgetCategoryModalView()
             .environmentObject(BudgetStore())
             .environmentObject(CategoryTemplateStore())
     }

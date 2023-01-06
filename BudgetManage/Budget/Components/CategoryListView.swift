@@ -101,9 +101,7 @@ struct CategoryListView: View {
             )
         }
         .sheet(isPresented: self.$showAddBudgetCategoryModalView) {
-            EditBudgetCategoryModalView(
-                showModalView: self.$showAddBudgetCategoryModalView
-            )
+            EditBudgetCategoryModalView()
         }
     }
 }
