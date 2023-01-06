@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddExpenseView: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     var categoryId: UUID?
@@ -81,7 +82,8 @@ struct AddExpenseView: View {
             }
             .disabled(self.amount.value.isEmpty)
             .buttonStyle(.borderedProminent)
-            .tint(self.theme?.mainColor ?? .gray)
+            .tint(self.theme?.mainColor != nil ? self.theme?.mainColor : self.colorScheme == .dark ? .white : .black)
+            .foregroundColor(self.colorScheme == .dark ? .black : .white)
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
         }
