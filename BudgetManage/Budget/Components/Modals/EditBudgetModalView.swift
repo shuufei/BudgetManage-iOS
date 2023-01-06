@@ -23,61 +23,40 @@ struct EditBudgetModalView: View {
         }
     }
     
+    private func commit() {
+        self.data.budgetAmount = Int(self.amount.value) ?? 0
+        onSave(self.data)
+        self.dismiss()
+    }
+    
     var body: some View {
-        NavigationView {
-            List {
-                Section(header: Text("タイトル")) {
-                    TextField("今月の予算", text: self.$data.title)
-                        .modifier(TextFieldClearButton(text: self.$data.title))
+        List {
+            Section(header: Text("タイトル")) {
+                TextField("今月の予算", text: self.$data.title)
+                    .modifier(TextFieldClearButton(text: self.$data.title))
+            }
+            Section(header: Text("期間")) {
+                DatePicker(selection: self.$data.startDate, displayedComponents: .date) {
+                    Text("開始日")
+                        .foregroundColor(.secondary)
                 }
-                Section(header: Text("期間")) {
-                    DatePicker(selection: self.$data.startDate, displayedComponents: .date) {
-                        Text("開始日")
-                            .foregroundColor(.secondary)
-                    }
-                    DatePicker(selection: self.$data.endDate, displayedComponents: .date) {
-                        Text("終了日")
-                            .foregroundColor(.secondary)
-                    }
-                }
-                Section(header: Text("予算額")) {
-                    AmountTextField(value: self.$amount.value)
+                DatePicker(selection: self.$data.endDate, displayedComponents: .date) {
+                    Text("終了日")
+                        .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle("予算の編集")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル", role: .cancel) {
-                        if self.isModified {
-                            presentingConfirmationDialog.toggle()
-                        }
-                        else {
-                            self.dismiss()
-                        }
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("保存") {
-                        self.data.budgetAmount = Int(self.amount.value) ?? 0
-                        onSave(self.data)
-                        self.dismiss()
-                    }
-                }
-            }
-            .onAppear {
-                self.amount.value = String(self.budget.budgetAmount)
-                self.data = self.budget
+            Section(header: Text("予算額")) {
+                AmountTextField(value: self.$amount.value)
             }
         }
-        .interactiveDismissDisabled(isModified, attemptToDismiss: self.$presentingConfirmationDialog)
-        .confirmationDialog("", isPresented: $presentingConfirmationDialog) {
-            Button("変更を破棄", role: .destructive, action: {
-                self.dismiss()
-            })
-            Button("キャンセル", role: .cancel, action: { })
-        } message: {
-            Text("保存されていない変更があります")
+        .navigationTitle("予算の編集")
+        .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog(isModified: self.isModified) {
+            self.commit()
+        }
+        .onAppear {
+            self.amount.value = String(self.budget.budgetAmount)
+            self.data = self.budget
         }
     }
 }
