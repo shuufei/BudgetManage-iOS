@@ -23,9 +23,10 @@ struct BudgetViewMenu: View {
             Button {} label: {
                 Label("予算を複製...", systemImage: "square.on.square")
             }
-            Button {} label: {
-                Label("カテゴリを並び替え...", systemImage: "arrow.up.arrow.down")
-            }
+//            TODO: 実装
+//            Button {} label: {
+//                Label("カテゴリを並び替え...", systemImage: "arrow.up.arrow.down")
+//            }
             Button(role: .destructive) {} label: {
                 Label("予算を削除...", systemImage: "trash")
             }
