@@ -15,13 +15,11 @@ struct AddExpenseView: View {
     var onAdd: () -> Void
     
     @ObservedObject private var amount = NumbersOnly()
-    @State private var expenseDate = Date()
-    @State private var memo = ""
-    @State private var includeTime: Bool = true
-    @State private var selectedCategoryId: UUID?
+    @State private var initial: Expense = Expense(date: Date(), amount: 0)
+    @State private var data: Expense = Expense(date: Date(), amount: 0)
     
     private var theme: Theme? {
-        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.selectedCategoryId ?? self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
+        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.data.categoryId ?? self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
             return categoryTemplate.theme
         }
         return nil
@@ -35,40 +33,44 @@ struct AddExpenseView: View {
     }
     
     private func add() {
-        let amount = Int(self.amount.value) ?? 0;
         if var budget = self.budgetStore.selectedBudget {
             budget.expenses.append(
-                Expense(
-                    date: self.expenseDate,
-                    amount: amount,
-                    categoryId: self.categoryId ?? self.selectedCategoryId,
-                    memo: self.memo,
-                    includeTimeInDate: self.includeTime
-                )
+                self.data
             )
             self.budgetStore.selectedBudget = budget
         }
         self.onAdd()
     }
+    
+    @State private var presentingConfirmationDialog: Bool = false
+    private var isModified: Bool {
+        get {
+            self.initial != self.data
+        }
+    }
+    
     var body: some View {
         List {
             Section(header: Text("金額")) {
                 AmountTextField(value: self.$amount.value, theme: self.theme)
+                    .onChange(of: self.amount.value, perform: { value in
+                        self.data.amount = Int(value) ?? 0
+                    })
             }
             Section(header: Text("出費日")) {
-                DatePicker("日時", selection: self.$expenseDate, displayedComponents: self.includeTime ? [.date, .hourAndMinute] : .date)
+                DatePicker("日時", selection: self.$data.date, displayedComponents: self.data.includeTimeInDate ? [.date, .hourAndMinute] : .date)
                     .foregroundColor(.secondary)
-                Toggle(isOn: self.$includeTime) {
+                Toggle(isOn: self.$data.includeTimeInDate) {
                     Text("時間を含める")
                         .foregroundColor(.secondary)
                 }
             }
             Section {
                 if self.categoryId == nil{
-                    BudgetCategoryPicker(selectedCategoryId: self.$selectedCategoryId)
+                    BudgetCategoryPicker(selectedCategoryId: self.$data.categoryId)
                 }
-                TextField("メモ", text: self.$memo)
-                    .modifier(TextFieldClearButton(text: self.$memo))
+                TextField("メモ", text: self.$data.memo)
+                    .modifier(TextFieldClearButton(text: self.$data.memo))
             }
             Button {
                 self.add()
@@ -86,6 +88,10 @@ struct AddExpenseView: View {
             .foregroundColor(self.colorScheme == .dark ? .black : .white)
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
+            .onAppear {
+                self.initial.categoryId = self.categoryId
+                self.data.categoryId = self.categoryId
+            }
         }
     }
 }
