@@ -124,8 +124,7 @@ struct CategoryDetailModalView: View {
             }
             .sheet(isPresented: self.$showEditBudgetCategoryModalView) {
                 EditBudgetCategoryDetailModalView(
-                    selectedCategoryId: self.$selectedCategoryId,
-                    showModalView: self.$showEditBudgetCategoryModalView
+                    selectedCategoryId: self.$selectedCategoryId
                 )
             }
         }
