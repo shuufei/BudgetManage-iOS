@@ -26,53 +26,55 @@ struct EditExpenseModalView: View {
         }
         return nil
     }
+    
+    @State private var presentingConfirmationDialog: Bool = false
+    private var isModified: Bool {
+        get {
+            self.expense != self.data
+        }
+    }
+    
+    private func commit() {
+        onSave(self.data)
+        self.dismiss()
+    }
 
     var body: some View {
-        NavigationView {
-            List {
-                Section(header: Text("金額")) {
-                    AmountTextField(value: self.$amount.value, theme: self.theme)
-                }
-                Section(header: Text("出費日")) {
-                    DatePicker("日時", selection: self.$data.date, displayedComponents: self.data.includeTimeInDate ? [.date, .hourAndMinute] : .date)
-                        .foregroundColor(.secondary)
-                    Toggle(isOn: self.$data.includeTimeInDate) {
-                        Text("時間を含める")
-                            .foregroundColor(.secondary)
-                    }
-                }
-                Section {
-                    BudgetCategoryPicker(selectedCategoryId: self.$selectedCategoryId)
-                    TextField("メモ", text: self.$data.memo)
-                        .modifier(TextFieldClearButton(text: self.$data.memo))
-                }
-            }
-            .navigationTitle("出費の編集")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
-                        self.dismiss()
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("保存") {
+        List {
+            Section(header: Text("金額")) {
+                AmountTextField(value: self.$amount.value, theme: self.theme)
+                    .onChange(of: self.amount.value, perform: { value in
                         self.data.amount = Int(self.amount.value) ?? 0
+                    })
+            }
+            Section(header: Text("出費日")) {
+                DatePicker("日時", selection: self.$data.date, displayedComponents: self.data.includeTimeInDate ? [.date, .hourAndMinute] : .date)
+                    .foregroundColor(.secondary)
+                Toggle(isOn: self.$data.includeTimeInDate) {
+                    Text("時間を含める")
+                        .foregroundColor(.secondary)
+                }
+            }
+            Section {
+                BudgetCategoryPicker(selectedCategoryId: self.$selectedCategoryId)
+                    .onChange(of: self.selectedCategoryId, perform: { value in
                         self.data.categoryId = self.selectedCategoryId
-                        onSave(self.data)
-                        self.dismiss()
-                    }
-                }
+                    })
+                TextField("メモ", text: self.$data.memo)
+                    .modifier(TextFieldClearButton(text: self.$data.memo))
             }
-            .onAppear {
-                if self.initialized {
-                    return
-                }
-                self.amount.value = String(self.expense.amount)
-                self.data = self.expense
-                self.selectedCategoryId = self.expense.categoryId
-                self.initialized = true
+        }
+        .navigationTitle("出費の編集")
+        .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
+        .onAppear {
+            if self.initialized {
+                return
             }
+            self.amount.value = String(self.expense.amount)
+            self.data = self.expense
+            self.selectedCategoryId = self.expense.categoryId
+            self.initialized = true
         }
     }
 }
