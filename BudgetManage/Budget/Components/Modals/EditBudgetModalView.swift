@@ -8,13 +8,20 @@
 import SwiftUI
 
 struct EditBudgetModalView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject private var amount = NumbersOnly()
     
     var budget: Budget
     var onSave: (_ budget: Budget) -> Void
     
     @State var data: Budget = Budget(title: "", startDate: Date(), endDate: Date(), budgetAmount: 0, isActibe: false, expenses: [])
+    
+    @State private var presentingConfirmationDialog: Bool = false
+    private var isModified: Bool {
+        get {
+            self.budget != self.data
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -41,8 +48,13 @@ struct EditBudgetModalView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") {
-                        self.dismiss()
+                    Button("キャンセル", role: .cancel) {
+                        if self.isModified {
+                            presentingConfirmationDialog.toggle()
+                        }
+                        else {
+                            self.dismiss()
+                        }
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
@@ -57,6 +69,15 @@ struct EditBudgetModalView: View {
                 self.amount.value = String(self.budget.budgetAmount)
                 self.data = self.budget
             }
+        }
+        .interactiveDismissDisabled(isModified, attemptToDismiss: self.$presentingConfirmationDialog)
+        .confirmationDialog("", isPresented: $presentingConfirmationDialog) {
+            Button("変更を破棄", role: .destructive, action: {
+                self.dismiss()
+            })
+            Button("キャンセル", role: .cancel, action: { })
+        } message: {
+            Text("保存されていない変更があります")
         }
     }
 }
