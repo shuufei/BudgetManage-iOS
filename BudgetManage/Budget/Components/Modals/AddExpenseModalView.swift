@@ -12,7 +12,7 @@ struct AddExpenseModalView: View {
     
     var body: some View {
         NavigationView {
-            AddExpenseView() {
+            AddExpenseView {
                 self.showModalView = false
             }
             .navigationTitle("出費 追加")

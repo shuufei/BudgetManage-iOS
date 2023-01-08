@@ -29,19 +29,19 @@ struct ConfirmationDialog: ViewModifier {
     NavigationView {
       content
         .toolbar {
-          ToolbarItem(placement: .cancellationAction) {
-            Button("キャンセル", role: .cancel) {
-              if isModified {
-                presentingConfirmationDialog.toggle()
-              }
-              else {
-                doCancel()
-              }
+            ToolbarItem(placement: .cancellationAction) {
+                Button("キャンセル", role: .cancel) {
+                  if isModified {
+                    presentingConfirmationDialog.toggle()
+                  }
+                  else {
+                    doCancel()
+                  }
+                }
+                }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("完了", action: doCommit)
             }
-          }
-          ToolbarItem(placement: .confirmationAction) {
-            Button("完了", action: doCommit)
-          }
         }
         .confirmationDialog("", isPresented: $presentingConfirmationDialog) {
           Button("変更を破棄", role: .destructive, action: doCancel)
@@ -51,16 +51,16 @@ struct ConfirmationDialog: ViewModifier {
         }
     }
     // Option 1: use a closure to handle the attempt to dismiss
-//    .interactiveDismissDisabled(isModified) {
-//      presentingConfirmationDialog.toggle()
-//    }
+    //    .interactiveDismissDisabled(isModified) {
+    //      presentingConfirmationDialog.toggle()
+    //    }
     // Option 2: bind attempt to dismiss to a boolean state variable that drives the UI
     .interactiveDismissDisabled(isModified, attemptToDismiss: $presentingConfirmationDialog)
   }
 }
 
 extension View {
-  func confirmationDialog(isModified: Bool, onCancel: (() -> Void)? = nil, onCommit: @escaping () -> Void) -> some View {
+    func confirmationDialog(isModified: Bool, onCancel: (() -> Void)? = nil, onCommit: @escaping () -> Void) -> some View {
     self.modifier(ConfirmationDialog(isModified: isModified,  onCancel: onCancel, onCommit: onCommit))
-  }
+    }
 }

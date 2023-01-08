@@ -11,11 +11,11 @@ struct AddExpenseView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     var categoryId: UUID?
     var onAdd: () -> Void
     
     @ObservedObject private var amount = NumbersOnly()
-    @State private var initial: Expense = Expense(date: Date(), amount: 0)
     @State private var data: Expense = Expense(date: Date(), amount: 0)
     
     private var theme: Theme? {
@@ -40,13 +40,6 @@ struct AddExpenseView: View {
             self.budgetStore.selectedBudget = budget
         }
         self.onAdd()
-    }
-    
-    @State private var presentingConfirmationDialog: Bool = false
-    private var isModified: Bool {
-        get {
-            self.initial != self.data
-        }
     }
     
     var body: some View {
@@ -89,7 +82,6 @@ struct AddExpenseView: View {
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
             .onAppear {
-                self.initial.categoryId = self.categoryId
                 self.data.categoryId = self.categoryId
             }
         }
