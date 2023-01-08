@@ -15,34 +15,29 @@ struct CategoryBudgetBar: View {
     private var data: BudgetCategory.CategoryDisplayData {
         self.budgetCategory.displayData()
     }
+    @State private var showBar = false
     
     private var balanceAmountRate: CGFloat {
         let rate = CGFloat(self.data.balanceAmount) / CGFloat(self.data.budgetAmount)
         return rate.isNaN || (!rate.isNaN && rate < 0) ? 0 : rate
     }
-    
-    private var totalExpenseAmountRate: CGFloat {
-        CGFloat(1) - self.balanceAmountRate
-    }
-    
+
     private func getBalanceAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
         let width = geometryWidth;
         return width >= 0 ? width * self.balanceAmountRate : 0;
-    }
-    
-    private func getTotalExpenseAmountBarWidth(_ geometryWidth: CGFloat) -> CGFloat {
-        let width = geometryWidth;
-        return width >= 0 ? width * self.totalExpenseAmountRate : 0;
     }
 
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 2) {
-                HStack(spacing: 0) {
+                ZStack {
                     self.data.mainColor
-                        .frame(width: self.getBalanceAmountBarWidth(geometry.size.width), height: self.barHeight)
-                    Color(UIColor.systemGray5).frame(width: self.getTotalExpenseAmountBarWidth(geometry.size.width), height: self.barHeight)
+                        .frame(width: self.showBar ? self.getBalanceAmountBarWidth(geometry.size.width) : 0, height: self.barHeight)
+                        .animation(.spring().delay(0.3), value: showBar)
                 }
+                
+                .frame(width: geometry.size.width, height: self.barHeight, alignment: .leading)
+                .background(Color(UIColor.systemGray5))
                 .cornerRadius(3)
                 HStack {
                     Text("¥0")
@@ -58,8 +53,12 @@ struct CategoryBudgetBar: View {
                 }
                 return Color.clear
             })
+
         }
         .frame(height: self.totalHeight)
+        .onAppear {
+            self.showBar = true
+        }
     }
 }
 

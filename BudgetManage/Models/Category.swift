@@ -112,3 +112,12 @@ func getBudgetCategorieDisplayDataList(categories: [Category], categoryTemplates
         )
     }
 }
+
+extension BudgetCategory: Equatable {
+    static func == (lhs: BudgetCategory, rhs: BudgetCategory) -> Bool {
+        return
+            lhs.displayData().categoryId == rhs.displayData().categoryId &&
+            lhs.displayData().balanceAmount == rhs.displayData().balanceAmount &&
+            lhs.displayData().totalExpenseAmount == rhs.displayData().totalExpenseAmount
+    }
+}

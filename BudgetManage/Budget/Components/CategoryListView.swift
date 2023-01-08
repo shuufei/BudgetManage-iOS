@@ -74,22 +74,30 @@ struct CategoryListView: View {
                         ))
                     }
                     .onMove(perform: {_, _ in})
-
-                    Button(role: .none) {
-                        self.selectedBudgetCategoryId = nil
-                        self.showCategoryDetailModalView = true
-                    } label: {
-                        CategoryCard(
-                            budgetCategory: .uncategorized(
-                                UnCategorized(
-                                    title: "未分類",
-                                    budgetAmount: budget.uncategorizedBudgetAmount
-                                ),
-                                budget.uncategorizedExpenses
+                    
+                    /*
+                     
+                     NOTE:
+                     budget切り替え時に未分類のカードを強制再renderさせるためのForEach
+                     再renderにより、barのanimationが実行される
+                     */
+                    ForEach([budget]) {_ in
+                        Button(role: .none) {
+                            self.selectedBudgetCategoryId = nil
+                            self.showCategoryDetailModalView = true
+                        } label: {
+                            CategoryCard(
+                                budgetCategory: .uncategorized(
+                                    UnCategorized(
+                                        title: "未分類",
+                                        budgetAmount: budget.uncategorizedBudgetAmount
+                                    ),
+                                    budget.uncategorizedExpenses
+                                )
                             )
-                        )
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
                 
             }
