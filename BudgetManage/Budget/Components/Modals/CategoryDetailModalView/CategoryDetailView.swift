@@ -8,26 +8,18 @@
 import SwiftUI
 
 struct CategoryDetailView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
-    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+    let budgetCategory: BudgetCategoryCD
 
-//    @Binding var selectedCategoryId: UUID?
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
     
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: ExpenseCD? = nil
-
     @State private var editTarget: ExpenseCD? = nil
-    
-//    let budgetCategory: BudgetCategory
-    let budgetCategory: BudgetCategoryCD
     
     private var expenses: [ExpenseCD] {
         self.budgetCategory.expenses?.allObjects as? [ExpenseCD] ?? []
-//        self.budgetStore.selectedBudget?.expenses.filter {
-//            $0.categoryId == self.selectedCategoryId
-//        } ?? []
     }
     
     private func getFormattedDate(date: Date, includeTime: Bool = true) -> String {
@@ -126,17 +118,7 @@ struct CategoryDetailView: View {
             }
         }
         .sheet(item: self.$editTarget) { editTarget in
-//            EditExpenseModalView(expense: editTarget) { expense in
-//            }
-            EditBudgetModalView(budget: Budget(startDate: Date(), endDate: Date(), budgetAmount: 0), onSave: {data in})
-//            if var budget = self.budgetStore.selectedBudget, let expenseIndex = budget.expenses.firstIndex(where: { el in
-//                el.id == editTarget.id
-//            }), let expense = budget.expenses[expenseIndex] {
-//                EditExpenseModalView(expense: editTarget) { expense in
-//    //                budget.expenses[expenseIndex] = expense
-//    //                self.budgetStore.selectedBudget = budget
-//                }
-//            }
+            EditExpenseModalView(expense: editTarget)
         }
         .onAppear {
             if #available(iOS 15, *) {

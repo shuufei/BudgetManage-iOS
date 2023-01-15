@@ -8,35 +8,32 @@
 import SwiftUI
 
 struct EditExpenseModalView: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
-    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
-    
     var expense: ExpenseCD
-    var onSave: (_ expense: ExpenseCD) -> Void
 
-//    @State private var selectedCategoryId: UUID?
-//    @State private var data: Expense = Expense(date: Date(), amount: 0)
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+
     @State private var initialized: Bool = false
-    
     @ObservedObject private var amount = NumbersOnly()
     @State private var memo: String = ""
     @State private var date: Date = Date()
     @State private var includeTimeInDate: Bool = false
     @State private var budgetCategoryId: UUID? = nil
     
-//    private var theme: Theme? {
-//        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.selectedCategoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
-//            return categoryTemplate.theme
-//        }
-//        return nil
-//    }
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
+    
+    private var selectedBudgetCategory: BudgetCategoryCD? {
+        (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first { budgetCategory in
+            budgetCategory.id == self.budgetCategoryId
+        }
+    }
     
     private var selectedBudgetCategoryMainColor: Color? {
-        (self.uiStateEntities.first?.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first { budgetCategory in
-            budgetCategory.id == self.budgetCategoryId
-        }?.mainColor
+        self.selectedBudgetCategory?.mainColor
     }
     
     @State private var presentingConfirmationDialog: Bool = false
@@ -51,21 +48,24 @@ struct EditExpenseModalView: View {
             )
         }
     }
-    
+
     private func commit() {
-//        TODO: update処理
-        onSave(self.expense)
+        self.expense.amount = Int32(self.amount.value) ?? 0
+        self.expense.memo = self.memo
+        self.expense.date = self.date
+        self.expense.includeTimeInDate = self.includeTimeInDate
+        self.expense.budgetCategory = self.selectedBudgetCategory
+        self.uiStateEntities.first?.updatedAt = Date()
+        try? self.viewContext.save()
+        
         self.dismiss()
     }
 
     var body: some View {
         List {
-//            Section(header: Text("金額")) {
-//                AmountTextField(value: self.$amount.value, mainColor: self.selectedBudgetCategoryMainColor)
-//                //                    .onChange(of: self.amount.value, perform: { value in
-//                //                        self.data.amount = Int(self.amount.value) ?? 0
-//                //                    })
-//            }
+            Section(header: Text("金額")) {
+                AmountTextField(value: self.$amount.value, mainColor: self.selectedBudgetCategoryMainColor)
+            }
             Section(header: Text("出費日")) {
                 DatePicker("日時", selection: self.$date, displayedComponents: self.includeTimeInDate ? [.date, .hourAndMinute] : .date)
                     .foregroundColor(.secondary)
@@ -76,13 +76,11 @@ struct EditExpenseModalView: View {
             }
             Section {
                 BudgetCategoryPicker(selectedBudgetCategoryId: self.$budgetCategoryId)
-                //                    .onChange(of: self.selectedCategoryId, perform: { value in
-                //                        self.data.categoryId = self.selectedCategoryId
-                //                    })
                 TextField("メモ", text: self.$memo)
                     .modifier(TextFieldClearButton(text: self.$memo))
             }
         }
+        .listStyle(InsetGroupedListStyle())
         .navigationTitle("出費の編集")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
@@ -91,13 +89,11 @@ struct EditExpenseModalView: View {
                 return
             }
             self.amount.value = String(self.expense.amount)
-            //            self.data = self.expense
-            self.amount.value = String(self.expense.amount)
             self.memo = self.expense.memo ?? ""
             self.date = self.expense.date ?? Date()
             self.includeTimeInDate = self.expense.includeTimeInDate
             self.budgetCategoryId = self.expense.budgetCategory?.id
-            //            self.selectedCategoryId = self.expense.categoryId
+
             self.initialized = true
         }
     }

@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct CategoryTitle: View {
-    @Environment(\.colorScheme) private var colorScheme
-
-//    var category: BudgetCategory
     var categoryTitle: String
     var categoryBalanceAmount: Int32
+
+    @Environment(\.colorScheme) private var colorScheme
     
-    var isDeficit: Bool {
+    private var isDeficit: Bool {
         self.categoryBalanceAmount < 0
     }
     
