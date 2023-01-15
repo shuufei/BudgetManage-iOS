@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BudgetCD" representedClassName="BudgetCD" syncable="YES">
-        <attribute name="budgetAmount" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="endDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="isActive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="title" attributeType="String"/>
+        <attribute name="budgetAmount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="expenses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExpenseCD" inverseName="budget" inverseEntity="ExpenseCD"/>
+        <relationship name="uiState" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UICD" inverseName="activeBudget" inverseEntity="UICD"/>
     </entity>
     <entity name="ExpenseCD" representedClassName="ExpenseCD" syncable="YES">
-        <attribute name="amount" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="includeTimeInDate" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="memo" optional="YES" attributeType="String"/>
+        <attribute name="amount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="includeTimeInDate" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="memo" attributeType="String"/>
         <relationship name="budget" maxCount="1" deletionRule="Nullify" destinationEntity="BudgetCD" inverseName="expenses" inverseEntity="BudgetCD"/>
     </entity>
+    <entity name="UICD" representedClassName="UICD" syncable="YES">
+        <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="activeBudget" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BudgetCD" inverseName="uiState" inverseEntity="BudgetCD"/>
+    </entity>
     <elements>
-        <element name="BudgetCD" positionX="-274.140625" positionY="-38.3125" width="128" height="148"/>
+        <element name="BudgetCD" positionX="-274.140625" positionY="-38.3125" width="128" height="163"/>
         <element name="ExpenseCD" positionX="-54" positionY="-9" width="128" height="133"/>
+        <element name="UICD" positionX="-586.875" positionY="-47.5" width="128" height="73"/>
     </elements>
 </model>

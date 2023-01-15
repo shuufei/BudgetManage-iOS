@@ -10,6 +10,9 @@ import SwiftUI
 struct BudgetView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
     @State var openedEditBudgetModal: Bool = false
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
@@ -23,15 +26,19 @@ struct BudgetView: View {
     var navigationTitle: String {
         return self.budgetStore.selectedBudget?.title ?? "予算"
     }
+    
+    var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
 
     var body: some View {
         NavigationView {
             ZStack {
-                if self.budgetStore.selectedBudget != nil {
+                if self.activeBudget != nil {
                     Color(UIColor.systemGray5)
                     ScrollView {
                         VStack {
-                            BudgetInfo(budget: self.budgetStore.selectedBudget!)
+                            BudgetInfo(budget: self.activeBudget!)
                                 .padding(.all, 12)
                             CategoryListView()
                                 .padding(.horizontal, 12)
@@ -77,23 +84,17 @@ struct BudgetView: View {
                 )
             }
             .sheet(isPresented: self.$openedBudgetListModal) {
-                BudgetListModalView(
-                    showBudgetList: $openedBudgetListModal
-                )
+                BudgetListModalView()
             }
             .sheet(isPresented: self.$openedCategoryListModal) {
                 CategoryTemplateListModalView(
                     showModalView: self.$openedCategoryListModal
                 )
             }
-            .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.budgetStore.selectedBudget) { budget in
+            .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.activeBudget) { budget in
                     Button("削除", role: .destructive) {
-                        var tmpBudgets = self.budgetStore.budgets.filter { $0.id != budget.id }
-                        let index = tmpBudgets.firstIndex {$0.isActive == true}
-                        if index == nil && tmpBudgets.count != 0 {
-                            tmpBudgets[0].isActive = true
-                        }
-                        self.budgetStore.budgets = tmpBudgets
+                        viewContext.delete(budget)
+                        try? viewContext.save()
                     }
             } message: { budget in
                 Text("予算を削除すると、予算に紐づく出費記録も削除されます。")

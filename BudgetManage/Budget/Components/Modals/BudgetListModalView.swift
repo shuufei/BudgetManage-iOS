@@ -9,9 +9,11 @@ import SwiftUI
 
 struct BudgetListModalView: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var budgetStore: BudgetStore
-    
-    @Binding var showBudgetList: Bool
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
 
     @State private var openedCreateBudgetModal: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
@@ -19,7 +21,7 @@ struct BudgetListModalView: View {
     
     @State private var editTarget: Budget? = nil
 
-    func getFormattedBudgetAmout(budgetAmount: Int) -> String {
+    func getFormattedBudgetAmout(budgetAmount: Int32) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         let formatted = formatter.string(
@@ -28,23 +30,30 @@ struct BudgetListModalView: View {
         return "¥\(formatted)"
     }
     
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
+    
     var body: some View {
         NavigationView {
             List {
-                if self.budgetStore.budgets.count == 0 {
+                if self.budgets.count == 0 {
                     Text("予算が登録されていません")
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color.black.opacity(0))
                 }
-                ForEach(self.budgetStore.budgets) { budget in
+//                ForEach(self.budgetStore.budgets) { budget in
+                ForEach(self.budgets) { budget in
                     Button(role: .none) {
-                        for (index, element) in self.budgetStore.budgets.enumerated() {
-                            self.budgetStore.budgets[index].isActive = element.id == budget.id ? true : false
+                        if let ui = self.uiStateEntities.first {
+                            ui.activeBudget = budget
+                            ui.updatedAt = Date()
+                            try? self.viewContext.save()
                         }
-                        self.showBudgetList = false
+                        self.dismiss()
                     } label: {
                         HStack {
-                            if budget.isActive ?? false {
+                            if self.activeBudget?.id == budget.id {
                                 Image(systemName: "checkmark.circle.fill")
                                     .resizable()
                                     .foregroundColor(.green)
@@ -53,7 +62,7 @@ struct BudgetListModalView: View {
                                 Text("")
                                     .frame(width: 20)
                             }
-                            Text(budget.title)
+                            Text(budget.title ?? "")
                                 .lineLimit(1)
                             Spacer()
                             Text(self.getFormattedBudgetAmout(budgetAmount: budget.budgetAmount))
@@ -64,13 +73,13 @@ struct BudgetListModalView: View {
                     .swipeActions {
                         Button {
                             self.showDeleteConfirmAlert = true
-                            self.deletionTarget = budget
+//                            self.deletionTarget = budget
                         } label: {
                             Text("削除")
                         }
                         .tint(.red)
                         Button(role: .none) {
-                            self.editTarget = budget
+//                            self.editTarget = budget
                         } label: {
                             Text("編集")
                         }
@@ -83,7 +92,7 @@ struct BudgetListModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("閉じる") {
-                        self.showBudgetList = false
+                        self.dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -117,15 +126,15 @@ struct BudgetListModalView: View {
                         self.budgetStore.budgets[index] = budget
                     }
                 }
-                
+            }
+            .onAppear {
+                if self.uiStateEntities.first == nil, let budget = self.budgets.first {
+                    let newUI = UICD(context: self.viewContext)
+                    newUI.updatedAt = Date()
+                    newUI.activeBudget = budget
+                    try? viewContext.save()
+                }
             }
         }
-    }
-}
-
-struct BudgetListModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        BudgetListModalView(showBudgetList: .constant(true))
-            .environmentObject(BudgetStore())
     }
 }

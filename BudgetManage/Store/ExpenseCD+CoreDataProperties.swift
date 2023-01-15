@@ -16,11 +16,11 @@ extension ExpenseCD {
         return NSFetchRequest<ExpenseCD>(entityName: "ExpenseCD")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var date: Date?
     @NSManaged public var amount: Int32
-    @NSManaged public var memo: String?
+    @NSManaged public var date: Date?
+    @NSManaged public var id: UUID?
     @NSManaged public var includeTimeInDate: Bool
+    @NSManaged public var memo: String?
     @NSManaged public var budget: BudgetCD?
 
 }

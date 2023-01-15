@@ -16,13 +16,14 @@ extension BudgetCD {
         return NSFetchRequest<BudgetCD>(entityName: "BudgetCD")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var title: String?
     @NSManaged public var budgetAmount: Int32
-    @NSManaged public var startDate: Date?
     @NSManaged public var endDate: Date?
-    @NSManaged public var isActive: Bool
+    @NSManaged public var id: UUID?
+    @NSManaged public var startDate: Date?
+    @NSManaged public var title: String?
+    @NSManaged public var createdAt: Date?
     @NSManaged public var expenses: NSSet?
+    @NSManaged public var uiState: UICD?
 
 }
 

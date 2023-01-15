@@ -9,11 +9,13 @@ import SwiftUI
 
 @main
 struct BudgetManageApp: App {
+    let persistenceController = PersistenceCoreDataController.shared
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(BudgetStore())
                 .environmentObject(CategoryTemplateStore())
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
