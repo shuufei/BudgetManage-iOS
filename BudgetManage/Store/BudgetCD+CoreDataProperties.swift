@@ -63,5 +63,14 @@ extension BudgetCD {
 }
 
 extension BudgetCD : Identifiable {
-
+    var uncategorizedBudgetAmount: Int32 {
+        let totalBudgetAmount = (self.budgetCategories?.allObjects as? [BudgetCategoryCD])?.reduce(0, { x, y in
+            x + y.budgetAmount
+        }) ?? 0
+        return self.budgetAmount - totalBudgetAmount
+    }
+    
+    var uncategorizedExpenses: [ExpenseCD] {
+        (self.expenses?.allObjects as? [ExpenseCD])?.filter { $0.budgetCategory == nil } ?? [] as [ExpenseCD]
+    }
 }

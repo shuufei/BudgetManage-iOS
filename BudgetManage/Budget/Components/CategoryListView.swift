@@ -9,8 +9,11 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct CategoryListView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
 
     @State private var showCategoryDetailModalView: Bool = false
     @State private var selectedBudgetCategoryId: UUID? = nil
@@ -18,6 +21,10 @@ struct CategoryListView: View {
     @State private var showAddBudgetCategoryModalView: Bool = false
     
     @State private var dragging: Category?
+    
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
     
     private func getCategoryTemplate(categoryTemplateId: UUID) -> CategoryTemplate? {
         self.categoryTemplateStore.categories.first { $0.id == categoryTemplateId }
@@ -33,6 +40,16 @@ struct CategoryListView: View {
         } else {
             return .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
         }
+    }
+    
+    private func budgetCategoriesArray(_ budgetCategories: NSSet?) -> [BudgetCategoryCD] {
+        budgetCategories?.allObjects as? [BudgetCategoryCD] ?? []
+    }
+    
+    private func getTotalExpenseAmount(_ expenses: [ExpenseCD]) -> Int32 {
+        expenses.reduce(0, { x, y in
+            x + y.amount
+        })
     }
     
     var body: some View {
@@ -51,27 +68,25 @@ struct CategoryListView: View {
             }
             .padding(.horizontal, 8)
             VStack(spacing: 12) {
-                if let budget = self.budgetStore.selectedBudget {
-                    ForEach(budget.categories) { category in
+                if let budget = self.activeBudget {
+                    ForEach(self.budgetCategoriesArray(budget.budgetCategories)) { category in
                         Button(role: .none) {
                             self.selectedBudgetCategoryId = category.id
                             self.showCategoryDetailModalView = true
                         } label: {
-                            CategoryCard(
-                                budgetCategory: self.getBudgetCategory(category: category)
-                            )
+                            CategoryCard(budgetCategoryTitle: category.title, budgetAmount: category.budgetAmount, budgetBalanceAmount: category.balanceAmount, budgetCategoryMainColor: category.mainColor)
                         }
                         .opacity(self.dragging?.id == category.id ? 0.4 : 1)
                         .buttonStyle(.plain)
-                        .onDrag {
-                            self.dragging = category
-                            return NSItemProvider(object: budget.id.uuidString as NSString)
-                        }
-                        .onDrop(of: [UTType.text], delegate: BudgetCategoryDragDelegate(
-                            item: category,
-                            budgetStore: self.budgetStore,
-                            current: $dragging
-                        ))
+//                        .onDrag {
+//                            self.dragging = category
+//                            return NSItemProvider(object: budget.id.uuidString as NSString)
+//                        }
+//                        .onDrop(of: [UTType.text], delegate: BudgetCategoryDragDelegate(
+//                            item: category,
+//                            budgetStore: self.budgetStore,
+//                            current: $dragging
+//                        ))
                     }
                     .onMove(perform: {_, _ in})
                     
@@ -81,23 +96,15 @@ struct CategoryListView: View {
                      budget切り替え時に未分類のカードを強制再renderさせるためのForEach
                      再renderにより、barのanimationが実行される
                      */
-                    ForEach([budget]) {_ in
-                        Button(role: .none) {
-                            self.selectedBudgetCategoryId = nil
-                            self.showCategoryDetailModalView = true
-                        } label: {
-                            CategoryCard(
-                                budgetCategory: .uncategorized(
-                                    UnCategorized(
-                                        title: "未分類",
-                                        budgetAmount: budget.uncategorizedBudgetAmount
-                                    ),
-                                    budget.uncategorizedExpenses
-                                )
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
+//                    ForEach([budget]) {_ in
+//                        Button(role: .none) {
+//                            self.selectedBudgetCategoryId = nil
+//                            self.showCategoryDetailModalView = true
+//                        } label: {
+//                            CategoryCard(budgetCategoryTitle: "未分類", budgetAmount: budget.uncategorizedBudgetAmount, budgetBalanceAmount: self.getTotalExpenseAmount(budget.uncategorizedExpenses), budgetCategoryMainColor: Color(UIColor.systemGray))
+//                        }
+//                        .buttonStyle(.plain)
+//                    }
                 }
                 
             }

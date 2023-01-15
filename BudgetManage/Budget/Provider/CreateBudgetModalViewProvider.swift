@@ -24,6 +24,13 @@ struct CreateBudgetModalViewProvider: View {
             budget.budgetAmount = Int32(newBudget.budgetAmount)
             budget.createdAt = Date()
             
+            let uncategorizedBudgetCategory = BudgetCategoryCD(context: self.viewContext)
+            uncategorizedBudgetCategory.id = UUID()
+            uncategorizedBudgetCategory.budgetAmount = budget.budgetAmount
+            uncategorizedBudgetCategory.createdAt = Date()
+            
+            budget.addToBudgetCategories(uncategorizedBudgetCategory)
+            
             let ui = self.uiStateEntities.first ?? UICD(context: self.viewContext)
             ui.updatedAt = Date()
             ui.activeBudget = budget

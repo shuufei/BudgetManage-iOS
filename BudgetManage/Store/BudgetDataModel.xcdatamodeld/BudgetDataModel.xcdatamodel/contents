@@ -40,10 +40,10 @@
         <relationship name="activeBudget" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BudgetCD" inverseName="uiState" inverseEntity="BudgetCD"/>
     </entity>
     <elements>
+        <element name="BudgetCategoryCD" positionX="-207.68359375" positionY="222.83984375" width="128" height="119"/>
         <element name="BudgetCD" positionX="-274.140625" positionY="-38.3125" width="128" height="178"/>
+        <element name="CategoryTemplateCD" positionX="9.0546875" positionY="223.65625" width="128" height="118"/>
         <element name="ExpenseCD" positionX="-54" positionY="-9" width="128" height="148"/>
         <element name="UICD" positionX="-586.875" positionY="-47.5" width="128" height="73"/>
-        <element name="CategoryTemplateCD" positionX="9.0546875" positionY="223.65625" width="128" height="118"/>
-        <element name="BudgetCategoryCD" positionX="-207.68359375" positionY="222.83984375" width="128" height="133"/>
     </elements>
 </model>

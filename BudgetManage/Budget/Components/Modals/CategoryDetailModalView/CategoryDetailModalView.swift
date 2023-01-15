@@ -10,6 +10,8 @@ import SwiftUI
 struct CategoryDetailModalView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+//    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var selectedCategoryId: UUID?
     @Binding var showModalView: Bool
@@ -19,33 +21,36 @@ struct CategoryDetailModalView: View {
     @State private var showEditBudgetCategoryModalView: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
     
-    private var budgetCategory: BudgetCategory? {
-        if let budget = self.budgetStore.selectedBudget {
-            if let category = budget.categories.first(
-                where: { $0.id == self.selectedCategoryId }
-            ), let categoryTemplate = self.categoryTemplateStore.categories.first(
-                where: { $0.id == category.categoryTemplateId }
-            )  {
-                let categoryExpenses = budget.expenses.filter { $0.categoryId == category.id }
-                return .categorized(category, categoryTemplate, categoryExpenses)
-            } else {
-                return .uncategorized(
-                    UnCategorized(
-                        title: "未分類",
-                        budgetAmount: budget.uncategorizedBudgetAmount
-                    ),
-                    budget.uncategorizedExpenses
-                )
-            }
+    private var budgetCategory: BudgetCategoryCD? {
+        return (self.uiStateEntities.first?.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first { budgetCategory in
+            budgetCategory.id == self.selectedCategoryId
         }
-        return nil
+//        if let budget = self.budgetStore.selectedBudget {
+//            if let category = budget.categories.first(
+//                where: { $0.id == self.selectedCategoryId }
+//            ), let categoryTemplate = self.categoryTemplateStore.categories.first(
+//                where: { $0.id == category.categoryTemplateId }
+//            )  {
+//                let categoryExpenses = budget.expenses.filter { $0.categoryId == category.id }
+//                return .categorized(category, categoryTemplate, categoryExpenses)
+//            } else {
+//                return .uncategorized(
+//                    UnCategorized(
+//                        title: "未分類",
+//                        budgetAmount: Int32(budget.uncategorizedBudgetAmount)
+//                    ),
+//                    budget.uncategorizedExpenses
+//                )
+//            }
+//        }
+//        return nil
     }
     
     var body: some View {
         NavigationView {
             VStack {
                 if let budgetCategory = self.budgetCategory {
-                    CategoryTitle(category: budgetCategory)
+                    CategoryTitle(categoryTitle: budgetCategory.title, categoryBalanceAmount: budgetCategory.balanceAmount)
                         .padding(.horizontal, 24)
                         .padding(.top, 12)
                     switch self.selectedView {
@@ -54,10 +59,7 @@ struct CategoryDetailModalView: View {
                             self.showModalView = false
                         }
                     case .detail:
-                        CategoryDetailView(
-                            selectedCategoryId: self.$selectedCategoryId,
-                            budgetCategory: budgetCategory
-                        )
+                        CategoryDetailView(budgetCategory: budgetCategory)
                     }
                 }
             }

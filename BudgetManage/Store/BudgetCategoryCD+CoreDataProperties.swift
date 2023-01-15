@@ -8,6 +8,8 @@
 
 import Foundation
 import CoreData
+import UIKit
+import SwiftUI
 
 
 extension BudgetCategoryCD {
@@ -43,5 +45,28 @@ extension BudgetCategoryCD {
 }
 
 extension BudgetCategoryCD : Identifiable {
-
+    var title: String {
+        self.categoryTemplate?.title ?? "未分類"
+    }
+    var expensesArray: [ExpenseCD] {
+        self.expenses?.allObjects as? [ExpenseCD] ?? []
+    }
+    var balanceAmount: Int32 {
+        self.budgetAmount - self.getTotalExpenseAmount(self.expensesArray)
+    }
+    var totalExpensesAmount: Int32 {
+        self.getTotalExpenseAmount(self.expensesArray)
+    }
+    var mainColor: Color {
+        self.categoryTemplate?.theme.mainColor ?? Color(UIColor.systemGray)
+    }
+    var accentColor: Color {
+        self.categoryTemplate?.theme.accentColor ?? .primary
+    }
+    
+    private func getTotalExpenseAmount(_ expenses: [ExpenseCD]) -> Int32 {
+        expenses.reduce(0, { x, y in
+            x + Int32(y.amount)
+        })
+    }
 }
