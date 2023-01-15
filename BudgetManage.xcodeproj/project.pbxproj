@@ -11,6 +11,12 @@
 		704835812909749400224DBD /* BudgetCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704835802909749400224DBD /* BudgetCategoryPicker.swift */; };
 		709E8F1F297398D400261A78 /* View+InteractiveDismissableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */; };
 		709E8F20297398D400261A78 /* View+ConfirmationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E8F1E297398D400261A78 /* View+ConfirmationDialog.swift */; };
+		70F7F39429739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F39229739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld */; };
+		70F7F3A12973BFCA00B6C8C1 /* ExpenseCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F39D2973BFCA00B6C8C1 /* ExpenseCD+CoreDataClass.swift */; };
+		70F7F3A22973BFCA00B6C8C1 /* ExpenseCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F39E2973BFCA00B6C8C1 /* ExpenseCD+CoreDataProperties.swift */; };
+		70F7F3A32973BFCA00B6C8C1 /* BudgetCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F39F2973BFCA00B6C8C1 /* BudgetCD+CoreDataClass.swift */; };
+		70F7F3A42973BFCA00B6C8C1 /* BudgetCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F3A02973BFCA00B6C8C1 /* BudgetCD+CoreDataProperties.swift */; };
+		70F7F3A62973C03400B6C8C1 /* PersistenceCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F3A52973C03400B6C8C1 /* PersistenceCoreData.swift */; };
 		9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10928B359F90041C326 /* TextFieldClearButton.swift */; };
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
 		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
@@ -81,6 +87,12 @@
 		704835802909749400224DBD /* BudgetCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategoryPicker.swift; sourceTree = "<group>"; };
 		709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+InteractiveDismissableView.swift"; sourceTree = "<group>"; };
 		709E8F1E297398D400261A78 /* View+ConfirmationDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+ConfirmationDialog.swift"; sourceTree = "<group>"; };
+		70F7F39329739AA900B6C8C1 /* BudgetDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BudgetDataModel.xcdatamodel; sourceTree = "<group>"; };
+		70F7F39D2973BFCA00B6C8C1 /* ExpenseCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpenseCD+CoreDataClass.swift"; sourceTree = "<group>"; };
+		70F7F39E2973BFCA00B6C8C1 /* ExpenseCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpenseCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		70F7F39F2973BFCA00B6C8C1 /* BudgetCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCD+CoreDataClass.swift"; sourceTree = "<group>"; };
+		70F7F3A02973BFCA00B6C8C1 /* BudgetCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		70F7F3A52973C03400B6C8C1 /* PersistenceCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceCoreData.swift; sourceTree = "<group>"; };
 		9838A10928B359F90041C326 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
@@ -339,8 +351,14 @@
 		98B0439728B2183300BC762D /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				70F7F39D2973BFCA00B6C8C1 /* ExpenseCD+CoreDataClass.swift */,
+				70F7F39E2973BFCA00B6C8C1 /* ExpenseCD+CoreDataProperties.swift */,
+				70F7F39F2973BFCA00B6C8C1 /* BudgetCD+CoreDataClass.swift */,
+				70F7F3A02973BFCA00B6C8C1 /* BudgetCD+CoreDataProperties.swift */,
 				98B0439928B2186000BC762D /* BudgetStore.swift */,
 				983C7B4928C62315008D75D3 /* CategoryTemplateStore.swift */,
+				70F7F3A52973C03400B6C8C1 /* PersistenceCoreData.swift */,
+				70F7F39229739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -501,12 +519,15 @@
 			files = (
 				98B0436228B1E2F300BC762D /* ContentView.swift in Sources */,
 				983C7B3128BB38BB008D75D3 /* CategoryDetailModalView.swift in Sources */,
+				70F7F39429739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld in Sources */,
+				70F7F3A42973BFCA00B6C8C1 /* BudgetCD+CoreDataProperties.swift in Sources */,
 				983C7B5528CAF888008D75D3 /* EditCategoryTemplateModalView.swift in Sources */,
 				98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */,
 				983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */,
 				98B0438E28B1E41300BC762D /* Budget.swift in Sources */,
 				983C7B4228C2F294008D75D3 /* CategoryAddExpenseView.swift in Sources */,
 				9838A11928B65B5E0041C326 /* CategoryCard.swift in Sources */,
+				70F7F3A32973BFCA00B6C8C1 /* BudgetCD+CoreDataClass.swift in Sources */,
 				98B0439F28B24A8D00BC762D /* CreateBudgetModalView.swift in Sources */,
 				9838A11B28B65B810041C326 /* Category.swift in Sources */,
 				98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */,
@@ -514,6 +535,7 @@
 				98B0439C28B22E0800BC762D /* BudgetEmptyView.swift in Sources */,
 				9838A11728B65B3B0041C326 /* CategoryListView.swift in Sources */,
 				983C7B3728BD0058008D75D3 /* CategoryTitle.swift in Sources */,
+				70F7F3A12973BFCA00B6C8C1 /* ExpenseCD+CoreDataClass.swift in Sources */,
 				7048357F2906D7EE00224DBD /* EditBudgetModalView.swift in Sources */,
 				9838A11528B647B60041C326 /* BudgetInfo.swift in Sources */,
 				704835812909749400224DBD /* BudgetCategoryPicker.swift in Sources */,
@@ -531,7 +553,9 @@
 				9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */,
 				983C7B5A28CB2059008D75D3 /* AddBudgetCategoryAlert.swift in Sources */,
 				98B0439328B2089300BC762D /* BudgetViewNavigationTitle.swift in Sources */,
+				70F7F3A62973C03400B6C8C1 /* PersistenceCoreData.swift in Sources */,
 				9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */,
+				70F7F3A22973BFCA00B6C8C1 /* ExpenseCD+CoreDataProperties.swift in Sources */,
 				983C7B3E28C2E770008D75D3 /* CategoryBudgetBar.swift in Sources */,
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
 				983C7B4628C607EF008D75D3 /* CategoryTemplateListModalView.swift in Sources */,
@@ -715,7 +739,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.BudgetManage";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.shufei.app.BudgetManage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -744,7 +768,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.BudgetManage";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.shufei.app.BudgetManage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -868,6 +892,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		70F7F39229739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				70F7F39329739AA900B6C8C1 /* BudgetDataModel.xcdatamodel */,
+			);
+			currentVersion = 70F7F39329739AA900B6C8C1 /* BudgetDataModel.xcdatamodel */;
+			path = BudgetDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 98B0435428B1E2F300BC762D /* Project object */;
 }
