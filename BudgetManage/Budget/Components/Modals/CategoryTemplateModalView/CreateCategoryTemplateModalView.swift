@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct CreateCategoryTemplateModalView: View {
+    @Environment(\.dismiss) private var dismiss
     @State var title: String = ""
     @State var colorSelection: Theme = .yellow
-    @Binding var showModalView: Bool
     var createCategoryTemplate: (_ categoryTemplate: CategoryTemplate) -> Void
     
     private func create() {
         self.createCategoryTemplate(CategoryTemplate(title: self.title, theme: self.colorSelection))
-        self.showModalView = false
+        self.dismiss()
     }
     
     var body: some View {
@@ -46,18 +46,10 @@ struct CreateCategoryTemplateModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("キャンセル") {
-                        self.showModalView = false
+                        self.dismiss()
                     }
                 }
             }
-        }
-    }
-}
-
-struct CreateCategoryTemplateModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateCategoryTemplateModalView(showModalView: .constant(true)) { categoryTemplate in
-            
         }
     }
 }

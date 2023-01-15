@@ -24,7 +24,7 @@ struct BudgetView: View {
     }
 
     var navigationTitle: String {
-        return self.budgetStore.selectedBudget?.title ?? "予算"
+        return self.activeBudget?.title ?? "予算"
     }
     
     var activeBudget: BudgetCD? {
@@ -38,7 +38,7 @@ struct BudgetView: View {
                     Color(UIColor.systemGray5)
                     ScrollView {
                         VStack {
-                            BudgetInfo(budget: self.activeBudget!)
+                            BudgetInfo()
                                 .padding(.all, 12)
                             CategoryListView()
                                 .padding(.horizontal, 12)

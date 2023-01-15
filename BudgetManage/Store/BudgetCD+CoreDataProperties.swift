@@ -17,13 +17,14 @@ extension BudgetCD {
     }
 
     @NSManaged public var budgetAmount: Int32
+    @NSManaged public var createdAt: Date?
     @NSManaged public var endDate: Date?
     @NSManaged public var id: UUID?
     @NSManaged public var startDate: Date?
     @NSManaged public var title: String?
-    @NSManaged public var createdAt: Date?
     @NSManaged public var expenses: NSSet?
     @NSManaged public var uiState: UICD?
+    @NSManaged public var budgetCategories: NSSet?
 
 }
 
@@ -41,6 +42,23 @@ extension BudgetCD {
 
     @objc(removeExpenses:)
     @NSManaged public func removeFromExpenses(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for budgetCategories
+extension BudgetCD {
+
+    @objc(addBudgetCategoriesObject:)
+    @NSManaged public func addToBudgetCategories(_ value: BudgetCategoryCD)
+
+    @objc(removeBudgetCategoriesObject:)
+    @NSManaged public func removeFromBudgetCategories(_ value: BudgetCategoryCD)
+
+    @objc(addBudgetCategories:)
+    @NSManaged public func addToBudgetCategories(_ values: NSSet)
+
+    @objc(removeBudgetCategories:)
+    @NSManaged public func removeFromBudgetCategories(_ values: NSSet)
 
 }
 

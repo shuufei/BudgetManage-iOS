@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct EditBudgetCategoryModalView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
     
     @State private var showAddConfirmAlert: Bool = false
     @State private var addTarget: CategoryTemplate? = nil
@@ -114,8 +116,7 @@ struct EditBudgetCategoryModalView: View {
                     Text("カテゴリが登録されていません")
                         .listRowBackground(Color.black.opacity(0))
                         .font(.callout)
-                }
-                if self.appendableCategoryTemplates.isEmpty {
+                } else if self.appendableCategoryTemplates.isEmpty {
                     Text("追加可能なカテゴリがありません")
                         .listRowBackground(Color.black.opacity(0))
                         .font(.callout)
@@ -193,8 +194,13 @@ struct EditBudgetCategoryModalView: View {
             Text("\(self.tmpBudget.title)から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
         }
         .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
-            CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
-                self.categoryTemplateStore.categories.append(categoryTemplate)
+            CreateCategoryTemplateModalView() { categoryTemplate in
+                let newCategoryTemplate = CategoryTemplateCD(context: self.viewContext)
+                newCategoryTemplate.id = categoryTemplate.id
+                newCategoryTemplate.title = categoryTemplate.title
+                newCategoryTemplate.themeName = categoryTemplate.theme.name
+                newCategoryTemplate.createdAt = Date()
+                try? self.viewContext.save()
             }
         }
         .confirmationDialog(isModified: self.isModified, onCommit: self.commit)

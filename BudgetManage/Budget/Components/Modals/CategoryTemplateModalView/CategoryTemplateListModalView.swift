@@ -6,24 +6,27 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct CategoryTemplateListModalView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
 
     @Binding var showModalView: Bool
 
     @State private var showCreateCategoryTemplateModalView: Bool = false
 
     @State private var showDeleteConfirmAlert: Bool = false
-    @State private var deletionTarget: CategoryTemplate? = nil
+    @State private var deletionTarget: CategoryTemplateCD? = nil
 
     @State private var editTarget: CategoryTemplate? = nil
 
     var body: some View {
         NavigationView {
             List {
-                if self.categoryTemplateStore.categories.count == 0 {
+                if self.categoryTemplates.count == 0 {
                     HStack {
                         Spacer()
                         Text("カテゴリが登録されていません")
@@ -31,14 +34,14 @@ struct CategoryTemplateListModalView: View {
                     }
                     .listRowBackground(Color.red.opacity(0))
                 }
-                ForEach(self.categoryTemplateStore.categories) { categoryTemplate in
+                ForEach(self.categoryTemplates) { categoryTemplate in
                     HStack {
                         HStack {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(categoryTemplate.theme.mainColor)
                                 .frame(width: 24, height: 24)
                                 .foregroundColor(categoryTemplate.theme.accentColor)
-                            Text(categoryTemplate.title)
+                            Text(categoryTemplate.title ?? "")
                             Spacer()
                         }
                     }
@@ -50,7 +53,7 @@ struct CategoryTemplateListModalView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
-                            self.editTarget = categoryTemplate
+//                            self.editTarget = categoryTemplate
                         } label: {
                             Text("編集")
                         }
@@ -75,24 +78,28 @@ struct CategoryTemplateListModalView: View {
                 }
             }
             .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
-                CreateCategoryTemplateModalView(showModalView: self.$showCreateCategoryTemplateModalView) { categoryTemplate in
-                    self.categoryTemplateStore.categories.append(categoryTemplate)
+                CreateCategoryTemplateModalView() { categoryTemplate in
+                    let newCategoryTemplate = CategoryTemplateCD(context: self.viewContext)
+                    newCategoryTemplate.id = categoryTemplate.id
+                    newCategoryTemplate.title = categoryTemplate.title
+                    newCategoryTemplate.themeName = categoryTemplate.theme.name
+                    newCategoryTemplate.createdAt = Date()
+                    try? self.viewContext.save()
                 }
             }
             .alert("カテゴリの削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { categoryTemplate in
                     Button("削除", role: .destructive) {
-                        if var budget = self.budgetStore.selectedBudget {
-                            let expenses = budget.expenses.map { expense -> Expense in
-                                var tmp = expense
-                                if tmp.categoryId == deletionTarget?.id {
-                                    tmp.categoryId = nil
+                        if let categoryTemplate = self.deletionTarget {
+                            let fetchRequestExpense = NSFetchRequest<NSFetchRequestResult>()
+                            fetchRequestExpense.entity = ExpenseCD.entity()
+                            let expenses = try? self.viewContext.fetch(fetchRequestExpense) as? [ExpenseCD]
+                            expenses?.forEach { expense in
+                                if expense.budgetCategory?.categoryTemplate?.id == categoryTemplate.id {
+                                    expense.budgetCategory = nil
                                 }
-                                return tmp
                             }
-                            budget.expenses = expenses
-                            self.budgetStore.selectedBudget = budget
-                            let categoryTemplates = self.categoryTemplateStore.categories.filter { $0.id != categoryTemplate.id }
-                            self.categoryTemplateStore.categories = categoryTemplates
+                            self.viewContext.delete(categoryTemplate)
+                            try? self.viewContext.save()
                         }
                     }
             } message: { categoryTemplate in

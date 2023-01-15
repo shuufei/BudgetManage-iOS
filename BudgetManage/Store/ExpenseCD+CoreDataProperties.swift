@@ -22,6 +22,7 @@ extension ExpenseCD {
     @NSManaged public var includeTimeInDate: Bool
     @NSManaged public var memo: String?
     @NSManaged public var budget: BudgetCD?
+    @NSManaged public var budgetCategory: BudgetCategoryCD?
 
 }
 
