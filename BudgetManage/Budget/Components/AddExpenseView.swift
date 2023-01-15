@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct AddExpenseView: View {
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
 
@@ -33,12 +36,21 @@ struct AddExpenseView: View {
     }
     
     private func add() {
-        if var budget = self.budgetStore.selectedBudget {
-            budget.expenses.append(
-                self.data
-            )
-            self.budgetStore.selectedBudget = budget
+        if let ui = self.uiStateEntities.first {
+            let newExpense = ExpenseCD(context: self.viewContext)
+            newExpense.id = UUID()
+            newExpense.amount = Int32(self.data.amount)
+            newExpense.date = self.data.date
+            newExpense.memo = self.data.memo
+            newExpense.includeTimeInDate = self.data.includeTimeInDate
+            newExpense.budget = ui.activeBudget
+            ui.activeBudget?.addToExpenses(newExpense)
+            ui.updatedAt = Date()
+            try? self.viewContext.save()
+        } else {
+            fatalError("unexpected state: activeBudget is undefined")
         }
+        
         self.onAdd()
     }
     

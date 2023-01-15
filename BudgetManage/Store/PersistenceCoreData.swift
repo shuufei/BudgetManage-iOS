@@ -20,9 +20,6 @@ struct PersistenceCoreDataController {
             newBudget.budgetAmount = 150000
             newBudget.startDate = Date()
             newBudget.endDate = Date()
-            if index == 0 {
-                newBudget.isActive = true
-            }
         }
         do {
             try viewContext.save()

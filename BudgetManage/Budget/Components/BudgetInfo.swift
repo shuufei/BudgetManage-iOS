@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct BudgetInfo: View {
-    @Environment(\.colorScheme) var colorScheme
-    let budget: Budget
+    @Environment(\.colorScheme) private var colorScheme
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
     
-    var totalExpenseAmount: Int {
-        self.budget.expenses.reduce(0, {x, y in
-            x + y.amount
-        })
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
     }
     
-    var balanceAmount: Int {
-        self.budget.budgetAmount - self.totalExpenseAmount
+    private var totalExpenseAmount: Int32 {
+        return (self.activeBudget?.expenses?.allObjects as? [ExpenseCD])?.reduce(0, {x, y in
+            x + y.amount
+        }) ?? 0
+    }
+    
+    private var balanceAmount: Int32 {
+        (self.activeBudget?.budgetAmount ?? 0) - self.totalExpenseAmount
     }
     
     var body: some View {
@@ -32,9 +36,11 @@ struct BudgetInfo: View {
                     Text("残額")
                 }
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(self.budget.title)
-                    Text(Budget.Data.computedTitle(startDate: self.budget.startDate, endDate: self.budget.endDate))
-                    Text("¥\(self.budget.budgetAmount)")
+                    Text(self.activeBudget?.title ?? "")
+                    if let startDate = self.activeBudget?.startDate, let endDate = self.activeBudget?.endDate {
+                        Text(Budget.Data.computedTitle(startDate: startDate, endDate: endDate))
+                    }
+                    Text("¥\(self.activeBudget?.budgetAmount ?? 0)")
                     Text("¥\(self.totalExpenseAmount)")
                     Text("¥\(self.balanceAmount)")
                 }
@@ -49,8 +55,3 @@ struct BudgetInfo: View {
     }
 }
 
-struct BudgetInfo_Previews: PreviewProvider {
-    static var previews: some View {
-        BudgetInfo(budget: Budget.sampleData[0])
-    }
-}
