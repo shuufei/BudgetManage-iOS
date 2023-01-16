@@ -10,28 +10,32 @@ import SwiftUI
 struct EditBudgetCategoryModalView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+
     @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
-    
-    @State private var showAddConfirmAlert: Bool = false
-    @State private var addTarget: CategoryTemplate? = nil
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+
     @ObservedObject var categoryBudgetAmount = NumbersOnly()
 
+    @State private var showAddConfirmAlert: Bool = false
+    @State private var addTarget: CategoryTemplateCD? = nil
     @State private var showRemoveConfirmAlert: Bool = false
-    @State private var removeTarget: CategoryTemplate? = nil
-    
+    @State private var removeTarget: BudgetCategoryCD? = nil
     @State private var showCreateCategoryTemplateModalView: Bool = false
-
-    @State private var tmpBudget: Budget = Budget(startDate: Date(), endDate: Date(), budgetAmount: 0)
     
-    private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
-        return getBudgetCategorieDisplayDataList(categories: self.tmpBudget.categories, categoryTemplates: self.categoryTemplateStore.categories)
+    private var budgetCategories: [BudgetCategoryCD] {
+        return (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD] ?? []).filter { $0.title != "未分類" }
+    }
+
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
     }
     
-    private var appendableCategoryTemplates: [CategoryTemplate] {
-        self.categoryTemplateStore.categories.filter { categoryTemplate in
-            self.tmpBudget.categories.first { $0.categoryTemplateId == categoryTemplate.id } == nil
+    private var appendableCategoryTemplates: [CategoryTemplateCD] {
+        self.categoryTemplates.filter { template in
+            let budgetCategories = (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD]) ?? []
+            return budgetCategories.first { budgetCategory in
+                return budgetCategory.categoryTemplate?.id == template.id
+            } == nil
         }
     }
     
@@ -39,60 +43,68 @@ struct EditBudgetCategoryModalView: View {
         if addTarget == nil {
             return
         }
-        
-        let budgetAmount: Int = Int(self.categoryBudgetAmount.value) ?? 0
-        self.tmpBudget.categories.append(Category(categoryTemplateId: self.addTarget!.id, budgetAmount: budgetAmount))
+
+        let newBudgetCategory = BudgetCategoryCD(context: self.viewContext)
+        newBudgetCategory.id = UUID()
+        newBudgetCategory.createdAt = Date()
+        newBudgetCategory.expenses = []
+        newBudgetCategory.categoryTemplate = self.addTarget
+        newBudgetCategory.budgetAmount = Int32(self.categoryBudgetAmount.value) ?? 0
+        self.activeBudget?.addToBudgetCategories(newBudgetCategory)
+        if let uncategorized = self.activeBudget?.uncategorizedBudgetCategory {
+            uncategorized.budgetAmount -= newBudgetCategory.budgetAmount
+        }
+        self.uiStateEntities.first?.updatedAt = Date()
     }
     
+    private func removeBudgetCategory() -> Void {
+        if let budgetCategory = self.removeTarget {
+            if let uncategorized = self.activeBudget?.uncategorizedBudgetCategory {
+                (budgetCategory.expenses?.allObjects as? [ExpenseCD])?.forEach { expense in
+                    expense.budgetCategory = uncategorized
+                }
+                uncategorized.budgetAmount += budgetCategory.budgetAmount
+            }
+            self.viewContext.delete(budgetCategory)
+            self.uiStateEntities.first?.updatedAt = Date()
+        }
+    }
+
     private func resetAddAlert() {
         self.showAddConfirmAlert = false
         self.addTarget = nil
         self.categoryBudgetAmount.value = ""
     }
     
-    private func removeBudgetCategory() -> Void {
-        if let categoryTemplate = self.removeTarget, let category = self.tmpBudget.categories.first(where: { $0.categoryTemplateId == categoryTemplate.id }) {
-            self.tmpBudget.categories = self.tmpBudget.categories.filter { $0.categoryTemplateId != categoryTemplate.id }
-            self.tmpBudget.expenses = self.tmpBudget.expenses.map { expense in
-                var tmp = expense
-                if expense.categoryId == category.id {
-                    tmp.categoryId = nil
-                }
-                return tmp
-            }
-        }
-    }
-    
     private func commit() {
-        self.budgetStore.selectedBudget = self.tmpBudget
+        try? self.viewContext.save()
         self.dismiss()
     }
     
     @State private var presentingConfirmationDialog: Bool = false
     private var isModified: Bool {
         get {
-            self.budgetStore.selectedBudget != self.tmpBudget
+            self.viewContext.hasChanges
         }
     }
 
     var body: some View {
         List {
-            Text("\(self.tmpBudget.title)の予算へのカテゴリの追加, 削除")
+            Text("\(self.activeBudget?.title ?? "")の予算へのカテゴリの追加, 削除")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .listRowBackground(Color.black.opacity(0))
                 .listRowInsets(EdgeInsets())
             Section(header: Text("追加済み")) {
-                if self.tmpBudget.categories.isEmpty {
+                if self.budgetCategories.isEmpty {
                     Text("追加されているカテゴリはありません")
                         .listRowBackground(Color.black.opacity(0))
                         .font(.callout)
                 }
                 ForEach(Array(self.budgetCategories.enumerated()), id: \.element) { index, category in
                     Button(role: .none) {
-                        let categoryTemplate = self.categoryTemplateStore.categories.first { $0.id == category.categoryTemplateId }
-                        self.removeTarget = categoryTemplate
+                        self.removeTarget = category
                         self.showRemoveConfirmAlert = true
                     } label: {
                         HStack {
@@ -112,7 +124,7 @@ struct EditBudgetCategoryModalView: View {
                 }
             }
             Section(header: Text("カテゴリ一覧")) {
-                if self.categoryTemplateStore.categories.isEmpty {
+                if self.categoryTemplates.isEmpty {
                     Text("カテゴリが登録されていません")
                         .listRowBackground(Color.black.opacity(0))
                         .font(.callout)
@@ -127,7 +139,7 @@ struct EditBudgetCategoryModalView: View {
                         self.addTarget = categoryTemplate
                     } label: {
                         HStack {
-                            CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
+                            CategoryTemplateLabel(title: categoryTemplate.title ?? "", mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
                             Spacer()
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
@@ -154,7 +166,7 @@ struct EditBudgetCategoryModalView: View {
             AddBudgetCategoryAlert(
                 textfieldText: self.$categoryBudgetAmount.value,
                 showingAlert: self.$showAddConfirmAlert,
-                budgetTitle: self.tmpBudget.title,
+                budgetTitle: self.activeBudget?.title ?? "",
                 categoryTitle: self.addTarget?.title ?? "",
                 cancelButtonAction: {
                     self.resetAddAlert()
@@ -169,9 +181,6 @@ struct EditBudgetCategoryModalView: View {
         .navigationTitle("予算のカテゴリ編集")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            if let budget = self.budgetStore.selectedBudget {
-                self.tmpBudget = budget
-            }
             if #available(iOS 15, *) {
                 UITableView.appearance().contentInset.top = -25
             }
@@ -191,7 +200,7 @@ struct EditBudgetCategoryModalView: View {
             if self.removeTarget == nil {
                 Text("エラー")
             }
-            Text("\(self.tmpBudget.title)から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
+            Text("\(self.activeBudget?.title ?? "")から\(self.removeTarget?.title ?? "")カテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
         }
         .sheet(isPresented: self.$showCreateCategoryTemplateModalView) {
             CreateCategoryTemplateModalView() { categoryTemplate in
@@ -203,14 +212,8 @@ struct EditBudgetCategoryModalView: View {
                 try? self.viewContext.save()
             }
         }
-        .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
-    }
-}
-
-struct CreateBudgetCategoryModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditBudgetCategoryModalView()
-            .environmentObject(BudgetStore())
-            .environmentObject(CategoryTemplateStore())
+        .confirmationDialog(isModified: self.isModified, onCancel: {
+            self.viewContext.rollback()
+        }, onCommit: self.commit)
     }
 }
