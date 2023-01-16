@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70168E662975A6F5005BC267 /* EditBudgetModalViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70168E652975A6F5005BC267 /* EditBudgetModalViewProvider.swift */; };
 		7048357F2906D7EE00224DBD /* EditBudgetModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */; };
 		704835812909749400224DBD /* BudgetCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704835802909749400224DBD /* BudgetCategoryPicker.swift */; };
 		709E8F1F297398D400261A78 /* View+InteractiveDismissableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */; };
@@ -89,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		70168E652975A6F5005BC267 /* EditBudgetModalViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBudgetModalViewProvider.swift; sourceTree = "<group>"; };
 		7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBudgetModalView.swift; sourceTree = "<group>"; };
 		704835802909749400224DBD /* BudgetCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategoryPicker.swift; sourceTree = "<group>"; };
 		709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+InteractiveDismissableView.swift"; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				9838A11228B52A2E0041C326 /* CreateBudgetModalViewProvider.swift */,
+				70168E652975A6F5005BC267 /* EditBudgetModalViewProvider.swift */,
 			);
 			path = Provider;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 				983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */,
 				70F7F418297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift in Sources */,
 				98B0438E28B1E41300BC762D /* Budget.swift in Sources */,
+				70168E662975A6F5005BC267 /* EditBudgetModalViewProvider.swift in Sources */,
 				70F7F415297428A200B6C8C1 /* ExpenseCD+CoreDataClass.swift in Sources */,
 				983C7B4228C2F294008D75D3 /* CategoryAddExpenseView.swift in Sources */,
 				9838A11928B65B5E0041C326 /* CategoryCard.swift in Sources */,

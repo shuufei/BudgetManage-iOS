@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct BudgetListModalView: View {
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
-    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @State private var openedCreateBudgetModal: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
-    @State private var deletionTarget: Budget? = nil
-    
-    @State private var editTarget: Budget? = nil
+    @State private var deletionTarget: BudgetCD? = nil
+    @State private var editTarget: BudgetCD? = nil
 
     func getFormattedBudgetAmout(budgetAmount: Int32) -> String {
         let formatter = NumberFormatter()
@@ -42,7 +41,6 @@ struct BudgetListModalView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color.black.opacity(0))
                 }
-//                ForEach(self.budgetStore.budgets) { budget in
                 ForEach(self.budgets) { budget in
                     Button(role: .none) {
                         if let ui = self.uiStateEntities.first {
@@ -73,13 +71,13 @@ struct BudgetListModalView: View {
                     .swipeActions {
                         Button {
                             self.showDeleteConfirmAlert = true
-//                            self.deletionTarget = budget
+                            self.deletionTarget = budget
                         } label: {
                             Text("削除")
                         }
                         .tint(.red)
                         Button(role: .none) {
-//                            self.editTarget = budget
+                            self.editTarget = budget
                         } label: {
                             Text("編集")
                         }
@@ -110,22 +108,18 @@ struct BudgetListModalView: View {
             }
             .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { budget in
                     Button("削除", role: .destructive) {
-                        var tmpBudgets = self.budgetStore.budgets.filter { $0.id != budget.id }
-                        let index = tmpBudgets.firstIndex {$0.isActive == true}
-                        if index == nil && tmpBudgets.count != 0 {
-                            tmpBudgets[0].isActive = true
+                        self.viewContext.delete(budget)
+                        self.uiStateEntities.first?.updatedAt = Date()
+                        self.uiStateEntities.first?.activeBudget = self.budgets.first {
+                            $0.id != budget.id
                         }
-                        self.budgetStore.budgets = tmpBudgets
+                        try? self.viewContext.save()
                     }
             } message: { budget in
                 Text("予算を削除すると、予算に紐づく出費記録も削除されます。")
             }
             .sheet(item: self.$editTarget) { editTarget in
-                EditBudgetModalView(budget: editTarget) { budget in
-                    if let index = self.budgetStore.budgets.firstIndex(where: {el in el.id == editTarget.id}) {
-                        self.budgetStore.budgets[index] = budget
-                    }
-                }
+                EditBudgetModalViewProvider(editTarget: editTarget)
             }
             .onAppear {
                 if self.uiStateEntities.first == nil, let budget = self.budgets.first {

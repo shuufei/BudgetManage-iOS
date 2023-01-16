@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct CreateBudgetModalViewProvider: View {
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @Environment(\.managedObjectContext) var viewContext
-    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var openedCreateBudgetModal: Bool
     
@@ -37,12 +36,5 @@ struct CreateBudgetModalViewProvider: View {
             
             try? viewContext.save()
         }
-    }
-}
-
-struct CreateBudgetModalProvider_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateBudgetModalViewProvider(openedCreateBudgetModal: .constant(true))
-            .environmentObject(BudgetStore())
     }
 }

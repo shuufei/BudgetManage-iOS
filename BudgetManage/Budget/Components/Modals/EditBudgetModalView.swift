@@ -9,38 +9,50 @@ import SwiftUI
 
 struct EditBudgetModalView: View {
     @Environment(\.dismiss) private var dismiss
+
+    @State var currentBudget: BudgetCD?
+    var onSave: (_ budget: BudgetCD) -> Void
+    
+    @State private var title: String = ""
     @ObservedObject private var amount = NumbersOnly()
-    
-    var budget: Budget
-    var onSave: (_ budget: Budget) -> Void
-    
-    @State var data: Budget = Budget(title: "", startDate: Date(), endDate: Date(), budgetAmount: 0, isActibe: false, expenses: [])
+    @State private var startDate: Date = Date()
+    @State private var endDate: Date = Date()
     
     @State private var presentingConfirmationDialog: Bool = false
     private var isModified: Bool {
         get {
-            self.budget != self.data
+            return (
+                self.currentBudget?.title != self.title ||
+                self.currentBudget?.budgetAmount != Int32(self.amount.value) ?? 0 ||
+                self.currentBudget?.startDate != self.startDate ||
+                self.currentBudget?.endDate != self.endDate
+            )
         }
     }
     
     private func commit() {
-        self.data.budgetAmount = Int(self.amount.value) ?? 0
-        onSave(self.data)
+        if let budget = self.currentBudget {
+            budget.title = self.title
+            budget.budgetAmount = Int32(self.amount.value) ?? 0
+            budget.startDate = self.startDate
+            budget.endDate = self.endDate
+            self.onSave(budget)
+        }
         self.dismiss()
     }
     
     var body: some View {
         List {
             Section(header: Text("タイトル")) {
-                TextField("今月の予算", text: self.$data.title)
-                    .modifier(TextFieldClearButton(text: self.$data.title))
+                TextField("今月の予算", text: self.$title)
+                    .modifier(TextFieldClearButton(text: self.$title))
             }
             Section(header: Text("期間")) {
-                DatePicker(selection: self.$data.startDate, displayedComponents: .date) {
+                DatePicker(selection: self.$startDate, displayedComponents: .date) {
                     Text("開始日")
                         .foregroundColor(.secondary)
                 }
-                DatePicker(selection: self.$data.endDate, displayedComponents: .date) {
+                DatePicker(selection: self.$endDate, displayedComponents: .date) {
                     Text("終了日")
                         .foregroundColor(.secondary)
                 }
@@ -55,8 +67,12 @@ struct EditBudgetModalView: View {
             self.commit()
         }
         .onAppear {
-            self.amount.value = String(self.budget.budgetAmount)
-            self.data = self.budget
+            if let budget = self.currentBudget {
+                self.title = budget.title ?? ""
+                self.amount.value = String(budget.budgetAmount)
+                self.startDate = budget.startDate ?? Date()
+                self.endDate = budget.endDate ?? Date()
+            }
         }
     }
 }

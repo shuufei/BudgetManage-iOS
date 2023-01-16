@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct BudgetView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
-    @Environment(\.managedObjectContext) private var viewContext
+
     @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
+
     @State var openedEditBudgetModal: Bool = false
     @State var openedCreateBudgetModal: Bool = false
     @State var openedBudgetListModal: Bool = false
@@ -72,10 +75,8 @@ struct BudgetView: View {
                 }
             }
             .sheet(isPresented: self.$openedEditBudgetModal) {
-                if let selectedBudget = self.budgetStore.selectedBudget {
-                    EditBudgetModalView(budget: selectedBudget) { budget in
-                        self.budgetStore.selectedBudget = budget
-                    }
+                if let budget = self.activeBudget {
+                    EditBudgetModalViewProvider(editTarget: budget)
                 }
             }
             .sheet(isPresented: self.$openedCreateBudgetModal) {
@@ -94,6 +95,8 @@ struct BudgetView: View {
             .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.activeBudget) { budget in
                     Button("削除", role: .destructive) {
                         viewContext.delete(budget)
+                        self.uiStateEntities.first?.updatedAt = Date()
+                        self.uiStateEntities.first?.activeBudget = self.budgets.first { $0.id != budget.id }
                         try? viewContext.save()
                     }
             } message: { budget in
