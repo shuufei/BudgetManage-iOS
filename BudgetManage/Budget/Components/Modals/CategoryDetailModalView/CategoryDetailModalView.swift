@@ -8,21 +8,24 @@
 import SwiftUI
 
 struct CategoryDetailModalView: View {
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) var dismiss
 
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
-    @Binding var selectedCategoryId: UUID?
-    @Binding var showModalView: Bool
+    @Binding var selectedBudgetCategoryId: UUID?
     @State private var selectedView: CategoryDetailViewType = .addExpense
     @State private var showEditBudgetCategoryModalView: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
     
     private var budgetCategory: BudgetCategoryCD? {
         return (self.uiStateEntities.first?.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first { budgetCategory in
-            budgetCategory.id == self.selectedCategoryId
+            budgetCategory.id == self.selectedBudgetCategoryId
         }
+    }
+    
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
     }
     
     var body: some View {
@@ -34,8 +37,8 @@ struct CategoryDetailModalView: View {
                         .padding(.top, 12)
                     switch self.selectedView {
                     case .addExpense:
-                        CategoryAddExpenseView(categoryId: self.selectedCategoryId) {
-                            self.showModalView = false
+                        CategoryAddExpenseView(categoryId: self.selectedBudgetCategoryId) {
+                            self.dismiss()
                         }
                     case .detail:
                         CategoryDetailView(budgetCategory: budgetCategory)
@@ -47,7 +50,7 @@ struct CategoryDetailModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(self.selectedView == .addExpense ? "キャンセル" : "閉じる") {
-                        self.showModalView = false
+                        self.dismiss()
                     }
                 }
                 ToolbarItem(placement: .principal) {
@@ -59,7 +62,7 @@ struct CategoryDetailModalView: View {
                     .frame(width: 150)
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    if self.selectedCategoryId != nil && self.selectedView == .detail {
+                    if self.selectedBudgetCategoryId != nil && self.selectedView == .detail {
                         Menu {
                             Button {
                                 self.showEditBudgetCategoryModalView = true
@@ -83,29 +86,25 @@ struct CategoryDetailModalView: View {
             }
             .alert("予算カテゴリの削除", isPresented: self.$showDeleteConfirmAlert) {
                 Button("削除", role: .destructive) {
-//                    TODO: CoreData内のデータを削除
-//                    if var budget = self.budgetStore.selectedBudget {
-//                        let categories = budget.categories.filter { $0.id != self.selectedCategoryId }
-//                        let expenses = budget.expenses.map { expense -> Expense in
-//                            var tmp: Expense = expense
-//                            if expense.categoryId == self.selectedCategoryId {
-//                                tmp.categoryId = nil
-//                            }
-//                            return tmp
-//                        }
-//                        budget.categories = categories
-//                        budget.expenses = expenses
-//                        self.budgetStore.selectedBudget = budget
-//                        self.showDeleteConfirmAlert = false
-//                        self.showModalView = false
-//                    }
+                    if let budgetCategory = self.budgetCategory {
+                        if let uncategorized = self.activeBudget?.uncategorizedBudgetCategory {
+                            (budgetCategory.expenses?.allObjects as? [ExpenseCD])?.forEach { expense in
+                                expense.budgetCategory = uncategorized
+                            }
+                            uncategorized.budgetAmount += budgetCategory.budgetAmount
+                        }
+                        self.viewContext.delete(budgetCategory)
+                        self.uiStateEntities.first?.updatedAt = Date()
+                        try? self.viewContext.save()
+                        self.dismiss()
+                    }
                 }
             } message: {
                 Text("予算からカテゴリを削除しますか？削除したカテゴリに紐づく出費は未分類になります。")
             }
             .sheet(isPresented: self.$showEditBudgetCategoryModalView) {
                 EditBudgetCategoryDetailModalView(
-                    selectedCategoryId: self.$selectedCategoryId
+                    selectedBudgetCategoryId: self.$selectedBudgetCategoryId
                 )
             }
         }

@@ -14,7 +14,7 @@ struct EditBudgetCategoryDetailModalView: View {
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
     @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
 
-    @Binding var selectedCategoryId: UUID?
+    @Binding var selectedBudgetCategoryId: UUID?
     
     @State private var categoryTemplateId: UUID = UUID()
     @ObservedObject private var budgetAmount = NumbersOnly()
@@ -76,7 +76,7 @@ struct EditBudgetCategoryDetailModalView: View {
             if self.initialized {
                return
             }
-            if let budgetCategory = (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first(where: { $0.id == self.selectedCategoryId }) {
+            if let budgetCategory = (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first(where: { $0.id == self.selectedBudgetCategoryId }) {
                 if let id = budgetCategory.categoryTemplate?.id {
                     self.categoryTemplateId = id
                 }
