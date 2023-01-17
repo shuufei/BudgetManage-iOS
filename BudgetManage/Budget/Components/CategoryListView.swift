@@ -69,7 +69,7 @@ struct CategoryListView: View {
             .padding(.horizontal, 8)
             VStack(spacing: 12) {
                 if let budget = self.activeBudget {
-                    ForEach(self.budgetCategoriesArray(budget.budgetCategories)) { category in
+                    ForEach(self.budgetCategoriesArray(budget.budgetCategories).sorted(by: {$0.createdAt ?? Date() > $1.createdAt ?? Date()})) { category in
                         Button(role: .none) {
                             self.selectedBudgetCategoryId = category.id
                             self.showCategoryDetailModalView = true
