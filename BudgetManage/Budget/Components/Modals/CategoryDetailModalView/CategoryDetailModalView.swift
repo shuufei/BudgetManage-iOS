@@ -9,11 +9,11 @@ import SwiftUI
 
 struct CategoryDetailModalView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.dismiss) var dismiss
 
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var selectedBudgetCategoryId: UUID?
+    @Binding var showModalView: Bool
     @State private var selectedView: CategoryDetailViewType = .addExpense
     @State private var showEditBudgetCategoryModalView: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
@@ -38,7 +38,7 @@ struct CategoryDetailModalView: View {
                     switch self.selectedView {
                     case .addExpense:
                         CategoryAddExpenseView(categoryId: self.selectedBudgetCategoryId) {
-                            self.dismiss()
+                            self.showModalView = false
                         }
                     case .detail:
                         CategoryDetailView(budgetCategory: budgetCategory)
@@ -50,7 +50,7 @@ struct CategoryDetailModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(self.selectedView == .addExpense ? "キャンセル" : "閉じる") {
-                        self.dismiss()
+                        self.showModalView = false
                     }
                 }
                 ToolbarItem(placement: .principal) {
@@ -96,7 +96,7 @@ struct CategoryDetailModalView: View {
                         self.viewContext.delete(budgetCategory)
                         self.uiStateEntities.first?.updatedAt = Date()
                         try? self.viewContext.save()
-                        self.dismiss()
+                        self.showModalView = false
                     }
                 }
             } message: {

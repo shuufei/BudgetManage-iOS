@@ -111,7 +111,8 @@ struct CategoryListView: View {
         }
         .sheet(isPresented: self.$showCategoryDetailModalView) {
             CategoryDetailModalView(
-                selectedBudgetCategoryId: self.$selectedBudgetCategoryId
+                selectedBudgetCategoryId: self.$selectedBudgetCategoryId,
+                showModalView: self.$showCategoryDetailModalView
             )
         }
         .sheet(isPresented: self.$showAddBudgetCategoryModalView) {
