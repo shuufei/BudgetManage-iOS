@@ -21,7 +21,7 @@ struct CategoryTemplateListModalView: View {
     @State private var showDeleteConfirmAlert: Bool = false
     @State private var deletionTarget: CategoryTemplateCD? = nil
 
-    @State private var editTarget: CategoryTemplate? = nil
+    @State private var editTarget: CategoryTemplateCD? = nil
 
     var body: some View {
         NavigationView {
@@ -53,7 +53,7 @@ struct CategoryTemplateListModalView: View {
                             Text("削除")
                         }
                         Button(role: .none) {
-//                            self.editTarget = categoryTemplate
+                            self.editTarget = categoryTemplate
                         } label: {
                             Text("編集")
                         }
@@ -107,7 +107,7 @@ struct CategoryTemplateListModalView: View {
             }
             .sheet(item: self.$editTarget) { editTarget in
                 EditCategoryTemplateModalView(
-                    categoryTemplateId: editTarget.id
+                    categoryTemplate: editTarget
                 )
             }
         }

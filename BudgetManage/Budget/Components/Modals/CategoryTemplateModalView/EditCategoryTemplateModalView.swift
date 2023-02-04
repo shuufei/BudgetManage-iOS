@@ -8,58 +8,53 @@
 import SwiftUI
 
 struct EditCategoryTemplateModalView: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    var categoryTemplate: CategoryTemplateCD
 
-    var categoryTemplateId: UUID
-    
-    @State private var current: CategoryTemplate = CategoryTemplate(title: "", theme: .yellow)
-    @State private var data: CategoryTemplate = CategoryTemplate(title: "", theme: .yellow)
-    @State private var initialized: Bool = false
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
+
+    @State private var initialized: Bool = false    
+    @State private var theme: Theme = .red
+    @State private var title: String = ""
     
     @State private var presentingConfirmationDialog: Bool = false
     private var isModified: Bool {
         get {
-            self.current != self.data
+            return (
+                self.categoryTemplate.title != self.title ||
+                self.categoryTemplate.theme != self.theme
+            )
         }
     }
     
     private func commit() {
-        if let index = self.categoryTemplateStore.categories.firstIndex(where: { $0.id == self.categoryTemplateId }) {
-            self.categoryTemplateStore.categories[index] = self.data
-        }
+        self.categoryTemplate.title = self.title
+        self.categoryTemplate.themeName = self.theme.name
+        self.uiStateEntities.first?.updatedAt = Date()
+        try? self.viewContext.save()
         self.dismiss()
     }
     
     var body: some View {
         List {
             Section {
-                TextField("カテゴリ名", text: self.$data.title)
-                    .modifier(TextFieldClearButton(text: self.$data.title))
-                ThemePicker(selection: self.$data.theme)
+                TextField("カテゴリ名", text: self.$title)
+                    .modifier(TextFieldClearButton(text: self.$title))
+                ThemePicker(selection: self.$theme)
             }
             .onAppear {
                 if self.initialized {
                     return
                 }
-                if let categoryTemplate = self.categoryTemplateStore.categories.first(where: { $0.id == self.categoryTemplateId }) {
-                    self.current = categoryTemplate
-                    self.data = categoryTemplate
-                    self.initialized = true
-                }
+                self.title = self.categoryTemplate.title ?? ""
+                self.theme = self.categoryTemplate.theme
+                self.initialized = true
             }
         }
         .navigationTitle("カテゴリの編集")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
-    }
-}
-
-struct EditCategoryTemplateModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditCategoryTemplateModalView(
-            categoryTemplateId: CategoryTemplate.sampleData[0].id
-        )
-            .environmentObject(CategoryTemplateStore())
     }
 }
