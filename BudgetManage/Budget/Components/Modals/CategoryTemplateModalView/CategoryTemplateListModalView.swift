@@ -13,6 +13,8 @@ struct CategoryTemplateListModalView: View {
     @EnvironmentObject private var budgetStore: BudgetStore
     @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var showModalView: Bool
 
@@ -95,9 +97,23 @@ struct CategoryTemplateListModalView: View {
                             let expenses = try? self.viewContext.fetch(fetchRequestExpense) as? [ExpenseCD]
                             expenses?.forEach { expense in
                                 if expense.budgetCategory?.categoryTemplate?.id == categoryTemplate.id {
-                                    expense.budgetCategory = nil
+                                    let uncategorized = expense.budget?.uncategorizedBudgetCategory
+                                    expense.budgetCategory = uncategorized ?? nil
                                 }
                             }
+                            self.budgets.forEach { budget in
+//                                削除したcategoryTemplateに紐づくbudgetCategoryを削除
+                                let removedBudgetCategories = (budget.budgetCategories?.allObjects as? [BudgetCategoryCD])?.filter({
+                                    $0.categoryTemplate?.id != categoryTemplate.id
+                                }) ?? []
+                                budget.budgetCategories = NSSet(array: removedBudgetCategories)
+//                                budgetCategoryが増減したので、未分類の予算額を算出し直す
+                                let budgetCategoriesAmount = (budget.budgetCategories?.allObjects as? [BudgetCategoryCD])?.reduce(0, {x, y in
+                                    return x + (y.title != "未分類" ? y.budgetAmount : 0)
+                                }) ?? 0
+                                budget.uncategorizedBudgetCategory?.budgetAmount = budget.budgetAmount - budgetCategoriesAmount
+                            }
+                            self.uiStateEntities.first?.updatedAt = Date()
                             self.viewContext.delete(categoryTemplate)
                             try? self.viewContext.save()
                         }
