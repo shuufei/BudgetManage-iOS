@@ -62,23 +62,25 @@ struct CategoryDetailModalView: View {
                     .frame(width: 150)
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    if self.selectedBudgetCategoryId != nil && self.selectedView == .detail {
-                        Menu {
-                            Button {
-                                self.showEditBudgetCategoryModalView = true
+                    if self.budgetCategory?.title != "未分類" {
+                        if self.selectedBudgetCategoryId != nil {
+                            Menu {
+                                Button {
+                                    self.showEditBudgetCategoryModalView = true
+                                } label: {
+                                    Label("編集", systemImage: "pencil")
+                                }
+                                Button(role: .destructive) {
+                                    self.showDeleteConfirmAlert = true
+                                } label: {
+                                    Label("削除...", systemImage: "trash")
+                                }
                             } label: {
-                                Label("編集", systemImage: "pencil")
+                                Button {} label: {
+                                    Image(systemName: "ellipsis")
+                                }
+                                .accessibilityLabel("open menu")
                             }
-                            Button(role: .destructive) {
-                                self.showDeleteConfirmAlert = true
-                            } label: {
-                                Label("削除...", systemImage: "trash")
-                            }
-                        } label: {
-                            Button {} label: {
-                                Image(systemName: "ellipsis")
-                            }
-                            .accessibilityLabel("open menu")
                         }
                     }
                 }
