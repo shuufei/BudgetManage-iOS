@@ -44,6 +44,7 @@ struct AddBudgetCategoryAlert: UIViewControllerRepresentable {
             textField.placeholder = "¥0"
             textField.text = self.textfieldText
             textField.delegate = context.coordinator
+            textField.keyboardType = .numberPad
         }
         
         alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel) { _ in
