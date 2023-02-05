@@ -47,7 +47,6 @@ struct BudgetView: View {
                     BudgetEmptyView(openedCreateBudgetModal: $openedCreateBudgetModal)
                 }
             }
-            .navigationTitle(self.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
