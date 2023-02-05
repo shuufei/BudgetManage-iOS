@@ -12,6 +12,8 @@ struct CategoryBudgetBar: View {
     var budgetBalanceAmount: Int32
     var mainColor: Color
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     @State private var totalHeight = CGFloat(0)
     private let barHeight: CGFloat = 20
 
@@ -37,7 +39,7 @@ struct CategoryBudgetBar: View {
                 }
                 
                 .frame(width: geometry.size.width, height: self.barHeight, alignment: .leading)
-                .background(Color(UIColor.systemGray5))
+                .background(self.colorScheme == .dark ? Color(UIColor.systemGray3) : Color(UIColor.systemGray5))
                 .cornerRadius(3)
                 HStack {
                     Text("¥0")
