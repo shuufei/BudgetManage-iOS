@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct CategoryBudgetBar: View {
-    var budgetCategory: BudgetCategory
+//    var budgetCategory: BudgetCategory
+    var budgetAmount: Int32
+    var budgetBalanceAmount: Int32
+    var mainColor: Color
     
     @State private var totalHeight = CGFloat(0)
     private let barHeight: CGFloat = 20
-    private var data: BudgetCategory.CategoryDisplayData {
-        self.budgetCategory.displayData()
-    }
+//    private var data: BudgetCategory.CategoryDisplayData {
+//        self.budgetCategory.displayData()
+//    }
     @State private var showBar = false
     
     private var balanceAmountRate: CGFloat {
-        let rate = CGFloat(self.data.balanceAmount) / CGFloat(self.data.budgetAmount)
+        let rate = CGFloat(self.budgetBalanceAmount) / CGFloat(self.budgetAmount)
         return rate.isNaN || (!rate.isNaN && rate < 0) ? 0 : rate
     }
 
@@ -31,7 +34,7 @@ struct CategoryBudgetBar: View {
         GeometryReader { geometry in
             VStack(spacing: 2) {
                 ZStack {
-                    self.data.mainColor
+                    self.mainColor
                         .frame(width: self.showBar ? self.getBalanceAmountBarWidth(geometry.size.width) : 0, height: self.barHeight)
                         .animation(.spring().delay(0.3), value: showBar)
                 }
@@ -42,7 +45,7 @@ struct CategoryBudgetBar: View {
                 HStack {
                     Text("¥0")
                     Spacer()
-                    Text("¥\(self.data.budgetAmount)")
+                    Text("¥\(self.budgetAmount)")
                 }
                 .font(.caption2)
                 .foregroundColor(.secondary)
@@ -59,16 +62,5 @@ struct CategoryBudgetBar: View {
         .onAppear {
             self.showBar = true
         }
-    }
-}
-
-struct CategoryBudgetBar_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryBudgetBar(
-            budgetCategory: .uncategorized(
-                UnCategorized(title: "未分類", budgetAmount: 40000),
-                Expense.sampleData
-            )
-        )
     }
 }

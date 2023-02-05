@@ -9,30 +9,33 @@ import SwiftUI
 
 struct EditBudgetCategoryDetailModalView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
+    @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
 
-    @Binding var selectedCategoryId: UUID?
+    @Binding var selectedBudgetCategoryId: UUID?
     
     @State private var categoryTemplateId: UUID = UUID()
     @ObservedObject private var budgetAmount = NumbersOnly()
-    @State private var current: Category = Category(categoryTemplateId: UUID(), budgetAmount: 0)
-    @State private var data: Category = Category(categoryTemplateId: UUID(), budgetAmount: 0)
+    @State private var current: BudgetCategoryCD?
     @State private var initialized: Bool = false
     
-    private func update() {
-        if let budget = self.budgetStore.selectedBudget {
-            let index = budget.categories.firstIndex { $0.id == self.selectedCategoryId }
-            if index == nil {
-                return
-            }
-            if let budgetAmountValue = Int(self.budgetAmount.value) {
-                var tmpBudget = budget
-                tmpBudget.categories[index!].budgetAmount = budgetAmountValue
-                tmpBudget.categories[index!].categoryTemplateId = self.categoryTemplateId
-                self.budgetStore.selectedBudget = tmpBudget
-            }
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
+    
+    private var categoryTemplate: CategoryTemplateCD? {
+        self.categoryTemplates.first { template in
+            template.id == self.categoryTemplateId
         }
+    }
+    
+    private func update() {
+        self.current?.budgetAmount = Int32(self.budgetAmount.value) ?? 0
+        self.current?.categoryTemplate = self.categoryTemplate
+        self.uiStateEntities.first?.updatedAt = Date()
+        try? self.viewContext.save()
     }
     
     private func commit() {
@@ -43,26 +46,25 @@ struct EditBudgetCategoryDetailModalView: View {
     @State private var presentingConfirmationDialog: Bool = false
     private var isModified: Bool {
         get {
-            self.current != self.data
+            return (
+                self.current?.budgetAmount != Int32(self.budgetAmount.value) ?? 0 ||
+                self.current?.categoryTemplate?.id != self.categoryTemplateId
+            )
         }
     }
 
     var body: some View {
         List {
             Section(header: Text("予算額")) {
-                AmountTextField(value: self.$budgetAmount.value)
-                    .onChange(of: self.budgetAmount.value, perform: { value in
-                        self.data.budgetAmount = Int(self.budgetAmount.value) ?? 0
-                    })
+                AmountTextField(value: self.$budgetAmount.value, mainColor: self.categoryTemplate?.theme.mainColor)
             }
             Section(header: Text("カテゴリ")) {
                 Picker("カテゴリを選択", selection: self.$categoryTemplateId) {
-                    ForEach(self.categoryTemplateStore.categories) { categoryTemplate in
-                        CategoryTemplateLabel(title: categoryTemplate.title, mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
+                    ForEach(self.categoryTemplates) { categoryTemplate in
+                        CategoryTemplateLabel(title: categoryTemplate.title ?? "", mainColor: categoryTemplate.theme.mainColor, accentColor: categoryTemplate.theme.accentColor)
+                            .tag(categoryTemplate.id!)
                     }
-                }.onChange(of: self.categoryTemplateId, perform: { value in
-                    self.data.categoryTemplateId = value
-                })
+                }
             }
         }
         .navigationTitle("予算カテゴリの編集")
@@ -74,24 +76,15 @@ struct EditBudgetCategoryDetailModalView: View {
             if self.initialized {
                return
             }
-            if let budget = self.budgetStore.selectedBudget, let category = budget.categories.first(where: { $0.id == self.selectedCategoryId }) {
-                self.categoryTemplateId = category.categoryTemplateId
-                self.budgetAmount.value = String(category.budgetAmount)
-                self.current = category
-                self.data = category
+            if let budgetCategory = (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first(where: { $0.id == self.selectedBudgetCategoryId }) {
+                if let id = budgetCategory.categoryTemplate?.id {
+                    self.categoryTemplateId = id
+                }
+                self.budgetAmount.value = String(budgetCategory.budgetAmount)
+                self.current = budgetCategory
             }
             self.initialized = true
         }
         .confirmationDialog(isModified: self.isModified, onCommit: self.commit)
-    }
-}
-
-struct EditBudgetCategoryDetailModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditBudgetCategoryDetailModalView(
-            selectedCategoryId: .constant(Budget.sampleData[0].categories[0].id)
-        )
-            .environmentObject(BudgetStore())
-            .environmentObject(CategoryTemplateStore())
     }
 }

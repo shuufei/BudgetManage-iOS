@@ -8,23 +8,25 @@
 import SwiftUI
 
 struct CategoryTitle: View {
-    @Environment(\.colorScheme) var colorScheme
+    var categoryTitle: String
+    var categoryBalanceAmount: Int32
 
-    var category: BudgetCategory
-    var isDeficit: Bool {
-        self.category.displayData().balanceAmount < 0
+    @Environment(\.colorScheme) private var colorScheme
+    
+    private var isDeficit: Bool {
+        self.categoryBalanceAmount < 0
     }
     
     var body: some View {
         HStack {
-            Text(self.category.displayData().title)
+            Text(self.categoryTitle)
                 .font(.headline)
             Spacer()
             HStack {
                 Text("残り")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Text("¥\(self.category.displayData().balanceAmount)")
+                Text("¥\(self.categoryBalanceAmount)")
                     .font(.headline)
                     .foregroundColor(self.isDeficit ? .red : getDefaultForegroundColor(self.colorScheme))
             }
@@ -32,11 +34,5 @@ struct CategoryTitle: View {
         .listRowInsets(EdgeInsets())
         .listRowBackground(Color.white.opacity(0))
         .padding(.horizontal, 12)
-    }
-}
-
-struct CategoryTitle_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryTitle(category: .uncategorized(UnCategorized(title: "未分類", budgetAmount: 1000), []))
     }
 }

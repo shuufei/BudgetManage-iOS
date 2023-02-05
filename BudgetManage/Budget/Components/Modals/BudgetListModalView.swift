@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct BudgetListModalView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject private var budgetStore: BudgetStore
-    
-    @Binding var showBudgetList: Bool
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
+
+    @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @State private var openedCreateBudgetModal: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
-    @State private var deletionTarget: Budget? = nil
-    
-    @State private var editTarget: Budget? = nil
+    @State private var deletionTarget: BudgetCD? = nil
+    @State private var editTarget: BudgetCD? = nil
 
-    func getFormattedBudgetAmout(budgetAmount: Int) -> String {
+    func getFormattedBudgetAmout(budgetAmount: Int32) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         let formatted = formatter.string(
@@ -28,23 +29,29 @@ struct BudgetListModalView: View {
         return "¥\(formatted)"
     }
     
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
+    }
+    
     var body: some View {
         NavigationView {
             List {
-                if self.budgetStore.budgets.count == 0 {
+                if self.budgets.count == 0 {
                     Text("予算が登録されていません")
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color.black.opacity(0))
                 }
-                ForEach(self.budgetStore.budgets) { budget in
+                ForEach(self.budgets) { budget in
                     Button(role: .none) {
-                        for (index, element) in self.budgetStore.budgets.enumerated() {
-                            self.budgetStore.budgets[index].isActive = element.id == budget.id ? true : false
+                        if let ui = self.uiStateEntities.first {
+                            ui.activeBudget = budget
+                            ui.updatedAt = Date()
+                            try? self.viewContext.save()
                         }
-                        self.showBudgetList = false
+                        self.dismiss()
                     } label: {
                         HStack {
-                            if budget.isActive ?? false {
+                            if self.activeBudget?.id == budget.id {
                                 Image(systemName: "checkmark.circle.fill")
                                     .resizable()
                                     .foregroundColor(.green)
@@ -53,7 +60,7 @@ struct BudgetListModalView: View {
                                 Text("")
                                     .frame(width: 20)
                             }
-                            Text(budget.title)
+                            Text(budget.title ?? "")
                                 .lineLimit(1)
                             Spacer()
                             Text(self.getFormattedBudgetAmout(budgetAmount: budget.budgetAmount))
@@ -83,7 +90,7 @@ struct BudgetListModalView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("閉じる") {
-                        self.showBudgetList = false
+                        self.dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -101,31 +108,27 @@ struct BudgetListModalView: View {
             }
             .alert("予算の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { budget in
                     Button("削除", role: .destructive) {
-                        var tmpBudgets = self.budgetStore.budgets.filter { $0.id != budget.id }
-                        let index = tmpBudgets.firstIndex {$0.isActive == true}
-                        if index == nil && tmpBudgets.count != 0 {
-                            tmpBudgets[0].isActive = true
+                        self.viewContext.delete(budget)
+                        self.uiStateEntities.first?.updatedAt = Date()
+                        self.uiStateEntities.first?.activeBudget = self.budgets.first {
+                            $0.id != budget.id
                         }
-                        self.budgetStore.budgets = tmpBudgets
+                        try? self.viewContext.save()
                     }
             } message: { budget in
                 Text("予算を削除すると、予算に紐づく出費記録も削除されます。")
             }
             .sheet(item: self.$editTarget) { editTarget in
-                EditBudgetModalView(budget: editTarget) { budget in
-                    if let index = self.budgetStore.budgets.firstIndex(where: {el in el.id == editTarget.id}) {
-                        self.budgetStore.budgets[index] = budget
-                    }
+                EditBudgetModalViewProvider(editTarget: editTarget)
+            }
+            .onAppear {
+                if self.uiStateEntities.first == nil, let budget = self.budgets.first {
+                    let newUI = UICD(context: self.viewContext)
+                    newUI.updatedAt = Date()
+                    newUI.activeBudget = budget
+                    try? viewContext.save()
                 }
-                
             }
         }
-    }
-}
-
-struct BudgetListModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        BudgetListModalView(showBudgetList: .constant(true))
-            .environmentObject(BudgetStore())
     }
 }

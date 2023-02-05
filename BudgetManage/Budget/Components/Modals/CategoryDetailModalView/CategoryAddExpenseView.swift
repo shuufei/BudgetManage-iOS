@@ -12,7 +12,7 @@ struct CategoryAddExpenseView: View {
     var onAdded: () -> Void
 
     var body: some View {
-        AddExpenseView(categoryId: self.categoryId) {
+        AddExpenseView(currentBudgetCategoryId: self.categoryId) {
             self.onAdded()
         }
 //        .onAppear {

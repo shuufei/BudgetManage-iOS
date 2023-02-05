@@ -34,16 +34,16 @@ struct Category: Codable, Hashable, Identifiable {
 
 struct UnCategorized {
     var title: String
-    var budgetAmount: Int
+    var budgetAmount: Int32
 }
 
 enum BudgetCategory {
     case categorized(Category, CategoryTemplate, [Expense])
     case uncategorized(UnCategorized, [Expense])
     
-    private func getTotalExpenseAmount(_ expenses: [Expense]) -> Int {
+    private func getTotalExpenseAmount(_ expenses: [Expense]) -> Int32 {
         expenses.reduce(0, { x, y in
-            x + y.amount
+            x + Int32(y.amount)
         })
     }
     
@@ -52,8 +52,8 @@ enum BudgetCategory {
         case let .uncategorized(uncategorized, expenses):
             return CategoryDisplayData(
                 title: uncategorized.title,
-                budgetAmount: uncategorized.budgetAmount,
-                balanceAmount: uncategorized.budgetAmount - self.getTotalExpenseAmount(expenses),
+                budgetAmount: Int(uncategorized.budgetAmount),
+                balanceAmount: Int(uncategorized.budgetAmount - self.getTotalExpenseAmount(expenses)),
                 mainColor: Color(UIColor.systemGray),
                 accentColor: .primary
             )
@@ -61,7 +61,7 @@ enum BudgetCategory {
             return CategoryDisplayData(
                 title: categoryTemplate.title,
                 budgetAmount: category.budgetAmount,
-                balanceAmount: category.budgetAmount - self.getTotalExpenseAmount(expenses),
+                balanceAmount: category.budgetAmount - Int(self.getTotalExpenseAmount(expenses)),
                 mainColor: categoryTemplate.theme.mainColor,
                 accentColor: categoryTemplate.theme.accentColor,
                 categoryTemplateId: categoryTemplate.id

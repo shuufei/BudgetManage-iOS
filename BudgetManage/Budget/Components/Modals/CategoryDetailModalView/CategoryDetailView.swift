@@ -8,22 +8,18 @@
 import SwiftUI
 
 struct CategoryDetailView: View {
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    let budgetCategory: BudgetCategoryCD
 
-    @Binding var selectedCategoryId: UUID?
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
     
     @State private var showDeleteConfirmAlert: Bool = false
-    @State private var deletionTarget: Expense? = nil
-
-    @State private var editTarget: Expense? = nil
+    @State private var deletionTarget: ExpenseCD? = nil
+    @State private var editTarget: ExpenseCD? = nil
     
-    let budgetCategory: BudgetCategory
-    
-    private var expenses: [Expense] {
-        self.budgetStore.selectedBudget?.expenses.filter {
-            $0.categoryId == self.selectedCategoryId
-        } ?? []
+    private var expenses: [ExpenseCD] {
+        self.budgetCategory.expenses?.allObjects as? [ExpenseCD] ?? []
     }
     
     private func getFormattedDate(date: Date, includeTime: Bool = true) -> String {
@@ -36,28 +32,26 @@ struct CategoryDetailView: View {
     var body: some View {
         List {
             Section {
-                CategoryBudgetBar(
-                    budgetCategory: self.budgetCategory
-                )
+                CategoryBudgetBar(budgetAmount: self.budgetCategory.budgetAmount, budgetBalanceAmount: self.budgetCategory.balanceAmount, mainColor: self.budgetCategory.mainColor)
                 .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
             }
             Section(header: Text("カテゴリ情報")) {
                 HStack {
                     Text("予算額")
                     Spacer()
-                    Text("¥\(self.budgetCategory.displayData().budgetAmount)")
+                    Text("¥\(self.budgetCategory.budgetAmount)")
                         .foregroundColor(.secondary)
                 }
                 HStack {
                     Text("出費合計")
                     Spacer()
-                    Text("¥\(self.budgetCategory.displayData().totalExpenseAmount)")
+                    Text("¥\(self.budgetCategory.totalExpensesAmount)")
                         .foregroundColor(.secondary)
                 }
                 HStack {
                     Text("残額")
                     Spacer()
-                    Text("¥\(self.budgetCategory.displayData().balanceAmount)")
+                    Text("¥\(self.budgetCategory.balanceAmount)")
                         .foregroundColor(.secondary)
                 }
             }
@@ -70,14 +64,14 @@ struct CategoryDetailView: View {
                 }
                 ForEach(self.expenses) { expense in
                     HStack {
-                        Text(self.getFormattedDate(date: expense.date, includeTime: expense.includeTimeInDate))
+                        Text(self.getFormattedDate(date: expense.date!, includeTime: expense.includeTimeInDate))
                             .fixedSize(horizontal: true, vertical: true)
                         Spacer()
-                        if !(expense.memo).isEmpty {
+                        if !(expense.memo ?? "").isEmpty {
                             VStack(alignment: .trailing) {
                                 Text("¥\(expense.amount)")
                                     .font(.callout)
-                                Text(expense.memo)
+                                Text(expense.memo ?? "")
                                     .foregroundColor(.secondary)
                                     .font(.caption)
                             }
@@ -103,15 +97,19 @@ struct CategoryDetailView: View {
                     }
                     .alert("出費の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { expense in
                             Button("削除", role: .destructive) {
-                                self.showDeleteConfirmAlert = false
+//                                TODO: 削除実行時にalertが重複して表示される問題を対応する
                                 self.deletionTarget  = nil
-                                if var budget = self.budgetStore.selectedBudget {
-                                    budget.expenses = budget.expenses.filter { $0.id != expense.id }
-                                    // NOTE: https://developer.apple.com/forums/thread/676885
-                                    DispatchQueue.main.async {
-                                        self.budgetStore.selectedBudget = budget
-                                    }
-                                }
+                                self.showDeleteConfirmAlert = false
+                                self.viewContext.delete(expense)
+                                self.uiStateEntities.first?.updatedAt = Date()
+                                try? self.viewContext.save()
+//                                if var budget = self.budgetStore.selectedBudget {
+//                                    budget.expenses = budget.expenses.filter { $0.id != expense.id }
+//                                    // NOTE: https://developer.apple.com/forums/thread/676885
+//                                    DispatchQueue.main.async {
+//                                        self.budgetStore.selectedBudget = budget
+//                                    }
+//                                }
                             }
                     } message: { expense in
                         Text("出費の記録を削除しますか?")
@@ -120,14 +118,7 @@ struct CategoryDetailView: View {
             }
         }
         .sheet(item: self.$editTarget) { editTarget in
-            if var budget = self.budgetStore.selectedBudget, let expenseIndex = budget.expenses.firstIndex(where: { el in
-                el.id == editTarget.id
-            }), let expense = budget.expenses[expenseIndex] {
-                EditExpenseModalView(expense: expense) { expense in
-                    budget.expenses[expenseIndex] = expense
-                    self.budgetStore.selectedBudget = budget
-                }
-            }
+            EditExpenseModalView(expense: editTarget)
         }
         .onAppear {
             if #available(iOS 15, *) {
@@ -139,16 +130,5 @@ struct CategoryDetailView: View {
                 UITableView.appearance().contentInset.top = .zero
             }
         }
-    }
-}
-
-struct CategoryDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryDetailView(
-            selectedCategoryId: .constant(nil),
-            budgetCategory: .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
-        )
-            .environmentObject(BudgetStore())
-            .environmentObject(CategoryTemplateStore())
     }
 }

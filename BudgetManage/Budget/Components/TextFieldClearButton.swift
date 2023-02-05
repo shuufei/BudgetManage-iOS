@@ -10,7 +10,7 @@ import SwiftUI
 struct TextFieldClearButton: ViewModifier {
     @Binding var text: String
     
-    var theme: Theme?
+    var mainColor: Color?
     
     func body(content: Content) -> some View {
         HStack {
@@ -21,7 +21,7 @@ struct TextFieldClearButton: ViewModifier {
                 } label: {
                     Image(systemName: "delete.left")
                 }
-                .tint(self.theme?.mainColor ?? .blue)
+                .tint(self.mainColor ?? .blue)
             }
         }
     }

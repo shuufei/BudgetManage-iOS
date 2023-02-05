@@ -8,48 +8,36 @@
 import SwiftUI
 
 struct CategoryCard: View {
-    @Environment(\.colorScheme) var colorScheme
-    var budgetCategory: BudgetCategory
-
-    private var data: BudgetCategory.CategoryDisplayData {
-        self.budgetCategory.displayData()
-    }
+    @Environment(\.colorScheme) private var colorScheme
+    var budgetCategoryTitle: String
+    var budgetAmount: Int32
+    var budgetBalanceAmount: Int32
+    var budgetCategoryMainColor: Color
 
     private var isDeficit: Bool {
-        self.data.balanceAmount < 0
+        self.budgetBalanceAmount < 0
     }
 
     var body: some View {
         VStack(spacing: 8) {
             HStack {
-                Text(self.data.title)
+                Text(self.budgetCategoryTitle)
                     .font(.headline)
                 Spacer()
                 HStack(spacing: 4) {
                     Text("残り")
                         .foregroundColor(.secondary)
                         .font(.caption)
-                    Text("¥\(self.data.balanceAmount)")
+                    Text("¥\(self.budgetBalanceAmount)")
                         .font(.headline)
                         .foregroundColor(self.isDeficit ? .red : getDefaultForegroundColor(self.colorScheme))
                 }
             }
-            CategoryBudgetBar(budgetCategory: self.budgetCategory)
+            CategoryBudgetBar(budgetAmount: self.budgetAmount, budgetBalanceAmount: self.budgetBalanceAmount, mainColor: self.budgetCategoryMainColor)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
         .background(getDefaultBackgroundColor(self.colorScheme))
         .cornerRadius(8)
-    }
-}
-
-struct CategoryCard_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryCard(
-            budgetCategory: .uncategorized(
-                UnCategorized(title: "未分類", budgetAmount: 40000),
-                Expense.sampleData
-            )
-        )
     }
 }

@@ -6,64 +6,77 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct AddExpenseView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
 
-    var categoryId: UUID?
+    var currentBudgetCategoryId: UUID?
     var onAdd: () -> Void
-    
+
     @ObservedObject private var amount = NumbersOnly()
-    @State private var data: Expense = Expense(date: Date(), amount: 0)
-    
-    private var theme: Theme? {
-        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.data.categoryId ?? self.categoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
-            return categoryTemplate.theme
-        }
-        return nil
+    @State private var memo: String = ""
+    @State private var date: Date = Date()
+    @State private var includeTimeInDate: Bool = false
+    @State private var budgetCategoryId: UUID? = nil
+
+    private var activeBudget: BudgetCD? {
+        self.uiStateEntities.first?.activeBudget
     }
     
-    private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
-        if let categories = self.budgetStore.selectedBudget?.categories {
-            return getBudgetCategorieDisplayDataList(categories: categories, categoryTemplates: self.categoryTemplateStore.categories)
-        }
-        return []
+    private var selectedBudgetCategoryMainColor: Color? {
+        (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first { budgetCategory in
+            budgetCategory.id == self.budgetCategoryId
+        }?.mainColor
     }
     
     private func add() {
-        if var budget = self.budgetStore.selectedBudget {
-            budget.expenses.append(
-                self.data
-            )
-            self.budgetStore.selectedBudget = budget
+        if let ui = self.uiStateEntities.first {
+            let newExpense = ExpenseCD(context: self.viewContext)
+            newExpense.id = UUID()
+            newExpense.amount = Int32(self.amount.value)  ?? 0
+            newExpense.date = self.date
+            newExpense.memo = self.memo
+            newExpense.includeTimeInDate = self.includeTimeInDate
+            newExpense.budget = ui.activeBudget
+            (ui.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first {
+                $0.id == self.budgetCategoryId
+            }?.addToExpenses(newExpense)
+            ui.activeBudget?.addToExpenses(newExpense)
+            ui.updatedAt = Date()
+            try? self.viewContext.save()
+        } else {
+            fatalError("unexpected state: activeBudget is undefined")
         }
+        
         self.onAdd()
     }
     
     var body: some View {
         List {
             Section(header: Text("金額")) {
-                AmountTextField(value: self.$amount.value, theme: self.theme)
-                    .onChange(of: self.amount.value, perform: { value in
-                        self.data.amount = Int(value) ?? 0
-                    })
+                AmountTextField(value: self.$amount.value, mainColor: self.selectedBudgetCategoryMainColor)
+//                    .onChange(of: self.amount.value, perform: { value in
+//                        self.data.amount = Int(value) ?? 0
+//                    })
             }
             Section(header: Text("出費日")) {
-                DatePicker("日時", selection: self.$data.date, displayedComponents: self.data.includeTimeInDate ? [.date, .hourAndMinute] : .date)
+                DatePicker("日時", selection: self.$date, displayedComponents: self.includeTimeInDate ? [.date, .hourAndMinute] : .date)
                     .foregroundColor(.secondary)
-                Toggle(isOn: self.$data.includeTimeInDate) {
+                Toggle(isOn: self.$includeTimeInDate) {
                     Text("時間を含める")
                         .foregroundColor(.secondary)
                 }
             }
             Section {
-                if self.categoryId == nil{
-                    BudgetCategoryPicker(selectedCategoryId: self.$data.categoryId)
-                }
-                TextField("メモ", text: self.$data.memo)
-                    .modifier(TextFieldClearButton(text: self.$data.memo))
+                BudgetCategoryPicker(selectedBudgetCategoryId: self.$budgetCategoryId)
+//                BudgetCategoryPicker(selectedCategoryId: self.$data.categoryId)
+//                if self.categoryId == nil{
+//                }
+                TextField("メモ", text: self.$memo)
+                    .modifier(TextFieldClearButton(text: self.$memo))
             }
             Button {
                 self.add()
@@ -77,12 +90,15 @@ struct AddExpenseView: View {
             }
             .disabled(self.amount.value.isEmpty)
             .buttonStyle(.borderedProminent)
-            .tint(self.theme?.mainColor != nil ? self.theme?.mainColor : self.colorScheme == .dark ? .white : .black)
+            .tint(self.selectedBudgetCategoryMainColor != nil ? self.selectedBudgetCategoryMainColor : self.colorScheme == .dark ? .white : .black)
             .foregroundColor(self.colorScheme == .dark ? .black : .white)
             .listRowBackground(Color.red.opacity(0))
             .listRowInsets(EdgeInsets())
             .onAppear {
-                self.data.categoryId = self.categoryId
+//                self.data.categoryId = self.currentBudgetCategoryId
+                self.budgetCategoryId = self.currentBudgetCategoryId ?? (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD])?.first {
+                    $0.title == "未分類"
+                }?.id
             }
         }
     }
