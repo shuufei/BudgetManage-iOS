@@ -72,7 +72,7 @@ struct AddExpenseView: View {
                 }
             }
             Section {
-                BudgetCategoryPicker(selectedBudgetCategoryId: self.$budgetCategoryId)
+//                BudgetCategoryPicker(selectedBudgetCategoryId: self.$budgetCategoryId)
 //                BudgetCategoryPicker(selectedCategoryId: self.$data.categoryId)
 //                if self.categoryId == nil{
 //                }
