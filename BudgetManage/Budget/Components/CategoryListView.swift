@@ -10,8 +10,6 @@ import UniformTypeIdentifiers
 
 struct CategoryListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
 
@@ -24,22 +22,6 @@ struct CategoryListView: View {
     
     private var activeBudget: BudgetCD? {
         return self.uiStateEntities.first?.activeBudget
-    }
-    
-    private func getCategoryTemplate(categoryTemplateId: UUID) -> CategoryTemplate? {
-        self.categoryTemplateStore.categories.first { $0.id == categoryTemplateId }
-    }
-    
-    private func getCategoryExpenses(categoryId: UUID) -> [Expense] {
-        self.budgetStore.selectedBudget?.expenses.filter { $0.categoryId == categoryId } ?? []
-    }
-    
-    private func getBudgetCategory(category: Category) -> BudgetCategory {
-        if let categoryTemplate = self.getCategoryTemplate(categoryTemplateId: category.categoryTemplateId) {
-            return .categorized(category, categoryTemplate, self.getCategoryExpenses(categoryId: category.id))
-        } else {
-            return .uncategorized(UnCategorized(title: "", budgetAmount: 0), [])
-        }
     }
     
     private func budgetCategoriesArray(_ budgetCategories: NSSet?) -> [BudgetCategoryCD] {
@@ -123,16 +105,6 @@ struct CategoryListView: View {
     }
 }
 
-struct CategoryListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            Color(UIColor.systemGray5)
-            CategoryListView()
-                .environmentObject(BudgetStore())
-                .environmentObject(CategoryTemplateStore())
-        }
-    }
-}
 
 struct BudgetCategoryDragDelegate: DropDelegate {
     @Environment(\.managedObjectContext) private var viewContext
