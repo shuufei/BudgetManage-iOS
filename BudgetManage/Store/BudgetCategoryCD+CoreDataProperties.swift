@@ -58,8 +58,8 @@ extension BudgetCategoryCD : Identifiable {
     var totalExpensesAmount: Int32 {
         self.getTotalExpenseAmount(self.expensesArray)
     }
-    var mainColor: Color {
-        self.categoryTemplate?.theme.mainColor ?? Color(UIColor.systemGray)
+    var mainColor: Color? {
+        self.categoryTemplate?.theme.mainColor
     }
     var accentColor: Color {
         self.categoryTemplate?.theme.accentColor ?? .primary
@@ -69,5 +69,10 @@ extension BudgetCategoryCD : Identifiable {
         expenses.reduce(0, { x, y in
             x + Int32(y.amount)
         })
+    }
+    
+    func getUncategorizedMainColor(_ colorSchema: ColorScheme) -> Color {
+        let color: Color =  colorSchema == .dark ? .white.opacity(0.75) : .black.opacity(0.6)
+        return color
     }
 }

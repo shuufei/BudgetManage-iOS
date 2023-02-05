@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct CategoryBudgetBar: View {
-//    var budgetCategory: BudgetCategory
     var budgetAmount: Int32
     var budgetBalanceAmount: Int32
     var mainColor: Color
     
     @State private var totalHeight = CGFloat(0)
     private let barHeight: CGFloat = 20
-//    private var data: BudgetCategory.CategoryDisplayData {
-//        self.budgetCategory.displayData()
-//    }
+
     @State private var showBar = false
     
     private var balanceAmountRate: CGFloat {

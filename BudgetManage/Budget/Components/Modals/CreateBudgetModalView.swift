@@ -57,15 +57,15 @@ struct CreateBudgetModalView: View {
                 .listRowBackground(Color.red.opacity(0))
                 .listRowInsets(EdgeInsets())
             }
-                .navigationTitle("新規予算")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("キャンセル") {
-                            self.isCreateMode = false
-                        }
+            .navigationTitle("新規予算")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") {
+                        self.isCreateMode = false
                     }
                 }
+            }
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now()) {

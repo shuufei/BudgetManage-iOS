@@ -9,6 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct CategoryListView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) private var budgets: FetchedResults<BudgetCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
@@ -56,7 +57,7 @@ struct CategoryListView: View {
                             self.selectedBudgetCategoryId = category.id
                             self.showCategoryDetailModalView = true
                         } label: {
-                            CategoryCard(budgetCategoryTitle: category.title, budgetAmount: category.budgetAmount, budgetBalanceAmount: category.balanceAmount, budgetCategoryMainColor: category.mainColor)
+                            CategoryCard(budgetCategoryTitle: category.title, budgetAmount: category.budgetAmount, budgetBalanceAmount: category.balanceAmount, budgetCategoryMainColor: category.mainColor ?? category.getUncategorizedMainColor(self.colorScheme))
                         }
                         .opacity(self.dragging?.id == category.id ? 0.4 : 1)
                         .buttonStyle(.plain)

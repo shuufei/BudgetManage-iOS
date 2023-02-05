@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BudgetCategoryPicker: View {
+    @Environment(\.colorScheme) private var colorScheme
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var selectedBudgetCategoryId: UUID?
@@ -26,12 +27,11 @@ struct BudgetCategoryPicker: View {
         if self.budgetCategories.count >= 1 {
             //        REF: https://stackoverflow.com/questions/65924526/deselecting-item-from-a-picker-swiftui
             Picker("カテゴリ", selection: Binding(self.$selectedBudgetCategoryId, deselectTo: UUID())) {
-//                Text("リセット").tag(self.UNCATEGORIZED_UUID_FOR_PICKER)
 
                 ForEach(self.budgetCategories, id: \.id) { budgetCategory in
                     CategoryTemplateLabel(
                         title: budgetCategory.title,
-                        mainColor: budgetCategory.mainColor,
+                        mainColor: budgetCategory.mainColor ?? budgetCategory.getUncategorizedMainColor(self.colorScheme),
                         accentColor: budgetCategory.accentColor
                     ).tag(budgetCategory.id)
                 }

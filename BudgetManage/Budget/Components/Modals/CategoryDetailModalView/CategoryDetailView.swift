@@ -11,6 +11,7 @@ struct CategoryDetailView: View {
     let budgetCategory: BudgetCategoryCD
 
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) private var colorScheme
 
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
     
@@ -32,7 +33,7 @@ struct CategoryDetailView: View {
     var body: some View {
         List {
             Section {
-                CategoryBudgetBar(budgetAmount: self.budgetCategory.budgetAmount, budgetBalanceAmount: self.budgetCategory.balanceAmount, mainColor: self.budgetCategory.mainColor)
+                CategoryBudgetBar(budgetAmount: self.budgetCategory.budgetAmount, budgetBalanceAmount: self.budgetCategory.balanceAmount, mainColor: self.budgetCategory.mainColor ?? self.budgetCategory.getUncategorizedMainColor(self.colorScheme))
                 .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
             }.padding(.top, 4)
             Section(header: Text("カテゴリ情報")) {

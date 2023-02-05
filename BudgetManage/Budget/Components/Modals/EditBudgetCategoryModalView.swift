@@ -10,6 +10,7 @@ import SwiftUI
 struct EditBudgetCategoryModalView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
     @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
@@ -109,7 +110,7 @@ struct EditBudgetCategoryModalView: View {
                     } label: {
                         HStack {
                             HStack {
-                                CategoryTemplateLabel(title: category.title, mainColor: category.mainColor, accentColor: category.accentColor)
+                                CategoryTemplateLabel(title: category.title, mainColor: category.mainColor ?? category.getUncategorizedMainColor(self.colorScheme), accentColor: category.accentColor)
                                 Text("¥\(category.budgetAmount)")
                                     .foregroundColor(.secondary)
                             }
