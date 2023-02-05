@@ -96,27 +96,18 @@ struct CategoryDetailView: View {
                         }
                         .tint(.gray)
                     }
-                    .alert("出費の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { expense in
-                            Button("削除", role: .destructive) {
-//                                TODO: 削除実行時にalertが重複して表示される問題を対応する
-                                self.deletionTarget  = nil
-                                self.showDeleteConfirmAlert = false
-                                self.viewContext.delete(expense)
-                                self.uiStateEntities.first?.updatedAt = Date()
-                                try? self.viewContext.save()
-//                                if var budget = self.budgetStore.selectedBudget {
-//                                    budget.expenses = budget.expenses.filter { $0.id != expense.id }
-//                                    // NOTE: https://developer.apple.com/forums/thread/676885
-//                                    DispatchQueue.main.async {
-//                                        self.budgetStore.selectedBudget = budget
-//                                    }
-//                                }
-                            }
-                    } message: { expense in
-                        Text("出費の記録を削除しますか?")
-                    }
                 }
             }
+        }
+        .alert("出費の削除", isPresented: self.$showDeleteConfirmAlert, presenting: self.deletionTarget) { expense in
+            Button("削除", role: .destructive) {
+                self.viewContext.delete(expense)
+                self.uiStateEntities.first?.updatedAt = Date()
+                try? self.viewContext.save()
+                self.deletionTarget  = nil
+            }
+        } message: { expense in
+            Text("出費の記録を削除しますか?")
         }
         .sheet(item: self.$editTarget) { editTarget in
             EditExpenseModalView(expense: editTarget)
