@@ -10,6 +10,8 @@
 		70168E662975A6F5005BC267 /* EditBudgetModalViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70168E652975A6F5005BC267 /* EditBudgetModalViewProvider.swift */; };
 		7048357F2906D7EE00224DBD /* EditBudgetModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */; };
 		704835812909749400224DBD /* BudgetCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704835802909749400224DBD /* BudgetCategoryPicker.swift */; };
+		707E47C2298F65D200DAE3CE /* BudgetCategoryCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707E47C0298F65D200DAE3CE /* BudgetCategoryCD+CoreDataClass.swift */; };
+		707E47C3298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707E47C1298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift */; };
 		709E8F1F297398D400261A78 /* View+InteractiveDismissableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */; };
 		709E8F20297398D400261A78 /* View+ConfirmationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E8F1E297398D400261A78 /* View+ConfirmationDialog.swift */; };
 		70F7F39429739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F39229739AA900B6C8C1 /* BudgetDataModel.xcdatamodeld */; };
@@ -22,8 +24,6 @@
 		70F7F418297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F40E297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift */; };
 		70F7F419297428A200B6C8C1 /* BudgetCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F40F297428A200B6C8C1 /* BudgetCD+CoreDataClass.swift */; };
 		70F7F41A297428A200B6C8C1 /* BudgetCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F410297428A200B6C8C1 /* BudgetCD+CoreDataProperties.swift */; };
-		70F7F41B297428A200B6C8C1 /* BudgetCategoryCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F411297428A200B6C8C1 /* BudgetCategoryCD+CoreDataClass.swift */; };
-		70F7F41C297428A200B6C8C1 /* BudgetCategoryCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F7F412297428A200B6C8C1 /* BudgetCategoryCD+CoreDataProperties.swift */; };
 		9838A10A28B359F90041C326 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10928B359F90041C326 /* TextFieldClearButton.swift */; };
 		9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10C28B39E120041C326 /* NumbersOnly.swift */; };
 		9838A10F28B47E650041C326 /* BudgetListModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838A10E28B47E650041C326 /* BudgetListModalView.swift */; };
@@ -93,6 +93,8 @@
 		70168E652975A6F5005BC267 /* EditBudgetModalViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBudgetModalViewProvider.swift; sourceTree = "<group>"; };
 		7048357E2906D7EE00224DBD /* EditBudgetModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBudgetModalView.swift; sourceTree = "<group>"; };
 		704835802909749400224DBD /* BudgetCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategoryPicker.swift; sourceTree = "<group>"; };
+		707E47C0298F65D200DAE3CE /* BudgetCategoryCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategoryCD+CoreDataClass.swift"; sourceTree = "<group>"; };
+		707E47C1298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategoryCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+InteractiveDismissableView.swift"; sourceTree = "<group>"; };
 		709E8F1E297398D400261A78 /* View+ConfirmationDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+ConfirmationDialog.swift"; sourceTree = "<group>"; };
 		70F7F39329739AA900B6C8C1 /* BudgetDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BudgetDataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -105,8 +107,6 @@
 		70F7F40E297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryTemplateCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		70F7F40F297428A200B6C8C1 /* BudgetCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCD+CoreDataClass.swift"; sourceTree = "<group>"; };
 		70F7F410297428A200B6C8C1 /* BudgetCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		70F7F411297428A200B6C8C1 /* BudgetCategoryCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategoryCD+CoreDataClass.swift"; sourceTree = "<group>"; };
-		70F7F412297428A200B6C8C1 /* BudgetCategoryCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategoryCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9838A10928B359F90041C326 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		9838A10C28B39E120041C326 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		9838A10E28B47E650041C326 /* BudgetListModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetListModalView.swift; sourceTree = "<group>"; };
@@ -366,6 +366,8 @@
 		98B0439728B2183300BC762D /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				707E47C0298F65D200DAE3CE /* BudgetCategoryCD+CoreDataClass.swift */,
+				707E47C1298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift */,
 				70F7F409297428A200B6C8C1 /* UICD+CoreDataClass.swift */,
 				70F7F40A297428A200B6C8C1 /* UICD+CoreDataProperties.swift */,
 				70F7F40B297428A200B6C8C1 /* ExpenseCD+CoreDataClass.swift */,
@@ -374,8 +376,6 @@
 				70F7F40E297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift */,
 				70F7F40F297428A200B6C8C1 /* BudgetCD+CoreDataClass.swift */,
 				70F7F410297428A200B6C8C1 /* BudgetCD+CoreDataProperties.swift */,
-				70F7F411297428A200B6C8C1 /* BudgetCategoryCD+CoreDataClass.swift */,
-				70F7F412297428A200B6C8C1 /* BudgetCategoryCD+CoreDataProperties.swift */,
 				98B0439928B2186000BC762D /* BudgetStore.swift */,
 				983C7B4928C62315008D75D3 /* CategoryTemplateStore.swift */,
 				70F7F3A52973C03400B6C8C1 /* PersistenceCoreData.swift */,
@@ -544,13 +544,13 @@
 				983C7B5528CAF888008D75D3 /* EditCategoryTemplateModalView.swift in Sources */,
 				98B0438B28B1E30F00BC762D /* BudgetView.swift in Sources */,
 				983C7B5328C77D86008D75D3 /* ThemeView.swift in Sources */,
+				707E47C2298F65D200DAE3CE /* BudgetCategoryCD+CoreDataClass.swift in Sources */,
 				70F7F418297428A200B6C8C1 /* CategoryTemplateCD+CoreDataProperties.swift in Sources */,
 				98B0438E28B1E41300BC762D /* Budget.swift in Sources */,
 				70168E662975A6F5005BC267 /* EditBudgetModalViewProvider.swift in Sources */,
 				70F7F415297428A200B6C8C1 /* ExpenseCD+CoreDataClass.swift in Sources */,
 				983C7B4228C2F294008D75D3 /* CategoryAddExpenseView.swift in Sources */,
 				9838A11928B65B5E0041C326 /* CategoryCard.swift in Sources */,
-				70F7F41C297428A200B6C8C1 /* BudgetCategoryCD+CoreDataProperties.swift in Sources */,
 				98B0439F28B24A8D00BC762D /* CreateBudgetModalView.swift in Sources */,
 				9838A11B28B65B810041C326 /* Category.swift in Sources */,
 				98B0439128B201F300BC762D /* BudgetViewMenu.swift in Sources */,
@@ -584,6 +584,7 @@
 				983C7B3E28C2E770008D75D3 /* CategoryBudgetBar.swift in Sources */,
 				9838A10D28B39E120041C326 /* NumbersOnly.swift in Sources */,
 				983C7B4628C607EF008D75D3 /* CategoryTemplateListModalView.swift in Sources */,
+				707E47C3298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift in Sources */,
 				983C7B4E28C77B45008D75D3 /* Theme.swift in Sources */,
 				9838A11D28B65C2E0041C326 /* Expense.swift in Sources */,
 				983C7B2F28B9F95D008D75D3 /* ColorTheme.swift in Sources */,
@@ -591,7 +592,6 @@
 				98B0439628B20A5B00BC762D /* LogView.swift in Sources */,
 				9863988928B9DFCB00CCBB1D /* AddExpenseModalView.swift in Sources */,
 				70F7F416297428A200B6C8C1 /* ExpenseCD+CoreDataProperties.swift in Sources */,
-				70F7F41B297428A200B6C8C1 /* BudgetCategoryCD+CoreDataClass.swift in Sources */,
 				983C7B3528BCEFA1008D75D3 /* CategoryDetailView.swift in Sources */,
 				70F7F419297428A200B6C8C1 /* BudgetCD+CoreDataClass.swift in Sources */,
 				983C7B5828CB1ABC008D75D3 /* CategoryTemplateLabel.swift in Sources */,

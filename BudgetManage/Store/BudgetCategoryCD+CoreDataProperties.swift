@@ -2,7 +2,7 @@
 //  BudgetCategoryCD+CoreDataProperties.swift
 //  BudgetManage
 //
-//  Created by shufei hanashiro on 2023/01/15.
+//  Created by shufei hanashiro on 2023/02/05.
 //
 //
 
@@ -18,11 +18,12 @@ extension BudgetCategoryCD {
         return NSFetchRequest<BudgetCategoryCD>(entityName: "BudgetCategoryCD")
     }
 
-    @NSManaged public var id: UUID?
     @NSManaged public var budgetAmount: Int32
     @NSManaged public var createdAt: Date?
-    @NSManaged public var categoryTemplate: CategoryTemplateCD?
+    @NSManaged public var id: UUID?
+    @NSManaged public var sortIndex: Int16
     @NSManaged public var budget: BudgetCD?
+    @NSManaged public var categoryTemplate: CategoryTemplateCD?
     @NSManaged public var expenses: NSSet?
 
 }

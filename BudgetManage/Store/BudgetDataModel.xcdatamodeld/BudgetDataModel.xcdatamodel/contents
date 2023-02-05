@@ -4,6 +4,7 @@
         <attribute name="budgetAmount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="sortIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="budget" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BudgetCD" inverseName="budgetCategories" inverseEntity="BudgetCD"/>
         <relationship name="categoryTemplate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CategoryTemplateCD" inverseName="budgetCategories" inverseEntity="CategoryTemplateCD"/>
         <relationship name="expenses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExpenseCD" inverseName="budgetCategory" inverseEntity="ExpenseCD"/>
@@ -40,7 +41,7 @@
         <relationship name="activeBudget" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BudgetCD" inverseName="uiState" inverseEntity="BudgetCD"/>
     </entity>
     <elements>
-        <element name="BudgetCategoryCD" positionX="-207.68359375" positionY="222.83984375" width="128" height="119"/>
+        <element name="BudgetCategoryCD" positionX="-207.68359375" positionY="222.83984375" width="128" height="134"/>
         <element name="BudgetCD" positionX="-274.140625" positionY="-38.3125" width="128" height="178"/>
         <element name="CategoryTemplateCD" positionX="9.0546875" positionY="223.65625" width="128" height="118"/>
         <element name="ExpenseCD" positionX="-54" positionY="-9" width="128" height="148"/>

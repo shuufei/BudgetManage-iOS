@@ -79,4 +79,13 @@ extension BudgetCD : Identifiable {
             category.title == "未分類"
         }
     }
+    
+    var sortedBudgetCategories: [BudgetCategoryCD]? {
+//        生成日時降順でsortした後に、sortIndexベースでsortする
+        return (self.budgetCategories?.allObjects as? [BudgetCategoryCD])?.sorted(by: {
+            $0.createdAt ?? Date() > $1.createdAt ?? Date()
+        }).sorted(by: {
+            $0.sortIndex < $1.sortIndex
+        })
+    }
 }

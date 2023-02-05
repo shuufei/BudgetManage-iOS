@@ -20,10 +20,10 @@ struct CategoryListView: View {
     
     @State private var showAddBudgetCategoryModalView: Bool = false
     
-    @State private var dragging: Category?
+    @State private var dragging: BudgetCategoryCD?
     
     private var activeBudget: BudgetCD? {
-        self.uiStateEntities.first?.activeBudget
+        return self.uiStateEntities.first?.activeBudget
     }
     
     private func getCategoryTemplate(categoryTemplateId: UUID) -> CategoryTemplate? {
@@ -69,7 +69,7 @@ struct CategoryListView: View {
             .padding(.horizontal, 8)
             VStack(spacing: 12) {
                 if let budget = self.activeBudget {
-                    ForEach(self.budgetCategoriesArray(budget.budgetCategories).sorted(by: {$0.createdAt ?? Date() > $1.createdAt ?? Date()})) { category in
+                    ForEach(budget.sortedBudgetCategories ?? []) { category in
                         Button(role: .none) {
                             self.selectedBudgetCategoryId = category.id
                             self.showCategoryDetailModalView = true
@@ -78,15 +78,17 @@ struct CategoryListView: View {
                         }
                         .opacity(self.dragging?.id == category.id ? 0.4 : 1)
                         .buttonStyle(.plain)
-//                        .onDrag {
-//                            self.dragging = category
-//                            return NSItemProvider(object: budget.id.uuidString as NSString)
-//                        }
-//                        .onDrop(of: [UTType.text], delegate: BudgetCategoryDragDelegate(
-//                            item: category,
-//                            budgetStore: self.budgetStore,
-//                            current: $dragging
-//                        ))
+                        .onDrag {
+                            self.dragging = category
+                            return NSItemProvider(object: budget.id!.uuidString as NSString)
+                        }
+                        .onDrop(of: [UTType.text], delegate: BudgetCategoryDragDelegate(
+                            activeBudget: self.activeBudget, droppedItem: category, draggingItem: self.$dragging, onCommit: { budgetCategories in
+                                self.activeBudget?.budgetCategories = NSSet(array:budgetCategories)
+                                self.uiStateEntities.first?.updatedAt = Date()
+                                try? self.viewContext.save()
+                            }
+                        ))
                     }
                     .onMove(perform: {_, _ in})
                     
@@ -133,17 +135,25 @@ struct CategoryListView_Previews: PreviewProvider {
 }
 
 struct BudgetCategoryDragDelegate: DropDelegate {
-    let item: Category
-    var budgetStore: BudgetStore
-    @Binding var current: Category?
+    @Environment(\.managedObjectContext) private var viewContext
+    let activeBudget: BudgetCD?
+    let droppedItem: BudgetCategoryCD
+    @Binding var draggingItem: BudgetCategoryCD?
+    let onCommit: (_ budgetCategories: [BudgetCategoryCD]) -> Void
     
     func dropEntered(info: DropInfo) {
-        if item != current, self.budgetStore.selectedBudget != nil {
-            let from = self.budgetStore.selectedBudget!.categories.firstIndex(of: current!)!
-            let to = self.budgetStore.selectedBudget!.categories.firstIndex(of: item)!
-            if self.budgetStore.selectedBudget!.categories[to].id != current!.id {
-                self.budgetStore.selectedBudget!.categories.move(fromOffsets: IndexSet(integer: from),
-                              toOffset: to > from ? to + 1 : to)
+        if let dragging = self.draggingItem, self.droppedItem != dragging, self.activeBudget != nil, var budgetCategories = self.activeBudget!.sortedBudgetCategories {
+            let from = budgetCategories.firstIndex(of: dragging)!
+            let to = budgetCategories.firstIndex(of: self.droppedItem)!
+            if budgetCategories[to].id != dragging.id {
+//              最新のsortされた状態でmoveすることで、適切な並び順の配列にする。
+//              その後、適切な並び順でsortIndexを割り当てる。
+//              budgetに対してbudgetCategoryは別モデルのため、配列を直接上書きしても、配列の並び順は保持されないのでsortIndexを用いる必要がある
+                budgetCategories.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
+                budgetCategories.enumerated().forEach({ index, bc in
+                    bc.sortIndex = Int16(index)
+                })
+                self.onCommit(budgetCategories)
             }
         }
     }
@@ -153,7 +163,7 @@ struct BudgetCategoryDragDelegate: DropDelegate {
     }
 
     func performDrop(info: DropInfo) -> Bool {
-        current = nil
+        self.draggingItem = nil
         return true
     }
 }

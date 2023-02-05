@@ -2,7 +2,7 @@
 //  BudgetCategoryCD+CoreDataClass.swift
 //  BudgetManage
 //
-//  Created by shufei hanashiro on 2023/01/15.
+//  Created by shufei hanashiro on 2023/02/05.
 //
 //
 
