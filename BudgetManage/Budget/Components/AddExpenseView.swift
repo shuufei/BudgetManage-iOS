@@ -12,33 +12,16 @@ struct AddExpenseView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
 
     var currentBudgetCategoryId: UUID?
     var onAdd: () -> Void
-    
-//    @State private var data: Expense = Expense(date: Date(), amount: 0)
+
     @ObservedObject private var amount = NumbersOnly()
     @State private var memo: String = ""
     @State private var date: Date = Date()
     @State private var includeTimeInDate: Bool = false
     @State private var budgetCategoryId: UUID? = nil
-    
-//    private var theme: Theme? {
-//        if let category = self.budgetStore.selectedBudget?.categories.first(where: { category in category.id == self.data.categoryId ?? self.currentBudgetCategoryId }), let categoryTemplate = self.categoryTemplateStore.categories.first(where: { categoryTemplate in categoryTemplate.id == category.categoryTemplateId }) {
-//            return categoryTemplate.theme
-//        }
-//        return nil
-//    }
-    
-    private var budgetCategories: [BudgetCategory.CategoryDisplayData] {
-        if let categories = self.budgetStore.selectedBudget?.categories {
-            return getBudgetCategorieDisplayDataList(categories: categories, categoryTemplates: self.categoryTemplateStore.categories)
-        }
-        return []
-    }
-    
+
     private var activeBudget: BudgetCD? {
         self.uiStateEntities.first?.activeBudget
     }

@@ -13,8 +13,6 @@ struct BudgetManageApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(BudgetStore())
-                .environmentObject(CategoryTemplateStore())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

@@ -10,9 +10,6 @@ import SwiftUI
 struct BudgetView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
-
     @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) var uiStateEntities: FetchedResults<UICD>
 
@@ -21,10 +18,6 @@ struct BudgetView: View {
     @State var openedBudgetListModal: Bool = false
     @State var openedCategoryListModal: Bool = false
     @State private var showDeleteConfirmAlert: Bool = false
-
-    var categoryTemplates: [CategoryTemplate] {
-        self.categoryTemplateStore.categories
-    }
 
     var navigationTitle: String {
         return self.activeBudget?.title ?? "予算"
@@ -107,12 +100,3 @@ struct BudgetView: View {
     }
 }
 
-struct BudgetView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            BudgetView()
-                .environmentObject(BudgetStore())
-                .environmentObject(CategoryTemplateStore())
-        }
-    }
-}

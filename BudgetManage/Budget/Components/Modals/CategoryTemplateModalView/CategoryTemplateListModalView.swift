@@ -10,8 +10,6 @@ import CoreData
 
 struct CategoryTemplateListModalView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @FetchRequest(entity: CategoryTemplateCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: true)]) private var categoryTemplates: FetchedResults<CategoryTemplateCD>
     @FetchRequest(entity: BudgetCD.entity(), sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]) var budgets: FetchedResults<BudgetCD>
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
@@ -127,15 +125,5 @@ struct CategoryTemplateListModalView: View {
                 )
             }
         }
-    }
-}
-
-struct CategoryListModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryTemplateListModalView(
-            showModalView: .constant(true)
-        )
-            .environmentObject(BudgetStore())
-            .environmentObject(CategoryTemplateStore())
     }
 }

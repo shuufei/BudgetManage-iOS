@@ -12,10 +12,9 @@ struct EditCategoryTemplateModalView: View {
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
-    @State private var initialized: Bool = false    
+    @State private var initialized: Bool = false
     @State private var theme: Theme = .red
     @State private var title: String = ""
     

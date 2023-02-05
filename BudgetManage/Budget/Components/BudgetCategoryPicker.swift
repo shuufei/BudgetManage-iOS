@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct BudgetCategoryPicker: View {
-    @EnvironmentObject private var budgetStore: BudgetStore
-    @EnvironmentObject private var categoryTemplateStore: CategoryTemplateStore
     @FetchRequest(entity: UICD.entity(), sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false)]) private var uiStateEntities: FetchedResults<UICD>
 
     @Binding var selectedBudgetCategoryId: UUID?
@@ -22,10 +20,6 @@ struct BudgetCategoryPicker: View {
     
     private var budgetCategories: [BudgetCategoryCD] {
         (self.activeBudget?.budgetCategories?.allObjects as? [BudgetCategoryCD]) ?? []
-//        if let categories = self.budgetStore.selectedBudget?.categories {
-//            return getBudgetCategorieDisplayDataList(categories: categories, categoryTemplates: self.categoryTemplateStore.categories)
-//        }
-//        return []
     }
 
     var body: some View {
