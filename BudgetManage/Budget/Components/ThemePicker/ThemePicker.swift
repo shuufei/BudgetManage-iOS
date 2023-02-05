@@ -11,10 +11,20 @@ struct ThemePicker: View {
     @Binding var selection: Theme
 
     var body: some View {
-        Picker("色", selection: self.$selection) {
-            ForEach(Theme.allCases) { theme in
-                ThemeView(theme: theme)
-                    .tag(theme)
+        if #available(iOS 16.0, *) {
+            Picker("色", selection: self.$selection) {
+                ForEach(Theme.allCases) { theme in
+                    ThemeView(theme: theme)
+                        .tag(theme)
+                }
+            }
+            .pickerStyle(.navigationLink)
+        } else {
+            Picker("色", selection: self.$selection) {
+                ForEach(Theme.allCases) { theme in
+                    ThemeView(theme: theme)
+                        .tag(theme)
+                }
             }
         }
     }
