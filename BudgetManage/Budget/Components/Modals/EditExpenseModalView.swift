@@ -69,6 +69,7 @@ struct EditExpenseModalView: View {
             Section(header: Text("出費日")) {
                 DatePicker("日時", selection: self.$date, displayedComponents: self.includeTimeInDate ? [.date, .hourAndMinute] : .date)
                     .foregroundColor(.secondary)
+                    .environment(\.locale, Locale(identifier: "ja_JP"))
                 Toggle(isOn: self.$includeTimeInDate) {
                     Text("時間を含める")
                         .foregroundColor(.secondary)

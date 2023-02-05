@@ -52,10 +52,12 @@ struct EditBudgetModalView: View {
                     Text("開始日")
                         .foregroundColor(.secondary)
                 }
+                .environment(\.locale, Locale(identifier: "ja_JP"))
                 DatePicker(selection: self.$endDate, displayedComponents: .date) {
                     Text("終了日")
                         .foregroundColor(.secondary)
                 }
+                .environment(\.locale, Locale(identifier: "ja_JP"))
             }
             Section(header: Text("予算額")) {
                 AmountTextField(value: self.$amount.value)
