@@ -34,7 +34,7 @@ struct CategoryDetailView: View {
             Section {
                 CategoryBudgetBar(budgetAmount: self.budgetCategory.budgetAmount, budgetBalanceAmount: self.budgetCategory.balanceAmount, mainColor: self.budgetCategory.mainColor)
                 .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
-            }
+            }.padding(.top, 4)
             Section(header: Text("カテゴリ情報")) {
                 HStack {
                     Text("予算額")
