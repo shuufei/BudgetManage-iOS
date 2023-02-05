@@ -63,7 +63,7 @@ struct CategoryDetailView: View {
                         .listRowBackground(Color.black.opacity(0))
                         .foregroundColor(.secondary)
                 }
-                ForEach(self.expenses) { expense in
+                ForEach(self.expenses.sorted(by: { $0.date ?? Date() > $1.date ?? Date()})) { expense in
                     HStack {
                         Text(self.getFormattedDate(date: expense.date!, includeTime: expense.includeTimeInDate))
                             .fixedSize(horizontal: true, vertical: true)
