@@ -32,6 +32,12 @@ struct EditBudgetCategoryDetailModalView: View {
     }
     
     private func update() {
+//        未分類カテゴリの予算を算出し直す
+        let diffBudgetAmount = (self.current?.budgetAmount ?? 0) - (Int32(self.budgetAmount.value) ?? 0)
+        if let uncategorized = self.activeBudget?.uncategorizedBudgetCategory {
+            uncategorized.budgetAmount += diffBudgetAmount
+        }
+
         self.current?.budgetAmount = Int32(self.budgetAmount.value) ?? 0
         self.current?.categoryTemplate = self.categoryTemplate
         self.uiStateEntities.first?.updatedAt = Date()
