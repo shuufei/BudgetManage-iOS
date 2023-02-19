@@ -95,6 +95,7 @@
 		707E47C1298F65D200DAE3CE /* BudgetCategoryCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategoryCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		709E8F1D297398D400261A78 /* View+InteractiveDismissableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+InteractiveDismissableView.swift"; sourceTree = "<group>"; };
 		709E8F1E297398D400261A78 /* View+ConfirmationDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+ConfirmationDialog.swift"; sourceTree = "<group>"; };
+		70A36B6D29A1EA4500181CB6 /* PrivacyPolicy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PrivacyPolicy.md; sourceTree = "<group>"; };
 		70F7F39329739AA900B6C8C1 /* BudgetDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BudgetDataModel.xcdatamodel; sourceTree = "<group>"; };
 		70F7F3A52973C03400B6C8C1 /* PersistenceCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceCoreData.swift; sourceTree = "<group>"; };
 		70F7F409297428A200B6C8C1 /* UICD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICD+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -270,6 +271,7 @@
 		98B0435328B1E2F300BC762D = {
 			isa = PBXGroup;
 			children = (
+				70A36B6D29A1EA4500181CB6 /* PrivacyPolicy.md */,
 				98B0435E28B1E2F300BC762D /* BudgetManage */,
 				98B0436F28B1E2F500BC762D /* BudgetManageTests */,
 				98B0437928B1E2F500BC762D /* BudgetManageUITests */,
